@@ -515,7 +515,7 @@ public class VectorL10n: NSObject {
   public static var authUseServerOptions: String { 
     return VectorL10n.tr("Vector", "auth_use_server_options") 
   }
-  /// Email or user name
+  /// user name
   public static var authUserIdPlaceholder: String { 
     return VectorL10n.tr("Vector", "auth_user_id_placeholder") 
   }

@@ -195,9 +195,6 @@ struct OnboardingSplashScreenUMR: View {
 struct OnboardingSplashScreenUMR_Previews: PreviewProvider {
     static let stateRenderer = MockOnboardingSplashScreenScreenState.stateRenderer
     static var previews: some View {
-        Group {
-            stateRenderer.screenGroup().previewInterfaceOrientation(.portraitUpsideDown)
-            stateRenderer.screenGroup().previewInterfaceOrientation(.portraitUpsideDown)
-        }
+        stateRenderer.screenGroup()
     }
 }
