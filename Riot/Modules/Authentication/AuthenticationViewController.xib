@@ -463,8 +463,8 @@ Clear it if you're finished using this device, or want to sign in to another acc
                                 <action selector="onButtonPressed:" destination="-1" eventType="touchUpInside" id="Pxo-2q-AdE"/>
                             </connections>
                         </button>
-                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7cW-ZD-oAh">
-                            <rect key="frame" x="98" y="40" width="375" height="694"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7cW-ZD-oAh">
+                            <rect key="frame" x="0" y="40" width="375" height="694"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                     </subviews>
