@@ -45,7 +45,7 @@ final class LegacyAuthenticationCoordinator: NSObject, AuthenticationCoordinator
 
     // Must be used only internally
     var childCoordinators: [Coordinator] = []
-    var completion: ((AuthenticationCoordinatorResult) -> Void)?
+    var callback: ((AuthenticationCoordinatorResult) -> Void)?
     
     var customServerFieldsVisible = false {
         didSet {
@@ -73,8 +73,10 @@ final class LegacyAuthenticationCoordinator: NSObject, AuthenticationCoordinator
     // MARK: - Public
     
     func start() {
-        // Listen to the end of the authentication flow
+        // Listen to the end of the authentication flow.
         authenticationViewController.authVCDelegate = self
+        // Listen for changes from deep links.
+        AuthenticationService.shared.delegate = self
     }
     
     func toPresentable() -> UIViewController {
@@ -95,10 +97,6 @@ final class LegacyAuthenticationCoordinator: NSObject, AuthenticationCoordinator
     
     func updateHomeserver(_ homeserver: String?, andIdentityServer identityServer: String?) {
         authenticationViewController.showCustomHomeserver(homeserver, andIdentityServer: identityServer)
-    }
-    
-    func continueSSOLogin(withToken loginToken: String, transactionID: String) -> Bool {
-        authenticationViewController.continueSSOLogin(withToken: loginToken, txnId: transactionID)
     }
     
     func presentPendingScreensIfNecessary() {
@@ -143,7 +141,14 @@ final class LegacyAuthenticationCoordinator: NSObject, AuthenticationCoordinator
     }
     
     private func authenticationDidComplete() {
-        completion?(.didComplete)
+        callback?(.didComplete)
+    }
+}
+
+// MARK: - AuthenticationServiceDelegate
+extension LegacyAuthenticationCoordinator: AuthenticationServiceDelegate {
+    func authenticationService(_ service: AuthenticationService, didReceive ssoLoginToken: String, with transactionID: String) -> Bool {
+        authenticationViewController.continueSSOLogin(withToken: ssoLoginToken, txnId: transactionID)
     }
 }
 
@@ -195,9 +200,9 @@ extension LegacyAuthenticationCoordinator: AuthenticationViewControllerDelegate 
             authenticationType = .other
         }
         
-        completion?(.didLogin(session: session,
-                              authenticationFlow: authenticationViewController.authType.flow,
-                              authenticationType: authenticationType))
+        callback?(.didLogin(session: session,
+                            authenticationFlow: authenticationViewController.authType.flow,
+                            authenticationType: authenticationType))
     }
 }
 

@@ -76,6 +76,8 @@
 	<string>The contact book is used to send room invitation to your contacts with their emails.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Face ID is used to access your app.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>When you share your location to people, Element needs access to show them a map.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>When you share your location to people, Element needs access to show them a map.</string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -87,6 +89,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
+		<string>location</string>
 		<string>remote-notification</string>
 		<string>voip</string>
 	</array>

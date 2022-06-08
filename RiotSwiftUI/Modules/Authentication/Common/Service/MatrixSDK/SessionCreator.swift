@@ -16,13 +16,27 @@
 
 import Foundation
 
-/// A WIP class that has common functionality to create a new session.
-class SessionCreator {
+protocol SessionCreatorProtocol {
     /// Creates an `MXSession` using the supplied credentials and REST client.
-    func createSession(credentials: MXCredentials, client: MXRestClient) -> MXSession {
+    /// - Parameters:
+    ///   - credentials: The `MXCredentials` for the account.
+    ///   - client: The client that completed the authentication.
+    /// - Returns: A new `MXSession` for the account.
+    func createSession(credentials: MXCredentials, client: AuthenticationRestClient) -> MXSession
+}
+
+/// A struct that provides common functionality to create a new session.
+struct SessionCreator: SessionCreatorProtocol {
+
+    private let accountManager: MXKAccountManager
+
+    init(withAccountManager accountManager: MXKAccountManager = .shared()) {
+        self.accountManager = accountManager
+    }
+
+    func createSession(credentials: MXCredentials, client: AuthenticationRestClient) -> MXSession {
         // Report the new account in account manager
         if credentials.identityServer == nil {
-            #warning("Check that the client is actually updated with this info?")
             credentials.identityServer = client.identityServer
         }
         
@@ -32,7 +46,7 @@ class SessionCreator {
             account.identityServerURL = identityServer
         }
         
-        MXKAccountManager.shared().addAccount(account, andOpenSession: true)
+        accountManager.addAccount(account, andOpenSession: true)
         return account.mxSession
     }
 }

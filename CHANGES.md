@@ -1,3 +1,50 @@
+## Changes in 1.8.18 (2022-06-03)
+
+🙌 Improvements
+
+- Upgrade MatrixSDK version ([v0.23.8](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.23.8)).
+- Show user indicators when paginating a room ([#5746](https://github.com/vector-im/element-ios/issues/5746))
+- Authentication: Display fallback screens on registration & login according to the HS needs. ([#6176](https://github.com/vector-im/element-ios/issues/6176))
+- WellKnown: support outbound keys presharing strategy ([#6214](https://github.com/vector-im/element-ios/issues/6214))
+
+🐛 Bugfixes
+
+- Location sharing: Improve automatic detection of pin drop state ([#6202](https://github.com/vector-im/element-ios/issues/6202))
+
+🧱 Build
+
+- Ensure that warnings from CocoaPods dependencies do not show up in Xcode ([#6196](https://github.com/vector-im/element-ios/pull/6196))
+- CI: Use macOS 12 and Xcode 13.4 ([#6204](https://github.com/vector-im/element-ios/pull/6204))
+
+🚧 In development 🚧
+
+- Authentication: Add the login screen to the new flow and support SSO on both login and registration flows. ([#5654](https://github.com/vector-im/element-ios/issues/5654))
+
+
+## Changes in 1.8.17 (2022-05-31)
+
+🙌 Improvements
+
+- Upgrade MatrixSDK version ([v0.23.7](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.23.7)).
+- Location sharing: Add a spinner view for starting state in timeline cell ([#6101](https://github.com/vector-im/element-ios/issues/6101))
+- Location sharing: Add labs flag for live location sharing ([#6195](https://github.com/vector-im/element-ios/issues/6195))
+
+🐛 Bugfixes
+
+- Added attempt at fixing random crashes while calculating timeline cell heights. ([#6188](https://github.com/vector-im/element-ios/pull/6188))
+- Fix ITMS Warning on CFBundleDocumentTypes ([#6159](https://github.com/vector-im/element-ios/issues/6159))
+- RoomViewController: Fix confirmation for RTL overridden links. ([#6208](https://github.com/vector-im/element-ios/issues/6208))
+- Fix issue with mention pill avatar consuming tap gestures ([#6212](https://github.com/vector-im/element-ios/issues/6212))
+
+🚧 In development 🚧
+
+- Authentication: Add Email/Terms/ReCaptcha screens into the flow. ([#5151](https://github.com/vector-im/element-ios/issues/5151))
+- Authentication: Implement msisdn verification screen. ([#6182](https://github.com/vector-im/element-ios/issues/6182))
+- Location sharing: Support sending live device location. ([#5722](https://github.com/vector-im/element-ios/issues/5722))
+- Authentication: Implement the LoginWizard to match Element Android. ([#5896](https://github.com/vector-im/element-ios/issues/5896))
+- Location sharing: Support restarting location sending after app kill. ([#6199](https://github.com/vector-im/element-ios/issues/6199))
+
+
 ## Changes in 1.8.16 (2022-05-19)
 
 🙌 Improvements
