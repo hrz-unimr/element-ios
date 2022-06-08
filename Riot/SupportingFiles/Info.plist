@@ -2,12 +2,25 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>de_DE</string>
 	<key>CFBundleDisplayName</key>
 	<string>$(BUNDLE_DISPLAY_NAME)</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Mention Pills</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>im.vector.app.pills</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -39,12 +52,16 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.education</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>http</string>
 		<string>https</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
@@ -59,14 +76,14 @@
 	<string>The contact book is used to send room invitation to your contacts with their emails.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Face ID is used to access your app.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>When you share your location to people, Element needs access to show them a map.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>The microphone is used to take videos, make calls.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>The photo library is used to send photos and videos.</string>
 	<key>NSSiriUsageDescription</key>
 	<string>Siri is used to perform calls even from the lock screen.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>When you share your location to people, Element needs access to show them a map.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
@@ -96,6 +113,7 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -106,29 +124,6 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>UserDefaults</key>
-	<string>${PRODUCT_NAME}-Defaults</string>
-	<key>applicationGroupIdentifier</key>
-	<string>$(APPLICATION_GROUP_IDENTIFIER)</string>
-	<key>baseBundleIdentifier</key>
-	<string>$(BASE_BUNDLE_IDENTIFIER)</string>
-	<key>keychainAccessGroup</key>
-	<string>$(KEYCHAIN_ACCESS_GROUP)</string>
-	<key>CFBundleDocumentTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Mention Pills</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>im.vector.app.pills</string>
-			</array>
-		</dict>
-	</array>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -142,5 +137,13 @@
 			<string>im.vector.app.pills</string>
 		</dict>
 	</array>
+	<key>UserDefaults</key>
+	<string>${PRODUCT_NAME}-Defaults</string>
+	<key>applicationGroupIdentifier</key>
+	<string>$(APPLICATION_GROUP_IDENTIFIER)</string>
+	<key>baseBundleIdentifier</key>
+	<string>$(BASE_BUNDLE_IDENTIFIER)</string>
+	<key>keychainAccessGroup</key>
+	<string>$(KEYCHAIN_ACCESS_GROUP)</string>
 </dict>
 </plist>
