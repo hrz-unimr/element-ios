@@ -39,7 +39,7 @@ final class OnboardingSplashScreenCoordinator: OnboardingSplashScreenCoordinator
     
     init() {
         let viewModel = OnboardingSplashScreenViewModel()
-        let view = OnboardingSplashScreen(viewModel: viewModel.context)
+        let view = OnboardingSplashScreenUMR(viewModel: viewModel.context)
         onboardingSplashScreenViewModel = viewModel
         onboardingSplashScreenHostingController = VectorHostingController(rootView: view)
         onboardingSplashScreenHostingController.vc_removeBackTitle()

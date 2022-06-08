@@ -87,7 +87,7 @@ final class BuildSettings: NSObject {
     }
     
     // Element-Web instance for the app
-    static let applicationWebAppUrlString = "https://app.element.io"
+    static let applicationWebAppUrlString = "https://matrix.uni-marburg.de"
     
     
     // MARK: - Localization
@@ -99,8 +99,8 @@ final class BuildSettings: NSObject {
     // MARK: - Server configuration
     
     // Default servers proposed on the authentication screen
-    static let serverConfigDefaultHomeserverUrlString = "https://matrix.org"
-    static let serverConfigDefaultIdentityServerUrlString = "https://vector.im"
+    static let serverConfigDefaultHomeserverUrlString = "https://matrix-homeserver.uni-marburg.de"
+    static let serverConfigDefaultIdentityServerUrlString = "https://matrix-homeserver.uni-marburg.de"
     
     static let serverConfigSygnalAPIUrlString = "https://matrix.org/_matrix/push/v1/notify"
     
@@ -131,8 +131,8 @@ final class BuildSettings: NSObject {
         "matrix.to": ["/"],
         "www.matrix.to": ["/"],
         // Client Permalinks (for use with `BuildSettings.clientPermalinkBaseUrl`)
-//        "example.com": ["/"],
-//        "www.example.com": ["/"],
+        "uni-marburg.de": [],
+        "matrix.uni-marburg.de": [],
     ]
     
     // For use in clients that use a custom base url for permalinks rather than matrix.to.
@@ -374,11 +374,11 @@ final class BuildSettings: NSObject {
     
     
     // MARK: - Authentication Screen
-    static let authScreenShowRegister = true
-    static let authScreenShowPhoneNumber = true
-    static let authScreenShowForgotPassword = true
-    static let authScreenShowCustomServerOptions = true
-    static let authScreenShowSocialLoginSection = true
+    static let authScreenShowRegister = false
+    static let authScreenShowPhoneNumber = false
+    static let authScreenShowForgotPassword = false
+    static let authScreenShowCustomServerOptions = false
+    static let authScreenShowSocialLoginSection = false
     
     // MARK: - Authentication Options
     static let authEnableRefreshTokens = false
