@@ -17,7 +17,6 @@
 import SceneKit
 import SwiftUI
 
-@available(iOS 14.0, *)
 class EffectsScene: SCNScene {
     
     // MARK: - Constants
@@ -32,7 +31,7 @@ class EffectsScene: SCNScene {
     static func confetti(with theme: ThemeSwiftUI) -> EffectsScene? {
         guard let scene = EffectsScene(named: Constants.confettiSceneName) else { return nil }
         
-        let colors: [[Float]] = theme.colors.namesAndAvatars.compactMap { $0.floatComponents }
+        let colors: [[Float]] = theme.colors.contentAndAvatars.compactMap { $0.floatComponents }
         
         if let particles = scene.rootNode.childNode(withName: Constants.particlesNodeName, recursively: false)?.particleSystems?.first {
             // The particles need a non-zero color variation for the handler to affect the color
@@ -61,15 +60,17 @@ class EffectsScene: SCNScene {
     }
 }
 
-@available(iOS 14.0, *)
 fileprivate extension Color {
     /// The color's components as an array of floats in the extended linear sRGB colorspace.
     ///
     /// SceneKit works in a colorspace with a linear gamma, which is why this conversion is necessary.
     var floatComponents: [Float]? {
+        // Get the CGColor from a UIColor as it is nil on Color when loaded from an asset catalog.
+        let cgColor = UIColor(self).cgColor
+        
         guard
             let colorSpace = CGColorSpace(name: CGColorSpace.extendedLinearSRGB),
-            let linearColor = cgColor?.converted(to: colorSpace, intent: .defaultIntent, options: nil),
+            let linearColor = cgColor.converted(to: colorSpace, intent: .defaultIntent, options: nil),
             let components = linearColor.components
         else { return nil }
         

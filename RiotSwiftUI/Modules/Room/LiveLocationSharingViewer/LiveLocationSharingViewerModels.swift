@@ -29,7 +29,6 @@ enum LiveLocationSharingViewerViewModelResult {
 
 // MARK: View
 
-@available(iOS 14, *)
 struct LiveLocationSharingViewerViewState: BindableState {
     
     /// Map style URL
@@ -57,6 +56,7 @@ struct LiveLocationSharingViewerViewState: BindableState {
 
 struct LiveLocationSharingViewerViewStateBindings {
     var alertInfo: AlertInfo<LocationSharingAlertType>?
+    var showMapCreditsSheet = false
 }
 
 enum LiveLocationSharingViewerViewAction {
@@ -64,4 +64,5 @@ enum LiveLocationSharingViewerViewAction {
     case stopSharing
     case tapListItem(_ userId: String)
     case share(_ annotation: UserLocationAnnotation)
+    case mapCreditsDidTap
 }

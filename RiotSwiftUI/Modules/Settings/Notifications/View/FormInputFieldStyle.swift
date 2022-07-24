@@ -18,7 +18,6 @@ import Foundation
 import SwiftUI
 
 /// An input field style for forms.
-@available(iOS 14.0, *)
 struct FormInputFieldStyle: TextFieldStyle {
     
     @Environment(\.theme) var theme: ThemeSwiftUI
@@ -26,7 +25,7 @@ struct FormInputFieldStyle: TextFieldStyle {
     
     private var textColor: Color {
         if !isEnabled {
-            return theme.colors.quarterlyContent
+            return theme.colors.quaternaryContent
         }
         return theme.colors.primaryContent
     }
@@ -49,7 +48,6 @@ struct FormInputFieldStyle: TextFieldStyle {
 }
 
 
-@available(iOS 14.0, *)
 struct FormInputFieldStyle_Previews: PreviewProvider {
     static var previews: some View {
         Group {

@@ -18,11 +18,21 @@ import SwiftUI
 
 // MARK: View model
 
-enum AuthenticationChoosePasswordViewModelResult {
+enum AuthenticationChoosePasswordViewModelResult: CustomStringConvertible {
     /// Submit with password and sign out of all devices option
     case submit(String, Bool)
     /// Cancel the flow.
     case cancel
+    
+    /// A string representation of the result, ignoring any associated values that could leak PII.
+    var description: String {
+        switch self {
+        case .submit:
+            return "submit"
+        case .cancel:
+            return "cancel"
+        }
+    }
 }
 
 // MARK: View
@@ -58,6 +68,8 @@ enum AuthenticationChoosePasswordViewAction {
 enum AuthenticationChoosePasswordErrorType: Hashable {
     /// An error response from the homeserver.
     case mxError(String)
+    /// The user hasn't tapped the link in the verification email.
+    case emailNotVerified
     /// An unknown error occurred.
     case unknown
 }

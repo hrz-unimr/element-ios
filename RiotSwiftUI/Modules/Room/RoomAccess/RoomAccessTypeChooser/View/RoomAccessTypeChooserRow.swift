@@ -16,7 +16,6 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct RoomAccessTypeChooserRow: View {
 
     // MARK: - Properties
@@ -46,7 +45,7 @@ struct RoomAccessTypeChooserRow: View {
                 Spacer()
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                     .renderingMode(.template)
-                    .foregroundColor(isSelected ? theme.colors.accent : theme.colors.quarterlyContent)
+                    .foregroundColor(isSelected ? theme.colors.accent : theme.colors.quaternaryContent)
             }
             if let badgeText = badgeText {
                 Text(badgeText)
@@ -70,7 +69,6 @@ struct RoomAccessTypeChooserRow: View {
 
 // MARK: - Previews
 
-@available(iOS 14.0, *)
 struct RoomAccessTypeChooserRow_Previews: PreviewProvider {
     static var previews: some View {
         VStack {

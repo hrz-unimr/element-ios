@@ -14,13 +14,12 @@
 // limitations under the License.
 //
 
-import Foundation
+import SwiftUI
 import DesignKit
 
-@available(iOS 14.0, *)
 struct DarkThemeSwiftUI: ThemeSwiftUI {
     var identifier: ThemeIdentifier = .dark
     let isDark: Bool = true
-    var colors: ColorSwiftUI = DarkColors.swiftUI
-    var fonts: FontSwiftUI = FontSwiftUI(values: ElementFonts())
+    var colors = Color.element
+    var fonts = Font.element
 }

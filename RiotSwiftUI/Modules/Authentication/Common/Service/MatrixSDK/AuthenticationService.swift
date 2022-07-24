@@ -17,6 +17,13 @@
 import Foundation
 
 protocol AuthenticationServiceDelegate: AnyObject {
+    /// The authentication service encountered an unrecognized certificate and needs to
+    /// prompt the user to find out whether or not it should be trusted.
+    /// - Parameters:
+    ///   - service: The authentication service.
+    ///   - unrecognizedCertificate: The certificate data to be trusted.
+    ///   - completion: A completion handler called one the user accepts/rejects the certificate.
+    func authenticationService(_ service: AuthenticationService, needsPromptFor unrecognizedCertificate: Data?, completion: @escaping (Bool) -> Void)
     /// The authentication service received an SSO login token via a deep link.
     /// This only occurs when SSOAuthenticationPresenter uses an SFSafariViewController.
     /// - Parameters:
@@ -118,16 +125,7 @@ class AuthenticationService: NSObject {
     }
     
     /// Credentials to be used when authenticating after soft logout, otherwise `nil`.
-    var softLogoutCredentials: MXCredentials? {
-        guard MXKAccountManager.shared().activeAccounts.isEmpty else { return nil }
-        for account in MXKAccountManager.shared().accounts {
-            if account.isSoftLogout {
-                return account.mxCredentials
-            }
-        }
-        
-        return nil
-    }
+    var softLogoutCredentials: MXCredentials?
     
     /// Get the last authenticated [Session], if there is an active session.
     /// - Returns: The last active session if any, or `nil`
@@ -176,12 +174,14 @@ class AuthenticationService: NSObject {
     }
     
     /// Reset the service to a fresh state.
-    func reset() {
+    /// - Parameter useDefaultServer: Pass `true` to revert back to the one in `BuildSettings`, otherwise the current homeserver will be kept.
+    func reset(useDefaultServer: Bool = false) {
         loginWizard = nil
         registrationWizard = nil
+        softLogoutCredentials = nil
 
         // The previously used homeserver is re-used as `startFlow` will be called again a replace it anyway.
-        let address = state.homeserver.addressFromUser ?? state.homeserver.address
+        let address = useDefaultServer ? BuildSettings.serverConfigDefaultHomeserverUrlString : state.homeserver.addressFromUser ?? state.homeserver.address
         let identityServer = state.identityServer
         self.state = AuthenticationState(flow: .login,
                                          homeserverAddress: address,
@@ -196,27 +196,6 @@ class AuthenticationService: NSObject {
     func continueSSOLogin(with token: String, and transactionID: String) -> Bool {
         delegate?.authenticationService(self, didReceive: token, with: transactionID) ?? false
     }
-    
-//    /// Perform a well-known request, using the domain from the matrixId
-//    func getWellKnownData(matrixId: String,
-//                          homeServerConnectionConfig: HomeServerConnectionConfig?) async -> WellknownResult {
-//
-//    }
-//
-//    /// Authenticate with a matrixId and a password
-//    /// Usually call this after a successful call to getWellKnownData()
-//    /// - Parameter homeServerConnectionConfig the information about the homeserver and other configuration
-//    /// - Parameter matrixId the matrixId of the user
-//    /// - Parameter password the password of the account
-//    /// - Parameter initialDeviceName the initial device name
-//    /// - Parameter deviceId the device id, optional. If not provided or null, the server will generate one.
-//    func directAuthentication(homeServerConnectionConfig: HomeServerConnectionConfig,
-//                              matrixId: String,
-//                              password: String,
-//                              initialDeviceName: String,
-//                              deviceId: String? = nil) async -> MXSession {
-//        
-//    }
     
     // MARK: - Private
     
@@ -244,8 +223,21 @@ class AuthenticationService: NSObject {
             }
         }
         
-        #warning("Add an unrecognized certificate handler.")
-        let client = clientType.init(homeServer: homeserverURL, unrecognizedCertificateHandler: nil)
+        let client = clientType.init(homeServer: homeserverURL, unrecognizedCertificateHandler: { [weak self] certificate in
+            guard let self = self else { return false }
+            
+            var isTrusted = false
+            let semaphore = DispatchSemaphore(value: 0)
+            
+            self.delegate?.authenticationService(self, needsPromptFor: certificate) { didTrust in
+                isTrusted = didTrust
+                semaphore.signal()
+            }
+            
+            semaphore.wait()
+            return isTrusted
+        })
+        
         if let identityServerURL = identityServerURL {
             client.identityServer = identityServerURL.absoluteString
         }

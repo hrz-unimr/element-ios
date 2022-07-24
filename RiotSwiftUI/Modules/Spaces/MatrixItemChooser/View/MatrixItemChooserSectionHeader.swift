@@ -16,7 +16,6 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct MatrixItemChooserSectionHeader: View {
 
     // MARK: - Properties
@@ -53,7 +52,7 @@ struct MatrixItemChooserSectionHeader: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.vertical, 8)
                 .padding(.horizontal)
-                .background(theme.colors.navigation)
+                .background(theme.colors.system)
                 .cornerRadius(8)
             }
         }
@@ -63,7 +62,6 @@ struct MatrixItemChooserSectionHeader: View {
 
 // MARK: - Previews
 
-@available(iOS 14.0, *)
 struct MatrixItemChooserSectionHeader_Previews: PreviewProvider {
     static var previews: some View {
         Group {

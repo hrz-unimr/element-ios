@@ -26,6 +26,8 @@ enum AuthenticationCoordinatorResult {
     case didLogin(session: MXSession, authenticationFlow: AuthenticationFlow, authenticationType: AuthenticationType)
     /// All of the required authentication steps including key verification is complete.
     case didComplete
+    /// In case of soft logout, user has decided to clear all data
+    case clearAllData
     /// The user has cancelled the associated authentication flow.
     case cancel(AuthenticationFlow)
 }
@@ -34,14 +36,8 @@ enum AuthenticationCoordinatorResult {
 protocol AuthenticationCoordinatorProtocol: Coordinator, Presentable {
     var callback: ((AuthenticationCoordinatorResult) -> Void)? { get set }
     
-    /// Whether the custom homeserver checkbox is enabled for the user to enter a homeserver URL.
-    var customServerFieldsVisible: Bool { get set }
-    
     /// Update the screen to display registration or login.
     func update(authenticationFlow: AuthenticationFlow)
-
-    /// Update the screen to use any credentials to use after a soft logout has taken place.
-    func update(softLogoutCredentials: MXCredentials)
 
     /// Indicates to the coordinator to display any pending screens if it was created with
     /// the `canPresentAdditionalScreens` parameter set to `false`

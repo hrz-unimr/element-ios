@@ -985,7 +985,11 @@
     if (event)
     {
         MXKEventFormatterError error;
-        reason = [roomDataSource.eventFormatter stringFromEvent:event withRoomState:roomDataSource.roomState error:&error];
+        reason = [roomDataSource.eventFormatter
+                  stringFromEvent:event
+                  withRoomState:roomDataSource.roomState
+                  andLatestRoomState:nil
+                  error:&error];
         if (error != MXKEventFormatterErrorNone)
         {
             reason = nil;
@@ -1246,7 +1250,7 @@
     customEventDetailsViewClass = eventDetailsViewClass;
 }
 
-- (BOOL)isIRCStyleCommand:(NSString*)string
+- (BOOL)sendAsIRCStyleCommandIfPossible:(NSString*)string
 {
     // Check whether the provided text may be an IRC-style command
     if ([string hasPrefix:@"/"] == NO || [string hasPrefix:@"//"] == YES)
@@ -1903,10 +1907,7 @@
         return;
     }
     
-    __block UserIndicatorCancel cancelIndicator;
-    NSTimer *indicatorTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 repeats:NO block:^(NSTimer * _Nonnull timer) {
-        cancelIndicator = [self.userIndicatorStore presentLoadingWithLabel:[VectorL10n homeSyncing] isInteractionBlocking:NO];
-    }];
+    UserIndicatorCancel cancelIndicator = [self.userIndicatorStore presentLoadingWithLabel:[VectorL10n loading] isInteractionBlocking:NO];
     
     // Store the current height of the first bubble (if any)
     backPaginationSavedFirstBubbleHeight = 0;
@@ -1993,8 +1994,6 @@
             [self updateCurrentEventIdAtTableBottom:NO];
         }
         
-        [indicatorTimer invalidate];
-        
         if (cancelIndicator) {
             cancelIndicator();
         }
@@ -2012,9 +2011,7 @@
         [self reloadBubblesTable:NO];
         
         self.bubbleTableViewDisplayInTransition = NO;
-        
-        [indicatorTimer invalidate];
-        
+
         if (cancelIndicator) {
             cancelIndicator();
         }
@@ -3378,7 +3375,7 @@
 - (void)roomInputToolbarView:(MXKRoomInputToolbarView*)toolbarView sendTextMessage:(NSString*)textMessage
 {
     // Handle potential IRC commands in typed string
-    if ([self isIRCStyleCommand:textMessage] == NO)
+    if ([self sendAsIRCStyleCommandIfPossible:textMessage] == NO)
     {
         // Send text message in the current room
         [self sendTextMessage:textMessage];

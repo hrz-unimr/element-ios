@@ -531,6 +531,202 @@ public class VectorL10n: NSObject {
   public static var authenticatedSessionFlowNotSupported: String { 
     return VectorL10n.tr("Vector", "authenticated_session_flow_not_supported") 
   }
+  /// Your account is not created yet. Stop the registration process?
+  public static var authenticationCancelFlowConfirmationMessage: String { 
+    return VectorL10n.tr("Vector", "authentication_cancel_flow_confirmation_message") 
+  }
+  /// Make sure it’s 8 characters or more
+  public static var authenticationChoosePasswordInputMessage: String { 
+    return VectorL10n.tr("Vector", "authentication_choose_password_input_message") 
+  }
+  /// Choose a new password
+  public static var authenticationChoosePasswordInputTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_choose_password_input_title") 
+  }
+  /// Check your inbox
+  public static var authenticationChoosePasswordNotVerifiedMessage: String { 
+    return VectorL10n.tr("Vector", "authentication_choose_password_not_verified_message") 
+  }
+  /// Email not verified
+  public static var authenticationChoosePasswordNotVerifiedTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_choose_password_not_verified_title") 
+  }
+  /// Sign out of all devices
+  public static var authenticationChoosePasswordSignoutAllDevices: String { 
+    return VectorL10n.tr("Vector", "authentication_choose_password_signout_all_devices") 
+  }
+  /// Reset Password
+  public static var authenticationChoosePasswordSubmitButton: String { 
+    return VectorL10n.tr("Vector", "authentication_choose_password_submit_button") 
+  }
+  /// New Password
+  public static var authenticationChoosePasswordTextFieldPlaceholder: String { 
+    return VectorL10n.tr("Vector", "authentication_choose_password_text_field_placeholder") 
+  }
+  /// %@ will send you a verification link
+  public static func authenticationForgotPasswordInputMessage(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "authentication_forgot_password_input_message", p1)
+  }
+  /// Enter your email
+  public static var authenticationForgotPasswordInputTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_forgot_password_input_title") 
+  }
+  /// Email
+  public static var authenticationForgotPasswordTextFieldPlaceholder: String { 
+    return VectorL10n.tr("Vector", "authentication_forgot_password_text_field_placeholder") 
+  }
+  /// Resend email
+  public static var authenticationForgotPasswordWaitingButton: String { 
+    return VectorL10n.tr("Vector", "authentication_forgot_password_waiting_button") 
+  }
+  /// Follow the instructions sent to %@
+  public static func authenticationForgotPasswordWaitingMessage(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "authentication_forgot_password_waiting_message", p1)
+  }
+  /// Check your email.
+  public static var authenticationForgotPasswordWaitingTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_forgot_password_waiting_title") 
+  }
+  /// Forgot password
+  public static var authenticationLoginForgotPassword: String { 
+    return VectorL10n.tr("Vector", "authentication_login_forgot_password") 
+  }
+  /// Welcome back!
+  public static var authenticationLoginTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_login_title") 
+  }
+  /// Username / Email / Phone
+  public static var authenticationLoginUsername: String { 
+    return VectorL10n.tr("Vector", "authentication_login_username") 
+  }
+  /// Are you a human?
+  public static var authenticationRecaptchaTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_recaptcha_title") 
+  }
+  /// Must be 8 characters or more
+  public static var authenticationRegistrationPasswordFooter: String { 
+    return VectorL10n.tr("Vector", "authentication_registration_password_footer") 
+  }
+  /// Create your account
+  public static var authenticationRegistrationTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_registration_title") 
+  }
+  /// Username
+  public static var authenticationRegistrationUsername: String { 
+    return VectorL10n.tr("Vector", "authentication_registration_username") 
+  }
+  /// You can’t change this later
+  public static var authenticationRegistrationUsernameFooter: String { 
+    return VectorL10n.tr("Vector", "authentication_registration_username_footer") 
+  }
+  /// Others can discover you %@
+  public static func authenticationRegistrationUsernameFooterAvailable(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "authentication_registration_username_footer_available", p1)
+  }
+  /// Where your conversations will live
+  public static var authenticationServerInfoTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_server_info_title") 
+  }
+  /// Where your conversations live
+  public static var authenticationServerInfoTitleLogin: String { 
+    return VectorL10n.tr("Vector", "authentication_server_info_title_login") 
+  }
+  /// Cannot find a server at this URL, please check it is correct.
+  public static var authenticationServerSelectionGenericError: String { 
+    return VectorL10n.tr("Vector", "authentication_server_selection_generic_error") 
+  }
+  /// What is the address of your server?
+  public static var authenticationServerSelectionLoginMessage: String { 
+    return VectorL10n.tr("Vector", "authentication_server_selection_login_message") 
+  }
+  /// Connect to homeserver
+  public static var authenticationServerSelectionLoginTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_server_selection_login_title") 
+  }
+  /// What is the address of your server? This is like a home for all your data
+  public static var authenticationServerSelectionRegisterMessage: String { 
+    return VectorL10n.tr("Vector", "authentication_server_selection_register_message") 
+  }
+  /// Select your homeserver
+  public static var authenticationServerSelectionRegisterTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_server_selection_register_title") 
+  }
+  /// Homeserver URL
+  public static var authenticationServerSelectionServerUrl: String { 
+    return VectorL10n.tr("Vector", "authentication_server_selection_server_url") 
+  }
+  /// Please read %@’s terms and policies
+  public static func authenticationTermsMessage(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "authentication_terms_message", p1)
+  }
+  /// Unable to find the selected policy. Please try again later.
+  public static var authenticationTermsPolicyUrlError: String { 
+    return VectorL10n.tr("Vector", "authentication_terms_policy_url_error") 
+  }
+  /// Server policies
+  public static var authenticationTermsTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_terms_title") 
+  }
+  /// %@ needs to verify your account
+  public static func authenticationVerifyEmailInputMessage(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "authentication_verify_email_input_message", p1)
+  }
+  /// Enter your email
+  public static var authenticationVerifyEmailInputTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_verify_email_input_title") 
+  }
+  /// Email
+  public static var authenticationVerifyEmailTextFieldPlaceholder: String { 
+    return VectorL10n.tr("Vector", "authentication_verify_email_text_field_placeholder") 
+  }
+  /// Resend email
+  public static var authenticationVerifyEmailWaitingButton: String { 
+    return VectorL10n.tr("Vector", "authentication_verify_email_waiting_button") 
+  }
+  /// Did not receive an email?
+  public static var authenticationVerifyEmailWaitingHint: String { 
+    return VectorL10n.tr("Vector", "authentication_verify_email_waiting_hint") 
+  }
+  /// Follow the instructions sent to %@
+  public static func authenticationVerifyEmailWaitingMessage(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "authentication_verify_email_waiting_message", p1)
+  }
+  /// Verify your email.
+  public static var authenticationVerifyEmailWaitingTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_verify_email_waiting_title") 
+  }
+  /// %@ needs to verify your account
+  public static func authenticationVerifyMsisdnInputMessage(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "authentication_verify_msisdn_input_message", p1)
+  }
+  /// Enter your phone number
+  public static var authenticationVerifyMsisdnInputTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_verify_msisdn_input_title") 
+  }
+  /// Invalid phone number
+  public static var authenticationVerifyMsisdnInvalidPhoneNumber: String { 
+    return VectorL10n.tr("Vector", "authentication_verify_msisdn_invalid_phone_number") 
+  }
+  /// Confirmation Code
+  public static var authenticationVerifyMsisdnOtpTextFieldPlaceholder: String { 
+    return VectorL10n.tr("Vector", "authentication_verify_msisdn_otp_text_field_placeholder") 
+  }
+  /// Phone Number
+  public static var authenticationVerifyMsisdnTextFieldPlaceholder: String { 
+    return VectorL10n.tr("Vector", "authentication_verify_msisdn_text_field_placeholder") 
+  }
+  /// Resend code
+  public static var authenticationVerifyMsisdnWaitingButton: String { 
+    return VectorL10n.tr("Vector", "authentication_verify_msisdn_waiting_button") 
+  }
+  /// A code was sent to %@
+  public static func authenticationVerifyMsisdnWaitingMessage(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "authentication_verify_msisdn_waiting_message", p1)
+  }
+  /// Verify your phone number
+  public static var authenticationVerifyMsisdnWaitingTitle: String { 
+    return VectorL10n.tr("Vector", "authentication_verify_msisdn_waiting_title") 
+  }
   /// Back
   public static var back: String { 
     return VectorL10n.tr("Vector", "back") 
@@ -2063,6 +2259,10 @@ public class VectorL10n: NSObject {
   public static var homeContextMenuMakeRoom: String { 
     return VectorL10n.tr("Vector", "home_context_menu_make_room") 
   }
+  /// Mark as read
+  public static var homeContextMenuMarkAsRead: String { 
+    return VectorL10n.tr("Vector", "home_context_menu_mark_as_read") 
+  }
   /// Mute
   public static var homeContextMenuMute: String { 
     return VectorL10n.tr("Vector", "home_context_menu_mute") 
@@ -2699,9 +2899,21 @@ public class VectorL10n: NSObject {
   public static var leave: String { 
     return VectorL10n.tr("Vector", "leave") 
   }
+  /// Leave space
+  public static var leaveSpaceAction: String { 
+    return VectorL10n.tr("Vector", "leave_space_action") 
+  }
   /// Leave all rooms and spaces
   public static var leaveSpaceAndAllRoomsAction: String { 
     return VectorL10n.tr("Vector", "leave_space_and_all_rooms_action") 
+  }
+  /// Leave space and %@ rooms
+  public static func leaveSpaceAndMoreRooms(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "leave_space_and_more_rooms", p1)
+  }
+  /// Leave space and 1 room
+  public static var leaveSpaceAndOneRoom: String { 
+    return VectorL10n.tr("Vector", "leave_space_and_one_room") 
   }
   /// Are you sure you want to leave %@? Do you also want to leave all rooms and spaces of this space?
   public static func leaveSpaceMessage(_ p1: String) -> String {
@@ -2714,6 +2926,18 @@ public class VectorL10n: NSObject {
   /// Don't leave any rooms
   public static var leaveSpaceOnlyAction: String { 
     return VectorL10n.tr("Vector", "leave_space_only_action") 
+  }
+  /// Select all rooms
+  public static var leaveSpaceSelectionAllRooms: String { 
+    return VectorL10n.tr("Vector", "leave_space_selection_all_rooms") 
+  }
+  /// Select no rooms
+  public static var leaveSpaceSelectionNoRooms: String { 
+    return VectorL10n.tr("Vector", "leave_space_selection_no_rooms") 
+  }
+  /// SELECT ROOMS
+  public static var leaveSpaceSelectionTitle: String { 
+    return VectorL10n.tr("Vector", "leave_space_selection_title") 
   }
   /// Leave %@
   public static func leaveSpaceTitle(_ p1: String) -> String {
@@ -2787,6 +3011,18 @@ public class VectorL10n: NSObject {
   public static var locationSharingLiveError: String { 
     return VectorL10n.tr("Vector", "location_sharing_live_error") 
   }
+  /// Enable live location sharing
+  public static var locationSharingLiveLabPromotionActivation: String { 
+    return VectorL10n.tr("Vector", "location_sharing_live_lab_promotion_activation") 
+  }
+  /// Please note: this is a labs feature using a temporary implementation that allows the history of your shared location to be permanently visible to other people in the room.
+  public static var locationSharingLiveLabPromotionText: String { 
+    return VectorL10n.tr("Vector", "location_sharing_live_lab_promotion_text") 
+  }
+  /// Live location sharing
+  public static var locationSharingLiveLabPromotionTitle: String { 
+    return VectorL10n.tr("Vector", "location_sharing_live_lab_promotion_title") 
+  }
   /// You
   public static var locationSharingLiveListItemCurrentUserDisplayName: String { 
     return VectorL10n.tr("Vector", "location_sharing_live_list_item_current_user_display_name") 
@@ -2803,7 +3039,7 @@ public class VectorL10n: NSObject {
   public static var locationSharingLiveListItemSharingExpired: String { 
     return VectorL10n.tr("Vector", "location_sharing_live_list_item_sharing_expired") 
   }
-  /// Stop sharing
+  /// Stop
   public static var locationSharingLiveListItemStopSharingAction: String { 
     return VectorL10n.tr("Vector", "location_sharing_live_list_item_stop_sharing_action") 
   }
@@ -2866,6 +3102,10 @@ public class VectorL10n: NSObject {
   /// %@ could not access your location. Please try again later.
   public static func locationSharingLocatingUserErrorTitle(_ p1: String) -> String {
     return VectorL10n.tr("Vector", "location_sharing_locating_user_error_title", p1)
+  }
+  /// © Copyright
+  public static var locationSharingMapCreditsTitle: String { 
+    return VectorL10n.tr("Vector", "location_sharing_map_credits_title") 
   }
   /// Open in Apple Maps
   public static var locationSharingOpenAppleMaps: String { 
@@ -3187,6 +3427,10 @@ public class VectorL10n: NSObject {
   public static var messageReplyToSenderSentAnImage: String { 
     return VectorL10n.tr("Vector", "message_reply_to_sender_sent_an_image") 
   }
+  /// Live location.
+  public static var messageReplyToSenderSentTheirLiveLocation: String { 
+    return VectorL10n.tr("Vector", "message_reply_to_sender_sent_their_live_location") 
+  }
   /// has shared their location.
   public static var messageReplyToSenderSentTheirLocation: String { 
     return VectorL10n.tr("Vector", "message_reply_to_sender_sent_their_location") 
@@ -3211,9 +3455,17 @@ public class VectorL10n: NSObject {
   public static var networkErrorNotReachable: String { 
     return VectorL10n.tr("Vector", "network_error_not_reachable") 
   }
+  /// You're offline, check your connection.
+  public static var networkOfflineMessage: String { 
+    return VectorL10n.tr("Vector", "network_offline_message") 
+  }
   /// The Internet connection appears to be offline.
   public static var networkOfflinePrompt: String { 
     return VectorL10n.tr("Vector", "network_offline_prompt") 
+  }
+  /// You're offline
+  public static var networkOfflineTitle: String { 
+    return VectorL10n.tr("Vector", "network_offline_title") 
   }
   /// New
   public static var newWord: String { 
@@ -3875,7 +4127,7 @@ public class VectorL10n: NSObject {
   public static var onboardingAvatarAccessibilityLabel: String { 
     return VectorL10n.tr("Vector", "onboarding_avatar_accessibility_label") 
   }
-  /// You can change this anytime.
+  /// Time to put a face to the name
   public static var onboardingAvatarMessage: String { 
     return VectorL10n.tr("Vector", "onboarding_avatar_message") 
   }
@@ -3887,11 +4139,11 @@ public class VectorL10n: NSObject {
   public static var onboardingCelebrationButton: String { 
     return VectorL10n.tr("Vector", "onboarding_celebration_button") 
   }
-  /// Your preferences have been saved.
+  /// Head to settings anytime to update your profile
   public static var onboardingCelebrationMessage: String { 
     return VectorL10n.tr("Vector", "onboarding_celebration_message") 
   }
-  /// You’re all set!
+  /// Looking good!
   public static var onboardingCelebrationTitle: String { 
     return VectorL10n.tr("Vector", "onboarding_celebration_title") 
   }
@@ -3899,7 +4151,7 @@ public class VectorL10n: NSObject {
   public static var onboardingCongratulationsHomeButton: String { 
     return VectorL10n.tr("Vector", "onboarding_congratulations_home_button") 
   }
-  /// Your account %@ has been created.
+  /// Your account %@ has been created
   public static func onboardingCongratulationsMessage(_ p1: String) -> String {
     return VectorL10n.tr("Vector", "onboarding_congratulations_message", p1)
   }
@@ -3991,11 +4243,11 @@ public class VectorL10n: NSObject {
   public static var onboardingUseCaseExistingServerMessage: String { 
     return VectorL10n.tr("Vector", "onboarding_use_case_existing_server_message") 
   }
-  /// We’ll help you get connected.
+  /// We’ll help you get connected
   public static var onboardingUseCaseMessage: String { 
     return VectorL10n.tr("Vector", "onboarding_use_case_message") 
   }
-  /// Not sure yet? You can %@
+  /// Not sure yet? %@
   public static func onboardingUseCaseNotSureYet(_ p1: String) -> String {
     return VectorL10n.tr("Vector", "onboarding_use_case_not_sure_yet", p1)
   }
@@ -4003,7 +4255,7 @@ public class VectorL10n: NSObject {
   public static var onboardingUseCasePersonalMessaging: String { 
     return VectorL10n.tr("Vector", "onboarding_use_case_personal_messaging") 
   }
-  /// skip this question
+  /// Skip this question
   public static var onboardingUseCaseSkipButton: String { 
     return VectorL10n.tr("Vector", "onboarding_use_case_skip_button") 
   }
@@ -4022,6 +4274,38 @@ public class VectorL10n: NSObject {
   /// or
   public static var or: String { 
     return VectorL10n.tr("Vector", "or") 
+  }
+  /// Contain a lower-case letter.
+  public static var passwordValidationErrorContainLowercaseLetter: String { 
+    return VectorL10n.tr("Vector", "password_validation_error_contain_lowercase_letter") 
+  }
+  /// Contain a number.
+  public static var passwordValidationErrorContainNumber: String { 
+    return VectorL10n.tr("Vector", "password_validation_error_contain_number") 
+  }
+  /// Contain a symbol.
+  public static var passwordValidationErrorContainSymbol: String { 
+    return VectorL10n.tr("Vector", "password_validation_error_contain_symbol") 
+  }
+  /// Contain an upper-case letter.
+  public static var passwordValidationErrorContainUppercaseLetter: String { 
+    return VectorL10n.tr("Vector", "password_validation_error_contain_uppercase_letter") 
+  }
+  /// Given password does not meet the criteria below:
+  public static var passwordValidationErrorHeader: String { 
+    return VectorL10n.tr("Vector", "password_validation_error_header") 
+  }
+  /// Not exceed %d characters.
+  public static func passwordValidationErrorMaxLength(_ p1: Int) -> String {
+    return VectorL10n.tr("Vector", "password_validation_error_max_length", p1)
+  }
+  /// At least %d characters.
+  public static func passwordValidationErrorMinLength(_ p1: Int) -> String {
+    return VectorL10n.tr("Vector", "password_validation_error_min_length", p1)
+  }
+  /// Your password should meet the criteria below:
+  public static var passwordValidationInfoHeader: String { 
+    return VectorL10n.tr("Vector", "password_validation_info_header") 
   }
   /// CONVERSATIONS
   public static var peopleConversationSection: String { 
@@ -4426,6 +4710,14 @@ public class VectorL10n: NSObject {
   /// Integrations
   public static var roomAccessibilityIntegrations: String { 
     return VectorL10n.tr("Vector", "room_accessibility_integrations") 
+  }
+  /// Record Voice Message
+  public static var roomAccessibilityRecordVoiceMessage: String { 
+    return VectorL10n.tr("Vector", "room_accessibility_record_voice_message") 
+  }
+  /// Double-tap and hold to record.
+  public static var roomAccessibilityRecordVoiceMessageHint: String { 
+    return VectorL10n.tr("Vector", "room_accessibility_record_voice_message_hint") 
   }
   /// Search
   public static var roomAccessibilitySearch: String { 
@@ -5015,6 +5307,10 @@ public class VectorL10n: NSObject {
   public static var roomEventActionReactionHistory: String { 
     return VectorL10n.tr("Vector", "room_event_action_reaction_history") 
   }
+  /// %@ more
+  public static func roomEventActionReactionMore(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "room_event_action_reaction_more", p1)
+  }
   /// Show all
   public static var roomEventActionReactionShowAll: String { 
     return VectorL10n.tr("Vector", "room_event_action_reaction_show_all") 
@@ -5190,6 +5486,10 @@ public class VectorL10n: NSObject {
   /// Failed to send
   public static var roomEventFailedToSend: String { 
     return VectorL10n.tr("Vector", "room_event_failed_to_send") 
+  }
+  /// Room Info
+  public static var roomInfoBackButtonTitle: String { 
+    return VectorL10n.tr("Vector", "room_info_back_button_title") 
   }
   /// 1 member
   public static var roomInfoListOneMember: String { 
@@ -6495,7 +6795,7 @@ public class VectorL10n: NSObject {
   public static func settingsCallsStunServerFallbackDescription(_ p1: String) -> String {
     return VectorL10n.tr("Vector", "settings_calls_stun_server_fallback_description", p1)
   }
-  /// Change Matrix account password
+  /// Change password
   public static var settingsChangePassword: String { 
     return VectorL10n.tr("Vector", "settings_change_password") 
   }
@@ -6527,7 +6827,7 @@ public class VectorL10n: NSObject {
   public static var settingsConfirmMediaSizeDescription: String { 
     return VectorL10n.tr("Vector", "settings_confirm_media_size_description") 
   }
-  /// confirm password
+  /// Confirm password
   public static var settingsConfirmPassword: String { 
     return VectorL10n.tr("Vector", "settings_confirm_password") 
   }
@@ -6579,7 +6879,7 @@ public class VectorL10n: NSObject {
   public static var settingsDeactivateAccount: String { 
     return VectorL10n.tr("Vector", "settings_deactivate_account") 
   }
-  /// Deactivate my account
+  /// Deactivate account permanently
   public static var settingsDeactivateMyAccount: String { 
     return VectorL10n.tr("Vector", "settings_deactivate_my_account") 
   }
@@ -6683,7 +6983,7 @@ public class VectorL10n: NSObject {
   public static var settingsEnableCallkit: String { 
     return VectorL10n.tr("Vector", "settings_enable_callkit") 
   }
-  /// Enable In-App notifications
+  /// Enable in-app notifications
   public static var settingsEnableInappNotifications: String { 
     return VectorL10n.tr("Vector", "settings_enable_inapp_notifications") 
   }
@@ -6947,7 +7247,7 @@ public class VectorL10n: NSObject {
   public static var settingsNewKeyword: String { 
     return VectorL10n.tr("Vector", "settings_new_keyword") 
   }
-  /// new password
+  /// New password
   public static var settingsNewPassword: String { 
     return VectorL10n.tr("Vector", "settings_new_password") 
   }
@@ -6971,7 +7271,7 @@ public class VectorL10n: NSObject {
   public static var settingsNotifyMeFor: String { 
     return VectorL10n.tr("Vector", "settings_notify_me_for") 
   }
-  /// old password
+  /// Old password
   public static var settingsOldPassword: String { 
     return VectorL10n.tr("Vector", "settings_old_password") 
   }
@@ -7107,6 +7407,10 @@ public class VectorL10n: NSObject {
   public static var settingsThreePidsManagementInformationPart3: String { 
     return VectorL10n.tr("Vector", "settings_three_pids_management_information_part3") 
   }
+  /// TIMELINE
+  public static var settingsTimeline: String { 
+    return VectorL10n.tr("Vector", "settings_timeline") 
+  }
   /// Settings
   public static var settingsTitle: String { 
     return VectorL10n.tr("Vector", "settings_title") 
@@ -7122,6 +7426,10 @@ public class VectorL10n: NSObject {
   /// Language
   public static var settingsUiLanguage: String { 
     return VectorL10n.tr("Vector", "settings_ui_language") 
+  }
+  /// Show a placeholder for removed messages
+  public static var settingsUiShowRedactionsInRoomHistory: String { 
+    return VectorL10n.tr("Vector", "settings_ui_show_redactions_in_room_history") 
   }
   /// Theme
   public static var settingsUiTheme: String { 
@@ -7642,6 +7950,10 @@ public class VectorL10n: NSObject {
   /// %@ rooms
   public static func spacesExploreRoomsRoomNumber(_ p1: String) -> String {
     return VectorL10n.tr("Vector", "spaces_explore_rooms_room_number", p1)
+  }
+  /// This feature isn't available here. For now, you can do this with %@ on your computer.
+  public static func spacesFeatureNotAvailable(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "spaces_feature_not_available", p1)
   }
   /// Home
   public static var spacesHomeSpaceTitle: String { 

@@ -28,7 +28,6 @@ enum AuthenticationChoosePasswordCoordinatorResult {
     case cancel
 }
 
-@available(iOS 14.0, *)
 final class AuthenticationChoosePasswordCoordinator: Coordinator, Presentable {
     
     // MARK: - Properties
@@ -137,7 +136,12 @@ final class AuthenticationChoosePasswordCoordinator: Coordinator, Presentable {
     /// Processes an error to either update the flow or display it to the user.
     @MainActor private func handleError(_ error: Error) {
         if let mxError = MXError(nsError: error as NSError) {
-            authenticationChoosePasswordViewModel.displayError(.mxError(mxError.error))
+            if mxError.errcode == kMXErrCodeStringUnauthorized {
+                authenticationChoosePasswordViewModel.displayError(.emailNotVerified)
+            } else {
+                authenticationChoosePasswordViewModel.displayError(.mxError(mxError.error))
+            }
+            
             return
         }
         

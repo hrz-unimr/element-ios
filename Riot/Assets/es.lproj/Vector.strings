@@ -347,10 +347,10 @@
 "settings_send_crash_report" = "Enviar datos de uso e informes de fallas anónimos";
 "settings_enable_rageshake" = "Agitar con rabia para reportar un error";
 "settings_clear_cache" = "Borrar caché";
-"settings_change_password" = "Cambiar contraseña en la cuenta de Matrix";
-"settings_old_password" = "contraseña anterior";
-"settings_new_password" = "contraseña nueva";
-"settings_confirm_password" = "confirmar contraseña";
+"settings_change_password" = "Cambiar contraseña";
+"settings_old_password" = "Contraseña actual";
+"settings_new_password" = "Contraseña nueva";
+"settings_confirm_password" = "Confirmar contraseña";
 "settings_fail_to_update_password" = "No se ha podido cambiar la contraseña de Matrix";
 "settings_password_updated" = "La contraseña de tu cuenta de Matrix ha sido cambiada";
 "settings_crypto_device_name" = "Nombre de la sesión: ";
@@ -2418,3 +2418,26 @@
 "location_sharing_live_timer_selector_title" = "Elige cuánto tiempo quieres que los demás vean tu ubicación precisa.";
 "location_sharing_live_error" = "Error en la ubicación en tiempo real";
 "location_sharing_live_loading" = "Cargando ubicación en tiempo real…";
+"settings_labs_enable_live_location_sharing" = "Compartir ubicación en tiempo real: comparte tu ubicación (en desarrollo, y temporalmente las ubicaciones persisten en el historial)";
+"location_sharing_allow_background_location_message" = "Si quieres compartir tu ubicación en tiempo real, Element necesita acceder a tu ubicación mientras la aplicación está en segundo plano. Para permitirlo, toca en Ajustes, ve a Ubicación y selecciona Siempre";
+"location_sharing_allow_background_location_cancel_action" = "Ahora no";
+"location_sharing_allow_background_location_validate_action" = "Ajustes";
+"location_sharing_allow_background_location_title" = "Permitir acceso";
+"settings_ui_show_redactions_in_room_history" = "Mostrar un indicador donde se haya eliminado un mensaje";
+"settings_timeline" = "LÍNEA DE TIEMPO";
+"room_accessibility_record_voice_message_hint" = "Toca dos veces y mantén para grabar.";
+
+// MARK: Reactions
+
+"room_event_action_reaction_more" = "%@ más";
+"leave_space_selection_no_rooms" = "No seleccionar ninguna sala";
+"leave_space_selection_all_rooms" = "Seleccionar todas las salas";
+"leave_space_selection_title" = "SELECCIONAR SALAS";
+"leave_space_and_more_rooms" = "Salir del espacio y %@ salas";
+"leave_space_and_one_room" = "Salir del espacio y 1 sala";
+
+// Mark: Leave space
+
+"leave_space_action" = "Salir del espacio";
+"home_context_menu_mark_as_read" = "Marcar como leído";
+"room_accessibility_record_voice_message" = "Grabar mensaje de voz";

@@ -19,9 +19,10 @@ import CommonKit
 
 struct AuthenticationVerifyEmailCoordinatorParameters {
     let registrationWizard: RegistrationWizard
+    /// The homeserver that is requesting email verification.
+    let homeserver: AuthenticationState.Homeserver
 }
 
-@available(iOS 14.0, *)
 final class AuthenticationVerifyEmailCoordinator: Coordinator, Presentable {
     
     // MARK: - Properties
@@ -55,7 +56,7 @@ final class AuthenticationVerifyEmailCoordinator: Coordinator, Presentable {
     @MainActor init(parameters: AuthenticationVerifyEmailCoordinatorParameters) {
         self.parameters = parameters
         
-        let viewModel = AuthenticationVerifyEmailViewModel()
+        let viewModel = AuthenticationVerifyEmailViewModel(homeserver: parameters.homeserver.viewData)
         let view = AuthenticationVerifyEmailScreen(viewModel: viewModel.context)
         authenticationVerifyEmailViewModel = viewModel
         authenticationVerifyEmailHostingController = VectorHostingController(rootView: view)

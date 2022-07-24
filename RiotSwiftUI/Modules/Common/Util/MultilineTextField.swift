@@ -16,7 +16,6 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct MultilineTextField: View {
     
     @Environment(\.theme) private var theme: ThemeSwiftUI
@@ -57,7 +56,7 @@ struct MultilineTextField: View {
             return theme.colors.accent
         }
         
-        return theme.colors.quarterlyContent
+        return theme.colors.quaternaryContent
     }
     
     private var borderWidth: CGFloat {
@@ -76,7 +75,7 @@ struct MultilineTextField: View {
             .overlay(rect.stroke(borderColor, lineWidth: borderWidth))
             .introspectTextView { textView in
                 textView.textColor = UIColor(textColor)
-                textView.font = theme.fonts.uiFonts.callout
+                textView.font = .element.callout
             }
     }
 
@@ -92,7 +91,6 @@ struct MultilineTextField: View {
     }
 }
 
-@available(iOS 14.0, *)
 fileprivate struct UITextViewWrapper: UIViewRepresentable {
     typealias UIViewType = UITextView
 
@@ -172,7 +170,6 @@ fileprivate struct UITextViewWrapper: UIViewRepresentable {
     }
 }
 
-@available(iOS 14.0, *)
 struct MultilineTextField_Previews: PreviewProvider {
     
     static var previews: some View {

@@ -16,7 +16,6 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct SpaceSettingsOptionListItem: View {
     
     // MARK: Private
@@ -68,7 +67,7 @@ struct SpaceSettingsOptionListItem: View {
                 Image(systemName: "chevron.right")
                     .renderingMode(.template)
                     .font(.system(size: 16, weight: .regular))
-                    .foregroundColor(theme.colors.quarterlyContent)
+                    .foregroundColor(theme.colors.quaternaryContent)
             }
             .opacity(isEnabled ? 1 : 0.5)
         }
@@ -85,7 +84,6 @@ struct SpaceSettingsOptionListItem: View {
 
 // MARK: - Previews
 
-@available(iOS 14.0, *)
 struct SpaceSettingsOptionListItem_Previews: PreviewProvider {
     
     static var previews: some View {

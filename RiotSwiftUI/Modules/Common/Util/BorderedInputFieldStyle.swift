@@ -18,7 +18,6 @@ import Foundation
 import SwiftUI
 import Introspect
 
-@available(iOS 14.0, *)
 /// A bordered style of text input
 ///
 /// As defined in:
@@ -51,7 +50,7 @@ struct BorderedInputFieldStyle: TextFieldStyle {
         if (theme.identifier == ThemeIdentifier.dark) {
             return (isEnabled ? theme.colors.primaryContent : theme.colors.tertiaryContent)
         } else {
-            return (isEnabled ? theme.colors.primaryContent : theme.colors.quarterlyContent)
+            return (isEnabled ? theme.colors.primaryContent : theme.colors.quaternaryContent)
         }
     }
     
@@ -90,7 +89,6 @@ struct BorderedInputFieldStyle: TextFieldStyle {
     }
 }
 
-@available(iOS 14.0, *)
 struct BorderedInputFieldStyle_Previews: PreviewProvider {
     static var previews: some View {
         Group {

@@ -49,7 +49,7 @@ struct TimelineLiveLocationViewData {
     }
     
     var showMap: Bool {
-        guard case .started(_, _) = status else {
+        guard case .started = status else {
             return false
         }
         return true
@@ -200,7 +200,7 @@ class RoomTimelineLocationView: UIView, NibLoadable, Themable, MGLMapViewDelegat
         }
         
         liveLocationContainerView.isHidden = false
-        liveLocationContainerView.backgroundColor = theme.colors.background.withAlphaComponent(0.75)
+        liveLocationContainerView.backgroundColor = theme.colors.background.withAlphaComponent(0.90)
         
         liveLocationIcon.image = Asset.Images.locationLiveCellIcon.image
         liveLocationIcon.tintColor = bannerViewData.iconTint
@@ -223,6 +223,7 @@ class RoomTimelineLocationView: UIView, NibLoadable, Themable, MGLMapViewDelegat
         placeholderBackground.isHidden = bannerViewData.showMap
         placeholderBackground.image = placeholderBackgroundImage
         mapView.isHidden = !bannerViewData.showMap
+        attributionLabel.isHidden = !bannerViewData.showMap
         
         switch bannerViewData.status {
         case .starting:
@@ -237,7 +238,7 @@ class RoomTimelineLocationView: UIView, NibLoadable, Themable, MGLMapViewDelegat
     
     private func liveLocationBannerViewData(from viewState: TimelineLiveLocationViewState) -> TimelineLiveLocationViewData {
         
-        var status: LiveLocationSharingStatus
+        let status: LiveLocationSharingStatus
         let iconTint: UIColor
         let title: String
         var titleColor: UIColor = theme.colors.primaryContent

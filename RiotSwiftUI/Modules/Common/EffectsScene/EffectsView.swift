@@ -17,7 +17,6 @@
 import SwiftUI
 import SceneKit
 
-@available(iOS 14.0, *)
 /// A SwiftUI wrapper around `SCNView`, that unlike `SceneView` allows the
 /// scene to have a transparent background and be rendered on top of other views.
 struct EffectsView: UIViewRepresentable {
@@ -58,5 +57,11 @@ struct EffectsView: UIViewRepresentable {
         case .none:
             return nil
         }
+    }
+}
+
+struct EffectsView_Previews: PreviewProvider {
+    static var previews: some View {
+        EffectsView(effect: .confetti)
     }
 }

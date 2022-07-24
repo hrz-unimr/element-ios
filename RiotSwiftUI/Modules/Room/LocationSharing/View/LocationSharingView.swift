@@ -17,7 +17,6 @@
 import SwiftUI
 import CoreLocation
 
-@available(iOS 14.0, *)
 struct LocationSharingView: View {
     
     // MARK: - Properties
@@ -25,6 +24,8 @@ struct LocationSharingView: View {
     // MARK: Private
     
     @Environment(\.theme) private var theme: ThemeSwiftUI
+    
+    @Environment(\.openURL) var openURL
     
     // MARK: Public
     
@@ -35,12 +36,21 @@ struct LocationSharingView: View {
             ZStack(alignment: .bottom) {
                 mapView
                 VStack(spacing: 0) {
-                    MapCreditsView()
+                    MapCreditsView(action: {
+                        context.send(viewAction: .mapCreditsDidTap)
+                    })
+                    .padding(.bottom, 10.0)
+                    .actionSheet(isPresented: $context.showMapCreditsSheet) {
+                        return MapCreditsActionSheet(openURL: { url in
+                            openURL(url)
+                        }).sheet
+                    }
                     buttonsView
                         .background(theme.colors.background)
                         .clipShape(RoundedCornerShape(radius: 8, corners: [.topLeft, .topRight]))
                 }
             }
+            .background(theme.colors.background.ignoresSafeArea())
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(VectorL10n.cancel, action: {
@@ -164,7 +174,6 @@ struct LocationSharingView: View {
 
 // MARK: - Previews
 
-@available(iOS 14.0, *)
 struct LocationSharingView_Previews: PreviewProvider {
     static let stateRenderer = MockLocationSharingScreenState.stateRenderer
     static var previews: some View {

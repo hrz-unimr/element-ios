@@ -16,7 +16,6 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct SpaceSettings: View {
 
     // MARK: - Properties
@@ -40,7 +39,7 @@ struct SpaceSettings: View {
                     .padding(.bottom, 32)
             }
         }
-        .background(theme.colors.navigation.ignoresSafeArea())
+        .background(theme.colors.system.ignoresSafeArea())
         .waitOverlay(show: viewModel.viewState.isLoading, allowUserInteraction: false)
         .ignoresSafeArea(.container, edges: .bottom)
         .frame(maxHeight: .infinity)
@@ -199,7 +198,6 @@ struct SpaceSettings: View {
 
 // MARK: - Previews
 
-@available(iOS 14.0, *)
 struct SpaceSettings_Previews: PreviewProvider {
     static let stateRenderer = MockSpaceSettingsScreenState.stateRenderer
     static var previews: some View {

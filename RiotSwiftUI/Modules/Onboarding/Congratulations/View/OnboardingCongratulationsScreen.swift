@@ -80,7 +80,7 @@ struct OnboardingCongratulationsScreen: View {
                     .font(theme.fonts.title2B)
                     .foregroundColor(.white)
                 
-                Text(VectorL10n.onboardingCongratulationsMessage(viewModel.viewState.userId))
+                StyledText(viewModel.viewState.messageString)
                     .font(theme.fonts.body)
                     .foregroundColor(.white)
                     .multilineTextAlignment(.center)
@@ -128,13 +128,9 @@ struct OnboardingCongratulationsScreen: View {
         .accessibilityIdentifier("homeButton")
     }
     
-    @ViewBuilder
     var effects: some View {
-        if viewModel.viewState.personalizationDisabled {
-            EffectsView(effect: .confetti)
-                .allowsHitTesting(false)
-                .accessibilityIdentifier("confetti")
-        }
+        EffectsView(effect: .confetti)
+            .allowsHitTesting(false)
     }
 }
 

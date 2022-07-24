@@ -16,7 +16,6 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct TimelinePollAnswerOptionButton: View {
     
     // MARK: - Properties
@@ -90,14 +89,13 @@ struct TimelinePollAnswerOptionButton: View {
     
     var progressViewAccentColor: Color {
         guard !poll.closed else {
-            return (answerOption.winner ? theme.colors.accent : theme.colors.quarterlyContent)
+            return (answerOption.winner ? theme.colors.accent : theme.colors.quaternaryContent)
         }
         
-        return answerOption.selected ? theme.colors.accent : theme.colors.quarterlyContent
+        return answerOption.selected ? theme.colors.accent : theme.colors.quaternaryContent
     }
 }
 
-@available(iOS 14.0, *)
 struct TimelinePollAnswerOptionButton_Previews: PreviewProvider {
     static let stateRenderer = MockTimelinePollScreenState.stateRenderer
     

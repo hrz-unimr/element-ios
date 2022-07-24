@@ -30,6 +30,8 @@ targets:
   RiotShareExtension:
     platform: iOS
     type: app-extension
+    dependencies:
+    - package: DesignKit
 
     configFiles:
       Debug: Debug.xcconfig
@@ -71,7 +73,8 @@ targets:
       buildPhase: resources
     - path: ../Riot/Modules/MatrixKit
       excludes:
-        - "**/MXKAuthenticationRecaptchaWebView.*"
+        - "**/MXKAuthenticationViewController.*"
+        - "Views/Authentication/**"
     - path: ../Riot/Modules/Analytics
     - path: ../Riot/Managers/UserSessions
       excludes:

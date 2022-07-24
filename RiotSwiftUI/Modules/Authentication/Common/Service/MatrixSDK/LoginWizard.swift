@@ -15,6 +15,7 @@
 //
 
 import Foundation
+import libPhoneNumber_iOS
 
 /// Set of methods to be able to login to an existing account on a homeserver.
 ///
@@ -42,23 +43,30 @@ class LoginWizard {
         self.state = State()
     }
     
-//    /// Get some information about a matrixId: displayName and avatar url
-//    func profileInfo(for matrixID: String) async -> LoginProfileInfo {
-//
-//    }
-    
     /// Login to the homeserver.
     /// - Parameters:
     ///   - login: The login field. Can be a user name, or a msisdn (email or phone number) associated to the account.
     ///   - password: The password of the account.
     ///   - initialDeviceName: The initial device name.
     ///   - deviceID: The device ID, optional. If not provided or nil, the server will generate one.
+    ///   - removeOtherAccounts: If set to true, existing accounts with different user identifiers will be removed.
     /// - Returns: An `MXSession` if the login is successful.
-    func login(login: String, password: String, initialDeviceName: String, deviceID: String? = nil) async throws -> MXSession {
+    func login(login: String,
+               password: String,
+               initialDeviceName: String,
+               deviceID: String? = nil,
+               removeOtherAccounts: Bool = false) async throws -> MXSession {
         let parameters: LoginPasswordParameters
         
         if MXTools.isEmailAddress(login) {
             parameters = LoginPasswordParameters(id: .thirdParty(medium: .email, address: login),
+                                                 password: password,
+                                                 deviceDisplayName: initialDeviceName,
+                                                 deviceID: deviceID)
+        } else if let number = try? NBPhoneNumberUtil.sharedInstance().parse(login, defaultRegion: nil),
+                  NBPhoneNumberUtil.sharedInstance().isValidNumber(number) {
+            let msisdn = login.replacingOccurrences(of: "+", with: "")
+            parameters = LoginPasswordParameters(id: .thirdParty(medium: .msisdn, address: msisdn),
                                                  password: password,
                                                  deviceDisplayName: initialDeviceName,
                                                  deviceID: deviceID)
@@ -70,23 +78,23 @@ class LoginWizard {
         }
         
         let credentials = try await client.login(parameters: parameters)
-        return sessionCreator.createSession(credentials: credentials, client: client)
+        return sessionCreator.createSession(credentials: credentials,
+                                            client: client,
+                                            removeOtherAccounts: removeOtherAccounts)
     }
-    
+
     /// Exchange a login token to an access token.
-    /// - Parameter loginToken: A login token, obtained when login has happened in a WebView, using SSO.
+    /// - Parameters:
+    ///   - token: A login token, obtained when login has happened in a WebView, using SSO.
+    ///   - removeOtherAccounts: If set to true, existing accounts with different user identifiers will be removed.
     /// - Returns: An `MXSession` if the login is successful.
-    func login(with token: String) async throws -> MXSession {
+    func login(with token: String, removeOtherAccounts: Bool = false) async throws -> MXSession {
         let parameters = LoginTokenParameters(token: token)
         let credentials = try await client.login(parameters: parameters)
-        return sessionCreator.createSession(credentials: credentials, client: client)
+        return sessionCreator.createSession(credentials: credentials,
+                                            client: client,
+                                            removeOtherAccounts: removeOtherAccounts)
     }
-    
-//    /// Login to the homeserver by sending a custom JsonDict.
-//    /// The data should contain at least one entry `type` with a String value.
-//    func loginCustom(data: Codable) async -> MXSession {
-//
-//    }
 
     /// Ask the homeserver to reset the user password. The password will not be
     /// reset until `resetPasswordMailConfirmed` is successfully called.

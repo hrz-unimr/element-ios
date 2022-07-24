@@ -96,7 +96,7 @@
 "accessibility_checkbox_label" = "checkbox";
 "accessibility_button_label" = "button";
 
-// Onboarding
+// MARK: Onboarding
 "onboarding_splash_register_button_title" = "Create account";
 "onboarding_splash_login_button_title" = "I already have an account";
 "onboarding_splash_page_1_title" = "Own your conversations.";
@@ -109,19 +109,19 @@
 "onboarding_splash_page_4_message" = "Element is also great for the workplace. It’s trusted by the world’s most secure organisations.";
 
 "onboarding_use_case_title" = "Who will you chat to the most?";
-"onboarding_use_case_message" = "We’ll help you get connected.";
+"onboarding_use_case_message" = "We’ll help you get connected";
 "onboarding_use_case_personal_messaging" = "Friends and family";
 "onboarding_use_case_work_messaging" = "Teams";
 "onboarding_use_case_community_messaging" = "Communities";
 /* The placeholder string contains onboarding_use_case_skip_button as a tappable action */
-"onboarding_use_case_not_sure_yet" = "Not sure yet? You can %@";
-"onboarding_use_case_skip_button" = "skip this question";
+"onboarding_use_case_not_sure_yet" = "Not sure yet? %@";
+"onboarding_use_case_skip_button" = "Skip this question";
 "onboarding_use_case_existing_server_message" = "Looking to join an existing server?";
 "onboarding_use_case_existing_server_button" = "Connect to server";
 
 "onboarding_congratulations_title" = "Congratulations!";
 /* The placeholder string contains the user's matrix ID */
-"onboarding_congratulations_message" = "Your account %@ has been created.";
+"onboarding_congratulations_message" = "Your account %@ has been created";
 "onboarding_congratulations_personalize_button" = "Personalise profile";
 "onboarding_congratulations_home_button" = "Take me home";
 
@@ -135,14 +135,95 @@
 "onboarding_display_name_max_length" = "Your display name must be less than 256 characters";
 
 "onboarding_avatar_title" = "Add a profile picture";
-"onboarding_avatar_message" = "You can change this anytime.";
+"onboarding_avatar_message" = "Time to put a face to the name";
 "onboarding_avatar_accessibility_label" = "Profile picture";
 
-"onboarding_celebration_title" = "You’re all set!";
-"onboarding_celebration_message" = "Your preferences have been saved.";
+"onboarding_celebration_title" = "Looking good!";
+"onboarding_celebration_message" = "Head to settings anytime to update your profile";
 "onboarding_celebration_button" = "Let's go";
 
-// Authentication
+// MARK: Authentication
+"authentication_registration_title" = "Create your account";
+"authentication_registration_username" = "Username";
+"authentication_registration_username_footer" = "You can’t change this later";
+/* The placeholder will show the full Matrix ID that has been entered. */
+"authentication_registration_username_footer_available" = "Others can discover you %@";
+"authentication_registration_password_footer" = "Must be 8 characters or more";
+"authentication_server_info_title" = "Where your conversations will live";
+
+"authentication_login_title" = "Welcome back!";
+"authentication_login_username" = "Username / Email / Phone";
+"authentication_login_forgot_password" = "Forgot password";
+"authentication_server_info_title_login" = "Where your conversations live";
+
+"authentication_server_selection_login_title" = "Connect to homeserver";
+"authentication_server_selection_login_message" = "What is the address of your server?";
+"authentication_server_selection_register_title" = "Select your homeserver";
+"authentication_server_selection_register_message" = "What is the address of your server? This is like a home for all your data";
+"authentication_server_selection_server_url" = "Homeserver URL";
+"authentication_server_selection_generic_error" = "Cannot find a server at this URL, please check it is correct.";
+
+"authentication_cancel_flow_confirmation_message" = "Your account is not created yet. Stop the registration process?";
+
+"authentication_verify_email_input_title" = "Enter your email";
+/* The placeholder will show the homeserver's domain */
+"authentication_verify_email_input_message" = "%@ needs to verify your account";
+"authentication_verify_email_text_field_placeholder" = "Email";
+"authentication_verify_email_waiting_title" = "Verify your email.";
+/* The placeholder will show the email address that was entered. */
+"authentication_verify_email_waiting_message" = "Follow the instructions sent to %@";
+"authentication_verify_email_waiting_hint" = "Did not receive an email?";
+"authentication_verify_email_waiting_button" = "Resend email";
+
+"authentication_forgot_password_input_title" = "Enter your email";
+/* The placeholder will show the homeserver's domain */
+"authentication_forgot_password_input_message" = "%@ will send you a verification link";
+"authentication_forgot_password_text_field_placeholder" = "Email";
+"authentication_forgot_password_waiting_title" = "Check your email.";
+/* The placeholder will show the email address that was entered. */
+"authentication_forgot_password_waiting_message" = "Follow the instructions sent to %@";
+"authentication_forgot_password_waiting_button" = "Resend email";
+
+"authentication_choose_password_input_title" = "Choose a new password";
+"authentication_choose_password_input_message" = "Make sure it’s 8 characters or more";
+"authentication_choose_password_text_field_placeholder" = "New Password";
+"authentication_choose_password_signout_all_devices" = "Sign out of all devices";
+"authentication_choose_password_submit_button" = "Reset Password";
+"authentication_choose_password_not_verified_title" = "Email not verified";
+"authentication_choose_password_not_verified_message" = "Check your inbox";
+
+"authentication_verify_msisdn_input_title" = "Enter your phone number";
+/* The placeholder will show the homeserver's domain */
+"authentication_verify_msisdn_input_message" = "%@ needs to verify your account";
+"authentication_verify_msisdn_text_field_placeholder" = "Phone Number";
+"authentication_verify_msisdn_otp_text_field_placeholder" = "Confirmation Code";
+"authentication_verify_msisdn_waiting_title" = "Verify your phone number";
+/* The placeholder will show the phone number that was entered. */
+"authentication_verify_msisdn_waiting_message" = "A code was sent to %@";
+"authentication_verify_msisdn_waiting_button" = "Resend code";
+"authentication_verify_msisdn_invalid_phone_number" = "Invalid phone number";
+
+"authentication_terms_title" = "Server policies";
+/* The placeholder will show the homeserver's domain */
+"authentication_terms_message" = "Please read %@’s terms and policies";
+"authentication_terms_policy_url_error" = "Unable to find the selected policy. Please try again later.";
+
+"authentication_recaptcha_title" = "Are you a human?";
+
+// MARK: Password Validation
+"password_validation_info_header" = "Your password should meet the criteria below:";
+"password_validation_error_header" = "Given password does not meet the criteria below:";
+/* The placeholder will show a number */
+"password_validation_error_min_length" = "At least %d characters.";
+/* The placeholder will show a number */
+"password_validation_error_max_length" = "Not exceed %d characters.";
+"password_validation_error_contain_lowercase_letter" = "Contain a lower-case letter.";
+"password_validation_error_contain_uppercase_letter" = "Contain an upper-case letter.";
+"password_validation_error_contain_number" = "Contain a number.";
+"password_validation_error_contain_symbol" = "Contain a symbol.";
+
+
+// MARK: Legacy Authentication
 "auth_login" = "Log in";
 "auth_register" = "Register";
 "auth_submit" = "Submit";
@@ -485,6 +566,8 @@ Tap the + to start adding people.";
 "room_accessibility_threads" = "Threads";
 "room_accessibility_hangup" = "Hang up";
 "room_accessibility_thread_more" = "More";
+"room_accessibility_record_voice_message" = "Record Voice Message";
+"room_accessibility_record_voice_message_hint" = "Double-tap and hold to record.";
 "room_place_voice_call" = "Voice call";
 "room_open_dialpad" = "Dial pad";
 "room_join_group_call" = "Join";
@@ -570,6 +653,7 @@ Tap the + to start adding people.";
 "settings_identity_server_settings" = "IDENTITY SERVER";
 "settings_integrations" = "INTEGRATIONS";
 "settings_user_interface" = "USER INTERFACE";
+"settings_timeline" = "TIMELINE";
 "settings_ignored_users" = "IGNORED USERS";
 "settings_contacts" = "DEVICE CONTACTS";
 "settings_phone_contacts" = "PHONE CONTACTS";
@@ -597,7 +681,7 @@ Tap the + to start adding people.";
 "settings_add_email_address" = "Add email address";
 "settings_phone_number" = "Phone";
 "settings_add_phone_number" = "Add phone number";
-"settings_change_password" = "Change Matrix account password";
+"settings_change_password" = "Change password";
 "settings_night_mode" = "Night Mode";
 "settings_fail_to_update_profile" = "Fail to update profile";
 "settings_three_pids_management_information_part1" = "Manage which email addresses or phone numbers you can use to log in or recover your account here. Control who can find you in ";
@@ -655,6 +739,7 @@ Tap the + to start adding people.";
 "settings_ui_theme_picker_title" = "Select a theme";
 "settings_ui_theme_picker_message_invert_colours" = "\"Auto\" uses your device's \"Invert Colours\" settings";
 "settings_ui_theme_picker_message_match_system_theme" = "\"Auto\" matches your device's system theme";
+"settings_ui_show_redactions_in_room_history" = "Show a placeholder for removed messages";
 
 "settings_show_url_previews" = "Show website preview";
 "settings_show_url_previews_description" = "Previews will only be shown in unencrypted rooms.";
@@ -685,9 +770,9 @@ Tap the + to start adding people.";
 "settings_analytics_and_crash_data" = "Send crash and analytics data";
 "settings_enable_rageshake" = "Rage shake to report bug";
 
-"settings_old_password" = "old password";
-"settings_new_password" = "new password";
-"settings_confirm_password" = "confirm password";
+"settings_old_password" = "Old password";
+"settings_new_password" = "New password";
+"settings_confirm_password" = "Confirm password";
 "settings_fail_to_update_password" = "Fail to update Matrix account password";
 "settings_password_updated" = "Your Matrix account password has been updated";
 
@@ -702,7 +787,7 @@ Tap the + to start adding people.";
 "settings_crypto_export" = "Export keys";
 "settings_crypto_blacklist_unverified_devices" = "Encrypt to verified sessions only";
 
-"settings_deactivate_my_account" = "Deactivate my account";
+"settings_deactivate_my_account" = "Deactivate account permanently";
 
 "settings_key_backup_info" = "Encrypted messages are secured with end-to-end encryption. Only you and the recipient(s) have the keys to read these messages.";
 "settings_key_backup_info_checking" = "Checking…";
@@ -1056,6 +1141,8 @@ Tap the + to start adding people.";
 "today" = "Today";
 "yesterday" = "Yesterday";
 "network_offline_prompt" = "The Internet connection appears to be offline.";
+"network_offline_title" = "You're offline";
+"network_offline_message" = "You're offline, check your connection.";
 "homeserver_connection_lost" = "Could not connect to the homeserver.";
 "public_room_section_title" = "Public Rooms (at %@):";
 "bug_report_prompt" = "The application has crashed last time. Would you like to submit a crash report?";
@@ -1818,6 +1905,7 @@ Tap the + to start adding people.";
 "room_info_list_one_member" = "1 member";
 "room_info_list_several_members" = "%@ members";
 "room_info_list_section_other" = "Other";
+"room_info_back_button_title" = "Room Info";
 
 // MARK: - Dial Pad
 "dialpad_title" = "Dial pad";
@@ -1845,6 +1933,7 @@ Tap the + to start adding people.";
 "home_context_menu_low_priority" = "Low priority";
 "home_context_menu_normal_priority" = "Normal priority";
 "home_context_menu_leave" = "Leave";
+"home_context_menu_mark_as_read" = "Mark as read";
 "home_syncing" = "Syncing";
 
 // MARK: - Favourites
@@ -1946,6 +2035,8 @@ Tap the + to start adding people.";
 "space_settings_update_failed_message" = "Failed to update space settings. Do you want to retry?";
 "space_settings_current_address_message" = "Your space is viewable at\n%@";
 
+"spaces_feature_not_available" = "This feature isn't available here. For now, you can do this with %@ on your computer.";
+
 // Mark: - Space Creation
 
 "spaces_creation_hint" = "Spaces are a new way to group rooms and people.";
@@ -2005,6 +2096,19 @@ Tap the + to start adding people.";
 "spaces_add_room" = "Add room";
 "spaces_add_room_missing_permission_message" = "You do not have permissions to add rooms to this space.";
 "spaces_add_space" = "Add space";
+
+// Mark: Leave space
+
+"leave_space_action" = "Leave space";
+"leave_space_and_one_room" = "Leave space and 1 room";
+"leave_space_and_more_rooms" = "Leave space and %@ rooms";
+"leave_space_selection_title" = "SELECT ROOMS";
+"leave_space_selection_all_rooms" = "Select all rooms";
+"leave_space_selection_no_rooms" = "Select no rooms";
+
+// MARK: Reactions
+
+"room_event_action_reaction_more" = "%@ more";
 
 // Mark: Avatar
 
@@ -2144,6 +2248,7 @@ Tap the + to start adding people.";
 To enable access, tap Settings> Location and select Always";
 "location_sharing_allow_background_location_validate_action" = "Settings";
 "location_sharing_allow_background_location_cancel_action" = "Not now";
+"location_sharing_map_credits_title" = "© Copyright";
 
 // MARK: Live location sharing
 
@@ -2160,7 +2265,7 @@ To enable access, tap Settings> Location and select Always";
 "location_sharing_live_list_item_last_update" = "Updated %@ ago";
 "location_sharing_live_list_item_last_update_invalid" = "Unknown last update";
 "location_sharing_live_list_item_current_user_display_name" = "You";
-"location_sharing_live_list_item_stop_sharing_action" = "Stop sharing";
+"location_sharing_live_list_item_stop_sharing_action" = "Stop";
 "location_sharing_live_timer_incoming" = "Live until %@";
 "location_sharing_live_loading" = "Loading Live location...";
 "location_sharing_live_error" = "Live location error";
@@ -2171,6 +2276,10 @@ To enable access, tap Settings> Location and select Always";
 "location_sharing_live_no_user_locations_error_title" = "No user locations available";
 "location_sharing_live_stop_sharing_error" = "Fail to stop sharing location";
 "location_sharing_live_stop_sharing_progress" = "Stop location sharing";
+
+"location_sharing_live_lab_promotion_title" = "Live location sharing";
+"location_sharing_live_lab_promotion_text" = "Please note: this is a labs feature using a temporary implementation that allows the history of your shared location to be permanently visible to other people in the room.";
+"location_sharing_live_lab_promotion_activation" = "Enable live location sharing";
 
 // MARK: - MatrixKit
 
@@ -2320,7 +2429,7 @@ To enable access, tap Settings> Location and select Always";
 
 // Settings
 "settings" = "Settings";
-"settings_enable_inapp_notifications" = "Enable In-App notifications";
+"settings_enable_inapp_notifications" = "Enable in-app notifications";
 "settings_enable_push_notifications" = "Enable push notifications";
 "settings_enter_validation_token_for" = "Enter validation token for %@:";
 
@@ -2417,6 +2526,7 @@ To enable access, tap Settings> Location and select Always";
 "message_reply_to_sender_sent_a_voice_message" = "sent a voice message.";
 "message_reply_to_sender_sent_a_file" = "sent a file.";
 "message_reply_to_sender_sent_their_location" = "has shared their location.";
+"message_reply_to_sender_sent_their_live_location" = "Live location.";
 "message_reply_to_message_to_reply_to_prefix" = "In reply to";
 
 // Room members

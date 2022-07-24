@@ -63,12 +63,6 @@
 @property (nonatomic, readwrite) BOOL isOnboardingCoordinatorPreparing;
 @property (nonatomic, readwrite) BOOL isOnboardingInProgress;
 
-// Observer that checks when the Authentication view controller has gone.
-@property (nonatomic, readwrite) id addAccountObserver;
-@property (nonatomic, readwrite) id removeAccountObserver;
-
-@property (nonatomic, readwrite) MXCredentials *softLogoutCredentials;
-
 @property (nonatomic) BOOL reviewSessionAlertHasBeenDisplayed;
 
 @end
@@ -118,7 +112,7 @@
     [self vc_removeBackTitle];
     
     [self setupTitleView];
-    titleView.titleLabel.text = [VectorL10n titleHome];
+    self.titleLabelText = [VectorL10n titleHome];
     
     childViewControllers = [NSMutableArray array];
     
@@ -243,17 +237,6 @@
         currentAlert = nil;
     }
     
-    if (self.addAccountObserver)
-    {
-        [[NSNotificationCenter defaultCenter] removeObserver:self.addAccountObserver];
-        self.addAccountObserver = nil;
-    }
-    if (self.removeAccountObserver)
-    {
-        [[NSNotificationCenter defaultCenter] removeObserver:self.removeAccountObserver];
-        self.removeAccountObserver = nil;
-    }
-    
     if (kThemeServiceDidChangeThemeNotificationObserver)
     {
         [[NSNotificationCenter defaultCenter] removeObserver:kThemeServiceDidChangeThemeNotificationObserver];
@@ -295,8 +278,8 @@
         }
     }
     
-    titleView.titleLabel.text = [self getTitleForItemViewController:self.selectedViewController];
-    
+    self.titleLabelText = [self getTitleForItemViewController:self.selectedViewController];
+
     // Need to be called in case of the controllers have been replaced
     [self.selectedViewController viewDidAppear:NO];
 }
@@ -316,7 +299,7 @@
     NSInteger index = [self indexOfTabItemWithTag:tabBarIndex];
     self.selectedIndex = index;
     
-    titleView.titleLabel.text = [self getTitleForItemViewController:self.selectedViewController];
+    self.titleLabelText = [self getTitleForItemViewController:self.selectedViewController];
 }
 
 #pragma mark -
@@ -475,15 +458,10 @@
 // TODO: Manage the onboarding coordinator at the AppCoordinator level
 - (void)presentOnboardingFlow
 {
-    OnboardingCoordinatorBridgePresenterParameters *parameters = [[OnboardingCoordinatorBridgePresenterParameters alloc] init];
-    if (self.softLogoutCredentials)
-    {
-        parameters.softLogoutCredentials = self.softLogoutCredentials;
-        self.softLogoutCredentials = nil;
-    }
+    MXLogDebug(@"[MasterTabBarController] presentOnboardingFlow");
     
     MXWeakify(self);
-    OnboardingCoordinatorBridgePresenter *onboardingCoordinatorBridgePresenter = [[OnboardingCoordinatorBridgePresenter alloc] initWith:parameters];
+    OnboardingCoordinatorBridgePresenter *onboardingCoordinatorBridgePresenter = [[OnboardingCoordinatorBridgePresenter alloc] init];
     onboardingCoordinatorBridgePresenter.completion = ^{
         MXStrongifyAndReturnIfNil(self);
         [self.onboardingCoordinatorBridgePresenter dismissWithAnimated:YES completion:nil];
@@ -497,62 +475,44 @@
     
     self.onboardingCoordinatorBridgePresenter = onboardingCoordinatorBridgePresenter;
     self.isOnboardingCoordinatorPreparing = NO;
-    
-    self.addAccountObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kMXKAccountManagerDidAddAccountNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notif) {
-        MXStrongifyAndReturnIfNil(self);
-
-        // What was this doing? This should probably happen elsewhere
-        // self.onboardingCoordinatorBridgePresenter = nil;
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self.addAccountObserver];
-        self.addAccountObserver = nil;
-    }];
-    
-    self.removeAccountObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kMXKAccountManagerDidRemoveAccountNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *notif) {
-        MXStrongifyAndReturnIfNil(self);
-        // The user has cleared data for their soft logged out account
-
-        // What was this doing? This should probably happen elsewhere
-        // self.onboardingCoordinatorBridgePresenter = nil;
-        
-        [[NSNotificationCenter defaultCenter] removeObserver:self.removeAccountObserver];
-        self.removeAccountObserver = nil;
-    }];
 }
 
 - (void)showOnboardingFlow
 {
-    MXLogDebug(@"[MasterTabBarController] showAuthenticationScreen");
-    
-    // Check whether an authentication screen is not already shown or preparing
-    if (!self.onboardingCoordinatorBridgePresenter && !self.isOnboardingCoordinatorPreparing)
-    {
-        self.isOnboardingCoordinatorPreparing = YES;
-        self.isOnboardingInProgress = YES;
-        
-        [self resetReviewSessionsFlags];
-        
-        [[AppDelegate theDelegate] restoreInitialDisplay:^{
-                        
-            [self presentOnboardingFlow];
-        }];
-    }
+    MXLogDebug(@"[MasterTabBarController] showOnboardingFlow");
+    [self showOnboardingFlowAndResetSessionFlags:YES];
 }
 
 - (void)showSoftLogoutOnboardingFlowWithCredentials:(MXCredentials*)credentials;
 {
     MXLogDebug(@"[MasterTabBarController] showAuthenticationScreenAfterSoftLogout");
+    
+    // This method can be called after the user chooses to clear their data as the MXSession
+    // is opened to call logout from. So we only set the credentials when authentication isn't
+    // in progress to prevent a second soft logout screen being shown.
+    if (!self.onboardingCoordinatorBridgePresenter && !self.isOnboardingCoordinatorPreparing)
+    {
+        AuthenticationService.shared.softLogoutCredentials = credentials;
+        
+        [self showOnboardingFlowAndResetSessionFlags:NO];
+    }
+}
 
-    self.softLogoutCredentials = credentials;
-
+- (void)showOnboardingFlowAndResetSessionFlags:(BOOL)resetSessionFlags
+{
     // Check whether an authentication screen is not already shown or preparing
     if (!self.onboardingCoordinatorBridgePresenter && !self.isOnboardingCoordinatorPreparing)
     {
         self.isOnboardingCoordinatorPreparing = YES;
         self.isOnboardingInProgress = YES;
-
+        
+        if (resetSessionFlags)
+        {
+            [self resetReviewSessionsFlags];
+        }
+        
         [[AppDelegate theDelegate] restoreInitialDisplay:^{
-
+            
             [self presentOnboardingFlow];
         }];
     }
@@ -741,6 +701,12 @@
 {
     titleView = [MainTitleView new];
     self.navigationItem.titleView = titleView;
+}
+
+-(void)setTitleLabelText:(NSString *)text
+{
+    titleView.titleLabel.text = text;
+    self.navigationItem.backButtonTitle = text;
 }
 
 - (void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
@@ -1078,7 +1044,7 @@
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
 {
-    titleView.titleLabel.text = [self getTitleForItemViewController:viewController];
+    self.titleLabelText = [self getTitleForItemViewController:viewController];
 }
 
 @end

@@ -16,7 +16,6 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct OptionButton: View {
     
     // MARK: - Style
@@ -56,7 +55,7 @@ struct OptionButton: View {
                     }
                 }
                 Spacer()
-                Image(systemName: "chevron.right").font(.system(size: 16, weight: .regular)).foregroundColor(theme.colors.quarterlyContent)
+                Image(systemName: "chevron.right").font(.system(size: 16, weight: .regular)).foregroundColor(theme.colors.quaternaryContent)
             }
             .padding(EdgeInsets(top: 15, leading: 16, bottom: 15, trailing: 16))
             .background(theme.colors.quinaryContent)
@@ -70,7 +69,6 @@ struct OptionButton: View {
 
 // MARK: - Previews
 
-@available(iOS 14.0, *)
 struct OptionButton_Previews: PreviewProvider {
     static var previews: some View {
         Group {

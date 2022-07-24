@@ -18,7 +18,6 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct MatrixItemChooser: View {
     
     // MARK: Properties
@@ -145,13 +144,12 @@ struct MatrixItemChooser: View {
         }
         .padding(.vertical, 4)
         .padding(.horizontal)
-        .background(theme.colors.tile)
+        .background(theme.colors.legacyTile)
     }
 }
 
 // MARK: - Previews
 
-@available(iOS 14.0, *)
 struct MatrixItemChooser_Previews: PreviewProvider {
     
     static let stateRenderer = MockMatrixItemChooserScreenState.stateRenderer
