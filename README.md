@@ -18,16 +18,6 @@ $ open Riot.xcworkspace     # Open Xcode
 
 Else, you can visit our [installation guide](./INSTALL.md). This guide also offers more details and advanced usage like using [MatrixSDK](https://github.com/matrix-org/matrix-ios-sdk) in its development version.
 
-## Contributing
-
-If you want to contribute to Element iOS code or translations, go to the [contribution guide](CONTRIBUTING.md).
-
-## Support
-
-When you are experiencing an issue on Element iOS, please first search in [GitHub issues](https://github.com/vector-im/element-ios/issues)
-and then in [#element-ios:matrix.org](https://matrix.to/#/#element-ios:matrix.org).
-If after your research you still have a question, ask at [#element-ios:matrix.org](https://matrix.to/#/#element-ios:matrix.org). Otherwise feel free to create a GitHub issue if you encounter a bug or a crash, by explaining clearly in detail what happened. You can also perform bug reporting (Rageshake) from the Element application by shaking your phone or going to the application settings. This is especially recommended when you encounter a crash.
-
 ## Copyright & License
 
 Copyright (c) 2014-2017 OpenMarket Ltd  
