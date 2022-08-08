@@ -102,7 +102,7 @@ final class BuildSettings: NSObject {
     static let serverConfigDefaultHomeserverUrlString = "https://matrix-homeserver.uni-marburg.de"
     static let serverConfigDefaultIdentityServerUrlString = "https://matrix-homeserver.uni-marburg.de"
     
-    static let serverConfigSygnalAPIUrlString = "https://matrix.org/_matrix/push/v1/notify"
+    static let serverConfigSygnalAPIUrlString = "https://matrix-pushgateway.hrz.uni-marburg.de/_matrix/push/v1/notify"
     
     
     // MARK: - Legal URLs
