@@ -1,4 +1,4 @@
-// 
+//
 // Copyright 2021 New Vector Ltd
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,6 @@
 import SwiftUI
 
 struct AuthenticationReCaptchaScreen: View {
-
     // MARK: - Properties
     
     // MARK: Private
@@ -59,7 +58,7 @@ struct AuthenticationReCaptchaScreen: View {
     /// The header containing the icon, title and message.
     var header: some View {
         VStack(spacing: 8) {
-            OnboardingIconImage(image: Asset.Images.onboardingCongratulationsIcon)
+            OnboardingIconImage(image: Asset.Images.authenticationRecaptchaIcon)
                 .padding(.bottom, 8)
             
             Text(VectorL10n.authenticationRecaptchaTitle)

@@ -36,9 +36,6 @@
 #import "ThemeService.h"
 #import "TableViewCellWithPhoneNumberTextField.h"
 
-#import "GroupsDataSource.h"
-#import "GroupTableViewCellWithSwitch.h"
-
 #import "GBDeviceInfo_iOS.h"
 
 #import "MediaPickerViewController.h"
@@ -69,7 +66,6 @@ typedef NS_ENUM(NSUInteger, SECTION_TAG)
     SECTION_TAG_ADVANCED,
     SECTION_TAG_ABOUT,
     SECTION_TAG_LABS,
-    SECTION_TAG_FLAIR,
     SECTION_TAG_DEACTIVATE_ACCOUNT
 };
 
@@ -176,19 +172,22 @@ typedef NS_ENUM(NSUInteger, LABS_ENABLE)
     LABS_ENABLE_RINGING_FOR_GROUP_CALLS_INDEX = 0,
     LABS_ENABLE_THREADS_INDEX,
     LABS_ENABLE_AUTO_REPORT_DECRYPTION_ERRORS,
-    LABS_ENABLE_LIVE_LOCATION_SHARING
+    LABS_ENABLE_LIVE_LOCATION_SHARING,
+    LABS_ENABLE_NEW_SESSION_MANAGER,
+    LABS_ENABLE_NEW_CLIENT_INFO_FEATURE
 };
 
 typedef NS_ENUM(NSUInteger, SECURITY)
 {
     SECURITY_BUTTON_INDEX = 0,
+    DEVICE_MANAGER_INDEX
 };
 
 typedef void (^blockSettingsViewController_onReadyToDestroy)(void);
 
 #pragma mark - SettingsViewController
 
-@interface SettingsViewController () <UITextFieldDelegate, MXKCountryPickerViewControllerDelegate, MXKLanguagePickerViewControllerDelegate, MXKDataSourceDelegate, DeactivateAccountViewControllerDelegate,
+@interface SettingsViewController () <UITextFieldDelegate, MXKCountryPickerViewControllerDelegate, MXKLanguagePickerViewControllerDelegate, DeactivateAccountViewControllerDelegate,
 NotificationSettingsCoordinatorBridgePresenterDelegate,
 SecureBackupSetupCoordinatorBridgePresenterDelegate,
 SignOutAlertPresenterDelegate,
@@ -228,9 +227,6 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
     TableViewCellWithPhoneNumberTextField * newPhoneNumberCell;
     CountryPickerViewController *newPhoneNumberCountryPicker;
     NBPhoneNumber *newPhoneNumber;
-    
-    // Flair: the groups data source
-    GroupsDataSource *groupsDataSource;
     
     // Observe kAppDelegateDidTapStatusBarNotification to handle tap on clock status bar.
     __weak id kAppDelegateDidTapStatusBarNotificationObserver;
@@ -291,6 +287,7 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
 
 @property (nonatomic, strong) ThreadsBetaCoordinatorBridgePresenter *threadsBetaBridgePresenter;
 @property (nonatomic, strong) ChangePasswordCoordinatorBridgePresenter *changePasswordBridgePresenter;
+@property (nonatomic, strong) UserSessionsFlowCoordinatorBridgePresenter *userSessionsFlowCoordinatorBridgePresenter;
 
 /**
  Whether or not to check for contacts access after the user accepts the service terms. The value of this property is
@@ -407,6 +404,13 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
     
     Section *sectionSecurity = [Section sectionWithTag:SECTION_TAG_SECURITY];
     [sectionSecurity addRowWithTag:SECURITY_BUTTON_INDEX];
+        
+    if (RiotSettings.shared.enableNewSessionManager)
+    {
+        // NOTE: Add device manager entry point in the security section atm for debug purpose
+        [sectionSecurity addRowWithTag:DEVICE_MANAGER_INDEX];
+    }
+    
     sectionSecurity.headerTitle = [VectorL10n settingsSecurity];
     [tmpSections addObject:sectionSecurity];
     
@@ -593,24 +597,13 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
         {
             [sectionLabs addRowWithTag:LABS_ENABLE_LIVE_LOCATION_SHARING];
         }
+        [sectionLabs addRowWithTag:LABS_ENABLE_NEW_SESSION_MANAGER];
+        [sectionLabs addRowWithTag:LABS_ENABLE_NEW_CLIENT_INFO_FEATURE];
         sectionLabs.headerTitle = [VectorL10n settingsLabs];
         if (sectionLabs.hasAnyRows)
         {
             [tmpSections addObject:sectionLabs];
         }
-    }
-    
-    if ([groupsDataSource numberOfSectionsInTableView:self.tableView] && groupsDataSource.joinedGroupsSection != -1)
-    {
-        NSInteger count = [groupsDataSource tableView:self.tableView
-                                numberOfRowsInSection:groupsDataSource.joinedGroupsSection];
-        Section *sectionFlair = [Section sectionWithTag:SECTION_TAG_FLAIR];
-        for (NSInteger index = 0; index < count; index++)
-        {
-            [sectionFlair addRowWithTag:index];
-        }
-        sectionFlair.headerTitle = [VectorL10n settingsFlair];
-        [tmpSections addObject:sectionFlair];
     }
     
     if (BuildSettings.settingsScreenAllowDeactivatingAccount)
@@ -637,7 +630,6 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
     [self.tableView registerClass:MXKTableViewCellWithLabelAndSwitch.class forCellReuseIdentifier:[MXKTableViewCellWithLabelAndSwitch defaultReuseIdentifier]];
     [self.tableView registerClass:MXKTableViewCellWithLabelAndMXKImageView.class forCellReuseIdentifier:[MXKTableViewCellWithLabelAndMXKImageView defaultReuseIdentifier]];
     [self.tableView registerClass:TableViewCellWithPhoneNumberTextField.class forCellReuseIdentifier:[TableViewCellWithPhoneNumberTextField defaultReuseIdentifier]];
-    [self.tableView registerClass:GroupTableViewCellWithSwitch.class forCellReuseIdentifier:[GroupTableViewCellWithSwitch defaultReuseIdentifier]];
     [self.tableView registerNib:MXKTableViewCellWithTextView.nib forCellReuseIdentifier:[MXKTableViewCellWithTextView defaultReuseIdentifier]];
     [self.tableView registerNib:SectionFooterView.nib forHeaderFooterViewReuseIdentifier:[SectionFooterView defaultReuseIdentifier]];
     
@@ -694,10 +686,6 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
     }
     
     [self setupDiscoverySection];
-
-    groupsDataSource = [[GroupsDataSource alloc] initWithMatrixSession:self.mainSession];
-    [groupsDataSource finalizeInitialization];
-    groupsDataSource.delegate = self;
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(onSave:)];
     self.navigationItem.rightBarButtonItem.accessibilityIdentifier=@"SettingsVCNavBarSaveButton";
@@ -753,13 +741,6 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
 
 - (void)destroy
 {
-    if (groupsDataSource)
-    {
-        groupsDataSource.delegate = nil;
-        [groupsDataSource destroy];
-        groupsDataSource = nil;
-    }
-    
     // Release the potential pushed view controller
     [self releasePushedViewController];
     
@@ -2555,31 +2536,29 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
         {
             cell = [self buildLiveLocationSharingCellForTableView:tableView atIndexPath:indexPath];
         }
-    }
-    else if (section == SECTION_TAG_FLAIR)
-    {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:groupsDataSource.joinedGroupsSection];
-        cell = [groupsDataSource tableView:tableView cellForRowAtIndexPath:indexPath];
-        
-        if ([cell isKindOfClass:GroupTableViewCellWithSwitch.class])
+        else if (row == LABS_ENABLE_NEW_SESSION_MANAGER)
         {
-            GroupTableViewCellWithSwitch* groupWithSwitchCell = (GroupTableViewCellWithSwitch*)cell;
-            id<MXKGroupCellDataStoring> groupCellData = [groupsDataSource cellDataAtIndex:indexPath];
-            
-            // Display the groupId in the description label, except if the group has no name
-            if (![groupWithSwitchCell.groupName.text isEqualToString:groupCellData.group.groupId])
-            {
-                groupWithSwitchCell.groupDescription.hidden = NO;
-                groupWithSwitchCell.groupDescription.text = groupCellData.group.groupId;
-            }
-            
-            // Update the toogle button
-            groupWithSwitchCell.toggleButton.on = groupCellData.group.summary.user.isPublicised;
-            groupWithSwitchCell.toggleButton.enabled = YES;
-            groupWithSwitchCell.toggleButton.tag = row;
-            
-            [groupWithSwitchCell.toggleButton removeTarget:self action:nil forControlEvents:UIControlEventTouchUpInside];
-            [groupWithSwitchCell.toggleButton addTarget:self action:@selector(toggleCommunityFlair:) forControlEvents:UIControlEventTouchUpInside];
+            MXKTableViewCellWithLabelAndSwitch *labelAndSwitchCell = [self getLabelAndSwitchCell:tableView forIndexPath:indexPath];
+
+            labelAndSwitchCell.mxkLabel.text = [VectorL10n settingsLabsEnableNewSessionManager];
+            labelAndSwitchCell.mxkSwitch.on = RiotSettings.shared.enableNewSessionManager;
+            labelAndSwitchCell.mxkSwitch.onTintColor = ThemeService.shared.theme.tintColor;
+
+            [labelAndSwitchCell.mxkSwitch addTarget:self action:@selector(toggleEnableNewSessionManager:) forControlEvents:UIControlEventTouchUpInside];
+
+            cell = labelAndSwitchCell;
+        }
+        else if (row == LABS_ENABLE_NEW_CLIENT_INFO_FEATURE)
+        {
+            MXKTableViewCellWithLabelAndSwitch *labelAndSwitchCell = [self getLabelAndSwitchCell:tableView forIndexPath:indexPath];
+
+            labelAndSwitchCell.mxkLabel.text = [VectorL10n settingsLabsEnableNewClientInfoFeature];
+            labelAndSwitchCell.mxkSwitch.on = RiotSettings.shared.enableClientInformationFeature;
+            labelAndSwitchCell.mxkSwitch.onTintColor = ThemeService.shared.theme.tintColor;
+
+            [labelAndSwitchCell.mxkSwitch addTarget:self action:@selector(toggleEnableNewClientInfoFeature:) forControlEvents:UIControlEventTouchUpInside];
+
+            cell = labelAndSwitchCell;
         }
     }
     else if (section == SECTION_TAG_SECURITY)
@@ -2589,6 +2568,11 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
             case SECURITY_BUTTON_INDEX:
                 cell = [self getDefaultTableViewCell:tableView];
                 cell.textLabel.text = [VectorL10n securitySettingsTitle];
+                [cell vc_setAccessoryDisclosureIndicatorWithCurrentTheme];
+                break;
+            case DEVICE_MANAGER_INDEX:
+                cell = [self getDefaultTableViewCell:tableView];
+                cell.textLabel.text = [VectorL10n userSessionsSettings];
                 [cell vc_setAccessoryDisclosureIndicatorWithCurrentTheme];
                 break;
         }
@@ -2856,6 +2840,7 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
                 WebViewViewController *webViewViewController = [[WebViewViewController alloc] initWithURL:BuildSettings.applicationCopyrightUrlString];
                 
                 webViewViewController.title = [VectorL10n settingsCopyright];
+                [webViewViewController vc_setLargeTitleDisplayMode:UINavigationItemLargeTitleDisplayModeNever];
                 
                 [self pushViewController:webViewViewController];
             }
@@ -2864,6 +2849,7 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
                 WebViewViewController *webViewViewController = [[WebViewViewController alloc] initWithURL:BuildSettings.applicationTermsConditionsUrlString];
                 
                 webViewViewController.title = [VectorL10n settingsTermConditions];
+                [webViewViewController vc_setLargeTitleDisplayMode:UINavigationItemLargeTitleDisplayModeNever];
                 
                 [self pushViewController:webViewViewController];
             }
@@ -2872,6 +2858,7 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
                 WebViewViewController *webViewViewController = [[WebViewViewController alloc] initWithURL:BuildSettings.applicationPrivacyPolicyUrlString];
                 
                 webViewViewController.title = [VectorL10n settingsPrivacyPolicy];
+                [webViewViewController vc_setLargeTitleDisplayMode:UINavigationItemLargeTitleDisplayModeNever];
                 
                 [self pushViewController:webViewViewController];
             }
@@ -2882,6 +2869,7 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
                 WebViewViewController *webViewViewController = [[WebViewViewController alloc] initWithLocalHTMLFile:htmlFile];
                 
                 webViewViewController.title = [VectorL10n settingsThirdPartyNotices];
+                [webViewViewController vc_setLargeTitleDisplayMode:UINavigationItemLargeTitleDisplayModeNever];
                 
                 [self pushViewController:webViewViewController];
             }
@@ -2941,6 +2929,11 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
                     SecurityViewController *securityViewController = [SecurityViewController instantiateWithMatrixSession:self.mainSession];
 
                     [self pushViewController:securityViewController];
+                    break;
+                }
+                case DEVICE_MANAGER_INDEX:
+                {
+                    [self showUserSessionsFlow];
                     break;
                 }
             }
@@ -3316,6 +3309,19 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
     [[AppDelegate theDelegate] restoreEmptyDetailsViewController];
 }
 
+- (void)toggleEnableNewSessionManager:(UISwitch *)sender
+{
+    RiotSettings.shared.enableNewSessionManager = sender.isOn;
+    [self updateSections];
+}
+
+- (void)toggleEnableNewClientInfoFeature:(UISwitch *)sender
+{
+    BOOL isEnabled = sender.isOn;
+    RiotSettings.shared.enableClientInformationFeature = isEnabled;
+    MXSDKOptions.sharedInstance.enableNewClientInformationFeature = isEnabled;
+}
+
 - (void)togglePinRoomsWithMissedNotif:(UISwitch *)sender
 {
     RiotSettings.shared.pinRoomsWithMissedNotificationsOnHome = sender.isOn;
@@ -3324,43 +3330,6 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
 - (void)togglePinRoomsWithUnread:(UISwitch *)sender
 {
     RiotSettings.shared.pinRoomsWithUnreadMessagesOnHome = sender.on;
-}
-
-- (void)toggleCommunityFlair:(UISwitch *)sender
-{
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:sender.tag inSection:groupsDataSource.joinedGroupsSection];
-    id<MXKGroupCellDataStoring> groupCellData = [groupsDataSource cellDataAtIndex:indexPath];
-    MXGroup *group = groupCellData.group;
-    
-    if (group)
-    {
-        [self startActivityIndicator];
-        
-        __weak typeof(self) weakSelf = self;
-        
-        [self.mainSession updateGroupPublicity:group isPublicised:sender.isOn success:^{
-            
-            if (weakSelf)
-            {
-                typeof(self) self = weakSelf;
-                [self stopActivityIndicator];
-            }
-            
-        } failure:^(NSError *error) {
-            
-            if (weakSelf)
-            {
-                typeof(self) self = weakSelf;
-                [self stopActivityIndicator];
-                
-                // Come back to previous state button
-                [sender setOn:!sender.isOn animated:YES];
-                
-                // Notify user
-                [[AppDelegate theDelegate] showErrorAsAlert:error];
-            }
-        }];
-    }
 }
 
 - (void)toggleUseOnlyLatestUserAvatarAndName:(UISwitch *)sender
@@ -3778,11 +3747,13 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
         msisdn = [NSString stringWithFormat:@"+%@", [e164 substringFromIndex:2]];
     }
     
+    NSString *countryCode = newPhoneNumberCell.isoCountryCode;
+
     [self showAuthenticationIfNeededForAdding:kMX3PIDMediumMSISDN withSession:session completion:^(NSDictionary *authParams) {
         [self startActivityIndicator];
 
         __block MX3PidAddSession *new3Pid;
-        new3Pid = [session.threePidAddManager startAddPhoneNumberSessionWithPhoneNumber:msisdn countryCode:nil success:^{
+        new3Pid = [session.threePidAddManager startAddPhoneNumberSessionWithPhoneNumber:msisdn countryCode:countryCode success:^{
 
             [self showValidationMsisdnDialogWithMessage:[VectorL10n accountMsisdnValidationMessage] for3PidAddSession:new3Pid threePidAddManager:session.threePidAddManager authenticationParameters:authParams];
 
@@ -3920,6 +3891,10 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
                 // The user wants to select this theme
                 RiotSettings.shared.userInterfaceTheme = newTheme;
                 ThemeService.shared.themeId = newTheme;
+                
+                // This is a hack to force the background colour of the container view of the navigation controller
+                // This is needed only for hot theme update as the UIViewControllerWrapperView of the RioNavigationController is not updated
+                self.view.superview.backgroundColor = ThemeService.shared.theme.backgroundColor;
 
                 [self updateSections];
             }
@@ -4166,25 +4141,6 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
     }
 }
 
-#pragma mark - MXKDataSourceDelegate
-
-- (Class<MXKCellRendering>)cellViewClassForCellData:(MXKCellData*)cellData
-{
-    // Return the class used to display a group with a toogle button
-    return GroupTableViewCellWithSwitch.class;
-}
-
-- (NSString *)cellReuseIdentifierForCellData:(MXKCellData*)cellData
-{
-    return GroupTableViewCellWithSwitch.defaultReuseIdentifier;
-}
-
-- (void)dataSource:(MXKDataSource *)dataSource didCellChange:(id)changes
-{
-    // Group data has been updated. Do a simple full reload
-    [self refreshSettings];
-}
-
 #pragma mark - DeactivateAccountViewControllerDelegate
 
 - (void)deactivateAccountViewControllerDidDeactivateWithSuccess:(DeactivateAccountViewController *)deactivateAccountViewController
@@ -4258,19 +4214,7 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
 
 - (BOOL)canSetupSecureBackup
 {
-    // Accept to create a setup only if we have the 3 cross-signing keys
-    // This is the path to have a sane state
-    // TODO: What about missing MSK that was not gossiped before?
-    
-    MXRecoveryService *recoveryService = self.mainSession.crypto.recoveryService;
-    
-    NSArray *crossSigningServiceSecrets = @[
-                                            MXSecretId.crossSigningMaster,
-                                            MXSecretId.crossSigningSelfSigning,
-                                            MXSecretId.crossSigningUserSigning];
-    
-    return ([recoveryService.secretsStoredLocally mx_intersectArray:crossSigningServiceSecrets].count
-            == crossSigningServiceSecrets.count);
+    return [self.mainSession vc_canSetupSecureBackup];
 }
 
 #pragma mark - SecureBackupSetupCoordinatorBridgePresenterDelegate
@@ -4643,6 +4587,37 @@ ChangePasswordCoordinatorBridgePresenterDelegate>
 {
     [bridgePresenter dismissWithAnimated:YES completion:nil];
     self.changePasswordBridgePresenter = nil;
+}
+
+#pragma mark - User sessions management
+
+- (void)showUserSessionsFlow
+{
+    if (!self.mainSession)
+    {
+        MXLogError(@"[SettingsViewController] Cannot show user sessions flow, no user session available");
+        return;
+    }
+    
+    if (!self.navigationController)
+    {
+        MXLogError(@"[SettingsViewController] Cannot show user sessions flow, no navigation controller available");
+        return;
+    }
+    
+    UserSessionsFlowCoordinatorBridgePresenter *userSessionsFlowCoordinatorBridgePresenter = [[UserSessionsFlowCoordinatorBridgePresenter alloc] initWithMxSession:self.mainSession];
+    
+    MXWeakify(self);
+    
+    userSessionsFlowCoordinatorBridgePresenter.completion = ^{
+        MXStrongifyAndReturnIfNil(self);
+        
+        self.userSessionsFlowCoordinatorBridgePresenter = nil;
+    };
+
+    self.userSessionsFlowCoordinatorBridgePresenter = userSessionsFlowCoordinatorBridgePresenter;
+
+    [self.userSessionsFlowCoordinatorBridgePresenter pushFrom:self.navigationController animated:YES];
 }
 
 @end

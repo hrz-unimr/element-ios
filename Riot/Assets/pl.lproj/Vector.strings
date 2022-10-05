@@ -256,7 +256,7 @@
 "settings_crypto_device_id" = "\nID Sesji: ";
 "settings_crypto_device_key" = "\nKlucz Sesji:\n";
 "settings_crypto_blacklist_unverified_devices" = "Szyfruj wiadomości tylko do zaufanych sesji";
-"settings_deactivate_my_account" = "Dezaktywuj moje konto";
+"settings_deactivate_my_account" = "Dezaktywuj konto na stałe";
 // Room Details
 "room_details_title" = "Szczegóły pokoju";
 "room_details_files" = "Pliki";
@@ -2075,7 +2075,7 @@
 "room_displayname_all_other_members_left" = "%@ (Opuścił-a)";
 "call_jitsi_unable_to_start" = "Nie można rozpocząć połączenia konferencyjnego";
 "spaces_creation_invite_by_username_title" = "Zaproś swój zespół";
-"message_reply_to_sender_sent_their_live_location" = "udostępnił swoją lokalizację na żywo.";
+"message_reply_to_sender_sent_their_live_location" = "Lokalizacja na żywo.";
 "notice_error_unformattable_event" = "** Nie można wyrenderować wiadomości. Proszę zgłosić błąd";
 "ignore_user" = "Ignoruj użytkownika";
 "location_sharing_live_lab_promotion_activation" = "Włącz udostępnianie lokalizacji na żywo";
@@ -2414,7 +2414,7 @@
 "authentication_recaptcha_title" = "Jesteś człowiekiem?";
 "authentication_terms_policy_url_error" = "Nie można znaleźć wybranych reguł lub zasad. Spróbuj ponownie później.";
 "authentication_terms_message" = "Przeczytaj warunki i zasady %@";
-"authentication_terms_title" = "Zasady serwera";
+"authentication_terms_title" = "Polityki prywatności";
 "authentication_verify_msisdn_invalid_phone_number" = "Nieprawidłowy numer telefonu";
 "authentication_verify_msisdn_waiting_button" = "Ponownie wyślij kod";
 /* The placeholder will show the phone number that was entered. */
@@ -2439,8 +2439,8 @@
 "authentication_verify_email_waiting_button" = "Wyślij ponownie wiadomość e-mail";
 "authentication_verify_email_waiting_hint" = "Nie otrzymałeś e-maila?";
 /* The placeholder will show the email address that was entered. */
-"authentication_verify_email_waiting_message" = "Aby potwierdzić swój adres e-mail, dotknij przycisku w e-mailu, który właśnie wysłaliśmy do %@";
-"authentication_verify_email_waiting_title" = "Sprawdź swój adres e-mail, aby zweryfikować.";
+"authentication_verify_email_waiting_message" = "Postępuj zgodnie z instrukcjami wysłanymi do %@";
+"authentication_verify_email_waiting_title" = "Zweryfikuj swój adres email.";
 "authentication_verify_email_text_field_placeholder" = "Email";
 "authentication_verify_email_input_message" = "%@ musi zweryfikować Twoje konto";
 "authentication_verify_email_input_title" = "Wprowadź swój email";
@@ -2464,7 +2464,7 @@
 // MARK: Authentication
 "authentication_registration_title" = "Utwórz swoje konto";
 "onboarding_celebration_button" = "Ruszajmy dalej";
-"onboarding_celebration_message" = "Przejdź do ustawień w dowolnym momencie, aby zaktualizować swój profil.";
+"onboarding_celebration_message" = "Przejdź do ustawień w dowolnym momencie, aby zaktualizować swój profil";
 "onboarding_celebration_title" = "Wygląda dobrze!";
 "onboarding_avatar_accessibility_label" = "Obraz profilowy";
 "onboarding_avatar_message" = "Ustaw avatar";
@@ -2479,7 +2479,7 @@
 "onboarding_congratulations_home_button" = "Wróć do ekranu głównego";
 "onboarding_congratulations_personalize_button" = "Spersonalizuj profil";
 /* The placeholder string contains the user's matrix ID */
-"onboarding_congratulations_message" = "Twoje konto %@ zostało utworzone.";
+"onboarding_congratulations_message" = "Twoje konto %@ zostało utworzone";
 "onboarding_congratulations_title" = "Gratulacje!";
 "onboarding_use_case_existing_server_button" = "Połącz się z serwerem";
 "onboarding_use_case_existing_server_message" = "Chcesz dołączyć do istniejącego serwera?";
@@ -2510,3 +2510,72 @@
 "new_word" = "Nowy";
 "stop" = "Stop";
 "joining" = "Dołączanie";
+"location_sharing_invalid_power_level_message" = "Aby udostępniać lokalizację na żywo w tym pokoju, musisz mieć odpowiednie uprawnienia.";
+"location_sharing_invalid_power_level_title" = "Nie masz uprawnień do udostępniania lokalizacji na żywo";
+"authentication_choose_password_not_verified_message" = "Sprawdź swoją skrzynkę odbiorczą";
+"authentication_choose_password_not_verified_title" = "E-mail niezweryfikowany";
+"authentication_server_info_title_login" = "Miejsce twoich konwersacji";
+
+// MARK: User sessions management
+
+"user_sessions_overview_title" = "Sesje";
+"location_sharing_map_loading_error" = "Nie udało się załadować mapy\nTen serwer domowy nie jest skonfigurowany do wyświetlania map";
+"space_detail_nav_title" = "Szczegóły przestrzeni";
+"space_selector_create_space" = "Utwórz przestrzeń";
+"space_selector_empty_view_information" = "Przestrzenie to sposób na grupowanie pokojów i osób. Utwórz przestrzeń, aby rozpocząć.";
+"space_selector_empty_view_title" = "Nie masz jeszcze żadnych przestrzeni.";
+
+// Mark: - Space Selector
+
+"space_selector_title" = "Moje przestrzenie";
+"room_invites_empty_view_information" = "Tutaj pojawią się twoje zaproszenia.";
+
+// Mark: - Room invites
+
+"room_invites_empty_view_title" = "Nic nowego.";
+"all_chats_onboarding_try_it" = "Wypróbuj";
+"all_chats_onboarding_title" = "Co nowego";
+"all_chats_onboarding_page_message3" = "Dotknij swojego profilu by poinformować nas, co o tym sądzisz.";
+"all_chats_onboarding_page_title3" = "Prześlij opinię";
+"all_chats_onboarding_page_message2" = "Uzyskaj dostęp do twoich przestrzeni (lewy dolny róg) szybciej i prościej niż kiedykolwiek.";
+"all_chats_onboarding_page_message1" = "Aby uprościć korzystanie z Element, karty są teraz opcjonalne. Możesz nimi zarządzać w menu w prawym górnym rogu.";
+"all_chats_onboarding_page_title1" = "Witaj w nowym widoku!";
+"all_chats_edit_menu_space_settings" = "Ustawienia przestrzeni";
+"all_chats_edit_menu_leave_space" = "Opuść %@";
+"all_chats_user_menu_settings" = "Ustawienia użytkownika";
+"room_recents_recently_viewed_section" = "Ostatnio wyświetlane";
+"all_chats_nothing_found_placeholder_message" = "Spróbuj poprawić swoje wyszukiwanie.";
+"all_chats_nothing_found_placeholder_title" = "Nic nie znaleziono.";
+"all_chats_empty_unreads_placeholder_message" = "W tym miejscu pojawią się nieprzeczytane wiadomości, gdy będziesz takie mieć.";
+"all_chats_empty_list_placeholder_title" = "Jesteś na bieżąco.";
+"all_chats_empty_view_information" = "Bezpieczny, wielofunkcyjny komunikator dla zespołów, znajomych i organizacji. Utwórz rozmowę, lub dołącz do istniejącego pokoju, aby rozpocząć.";
+"all_chats_empty_space_information" = "Przestrzenie to nowy sposób na grupowanie pokojów i osób. Dodaj istniejący pokój, lub utwórz nowy, korzystając z przycisku w prawym dolnym rogu.";
+"all_chats_empty_view_title" = "%@\nwygląda pusto.";
+"all_chats_all_filter" = "Wszystkie";
+"all_chats_edit_layout_alphabetical_order" = "Sortuj alfabetycznie";
+"all_chats_edit_layout_activity_order" = "Sortuj według aktywności";
+"all_chats_edit_layout_show_filters" = "Pokaż filtry";
+"all_chats_edit_layout_show_recents" = "Pokaż ostatnie";
+"all_chats_edit_layout_sorting_options_title" = "Sortuj wiadomości według";
+"all_chats_edit_layout_pin_spaces_title" = "Przypnij swoje przestrzenie";
+"all_chats_edit_layout_add_filters_message" = "Automatyczne filtrowanie wiadomości do kategorii jakie wybierzesz";
+"all_chats_edit_layout_add_filters_title" = "Przefiltruj swoje wiadomości";
+"all_chats_edit_layout_add_section_message" = "Przypnij sekcje na ekranie głównym dla szybkiego dostępu";
+"all_chats_edit_layout_add_section_title" = "Dodaj sekcję do ekranu głównego";
+"all_chats_edit_layout_unreads" = "Nieprzeczytane";
+"all_chats_edit_layout_recents" = "Ostatnie";
+"all_chats_edit_layout" = "Ustawienia wyglądu";
+"all_chats_section_title" = "Rozmowy";
+
+// Mark: - All Chats
+
+"all_chats_title" = "Wszystkie rozmowy";
+"spaces_subspace_creation_visibility_message" = "Utworzona przestrzeń zostanie dodana do %@.";
+"spaces_subspace_creation_visibility_title" = "Jakiego rodzaju podprzestrzeń chcesz utworzyć?";
+"spaces_explore_rooms_format" = "Przeglądaj %@";
+"spaces_create_subspace_title" = "Utwórz podprzestrzeń";
+"spaces_add_subspace_title" = "Utwórz przestrzeń w %@";
+
+// User sessions management
+"user_sessions_settings" = "Zarządzaj sesjami";
+"invite_to" = "Zaproś do %@";

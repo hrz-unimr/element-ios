@@ -1,4 +1,4 @@
-// 
+//
 // Copyright 2021 New Vector Ltd
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@ import SwiftUI
 
 extension ThemableTextEditor {
     func showClearButton(text: Binding<String>, alignment: VerticalAlignment = .top) -> some View {
-        return modifier(ClearViewModifier(alignment: alignment, text: text))
+        modifier(ClearViewModifier(alignment: alignment, text: text))
     }
 }
 
@@ -47,7 +47,7 @@ struct ClearViewModifier: ViewModifier {
                 }) {
                     Image(systemName: "xmark.circle.fill")
                         .renderingMode(.template)
-                        .foregroundColor(theme.colors.quaternaryContent)
+                        .foregroundColor(theme.colors.quarterlyContent)
                 }
                 .padding(.top, alignment == .top ? 8 : 0)
                 .padding(.bottom, alignment == .bottom ? 8 : 0)

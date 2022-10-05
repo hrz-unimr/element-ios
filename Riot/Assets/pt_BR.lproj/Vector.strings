@@ -2230,7 +2230,7 @@
 "settings_labs_enable_auto_report_decryption_errors" = "Auto Reportar Erros de Decriptação";
 "room_preview_decline_invitation_options" = "Você quer declinar o convite ou ignorar esta(e) usuária(o)?";
 "threads_beta_cancel" = "Não agora";
-"threads_beta_enable" = "Teste aí";
+"threads_beta_enable" = "Experimentar";
 "threads_beta_information_link" = "Saber mais";
 "threads_beta_information" = "Mantenha discussões organizadas com threads.\n\nThreads ajudam manter suas conversas em-tópico e fáceis de rastrear. ";
 "threads_beta_title" = "Threads";
@@ -2344,7 +2344,7 @@
 "authentication_terms_policy_url_error" = "Incapaz de encontrar a política selecionada. Por favor tente de novo mais tarde.";
 /* The placeholder will show the homeserver's domain */
 "authentication_terms_message" = "Por favor leia os termos e políticas de %@";
-"authentication_terms_title" = "Políticas de servidor";
+"authentication_terms_title" = "Políticas de privacidade";
 "authentication_verify_msisdn_invalid_phone_number" = "Número de telefone inválido";
 "authentication_verify_msisdn_waiting_button" = "Reenviar código";
 /* The placeholder will show the phone number that was entered. */
@@ -2396,3 +2396,95 @@
 
 // MARK: Authentication
 "authentication_registration_title" = "Criar sua conta";
+"location_sharing_invalid_power_level_message" = "Você precisa ter as permissões certas a fim de compartilhar localização ao vivo nesta sala.";
+"location_sharing_invalid_power_level_title" = "Você não tem permissão para compartilhar localização ao vivo";
+"authentication_choose_password_not_verified_message" = "Cheque sua inbox";
+"authentication_choose_password_not_verified_title" = "Email não verificado";
+"location_sharing_map_loading_error" = "Incapaz de carregar mapa\nEste servidocasa não está configurado para exibir mapas";
+
+// Mark: - Space Selector
+
+"space_selector_title" = "Meus espaços";
+"all_chats_edit_menu_space_settings" = "Ajustes de espaço";
+"all_chats_edit_menu_leave_space" = "Sair de %@";
+"all_chats_user_menu_settings" = "Ajustes de usuária(o)";
+"room_recents_recently_viewed_section" = "Vistos recentemente";
+"all_chats_all_filter" = "Todos";
+"all_chats_edit_layout_alphabetical_order" = "Ordenar A-Z";
+"all_chats_edit_layout_activity_order" = "Classificar por atividade";
+"all_chats_edit_layout_show_filters" = "Mostrar filtros";
+"all_chats_edit_layout_show_recents" = "Mostrar recentes";
+"all_chats_edit_layout_sorting_options_title" = "Classificar mensagens por";
+"all_chats_edit_layout_pin_spaces_title" = "Pinnar seus espaços";
+"all_chats_edit_layout_add_filters_message" = "Filtrar automaticamente suas menagens para dentro das categorias de sua escolha";
+"all_chats_edit_layout_add_filters_title" = "Filtrar suas mensagens";
+"all_chats_edit_layout_add_section_message" = "Pinnar seções a home para acesso fácil";
+"all_chats_edit_layout_add_section_title" = "Adicionar seção a home";
+"all_chats_edit_layout_unreads" = "Não-lidos";
+"all_chats_edit_layout_recents" = "Recentes";
+"all_chats_edit_layout" = "Preferências de layout";
+"all_chats_section_title" = "Chats";
+
+// Mark: - All Chats
+
+"all_chats_title" = "Todos os chats";
+"spaces_subspace_creation_visibility_message" = "O espaço criado vai ser adicionado a %@.";
+"spaces_subspace_creation_visibility_title" = "Que tipo de subespaço você quer criar?";
+"spaces_create_subspace_title" = "Criar um subespaço";
+"spaces_add_subspace_title" = "Criar espaço dentro de %@";
+
+// MARK: User sessions management
+
+"user_sessions_overview_title" = "Sessões";
+"space_invite_nav_title" = "Convite de espaço";
+"space_detail_nav_title" = "Detalhe de espaço";
+"space_selector_create_space" = "Criar Espaço";
+"space_selector_empty_view_information" = "Espaços são uma nova forma de agrupar salas e pessoas. Crie um espaço para começar.";
+"space_selector_empty_view_title" = "Nenhum espaço ainda.";
+"room_invites_empty_view_information" = "Isto é onde seus convites aparecem.";
+
+// Mark: - Room invites
+
+"room_invites_empty_view_title" = "Nada novo.";
+"all_chats_onboarding_try_it" = "Experimentar";
+"all_chats_onboarding_title" = "O que tem de novo";
+"all_chats_onboarding_page_message3" = "Toque em seu perfil para nos deixar sabendo do que você acha.";
+"all_chats_onboarding_page_title3" = "Dê Feedback";
+"all_chats_onboarding_page_message2" = "Acesse seus Espaços (esquerda fundo) mais rápido e fácil que jamais antes.";
+"all_chats_onboarding_page_title2" = "Acesse Espaços";
+"all_chats_onboarding_page_message1" = "Para simplificar seu Element, abas são agora opcionais. Gerencie-as usando o menu direito topo.";
+"all_chats_onboarding_page_title1" = "Boas vindas a uma nova visão!";
+"all_chats_nothing_found_placeholder_message" = "Tente ajustar sua pesquisa.";
+"all_chats_nothing_found_placeholder_title" = "Nada encontrado.";
+"all_chats_empty_unreads_placeholder_message" = "Isto é onde suas mensagens não-lidas vão aparecer, quando você tiver algumas.";
+"all_chats_empty_list_placeholder_title" = "Você está em dia.";
+"all_chats_empty_view_information" = "O app de chat seguro tudo-em-um para times, amigos, e organizações. Crie um chat, ou junte-se a uma sala existente, para começar.";
+"all_chats_empty_space_information" = "Espaços são uma nova forma de agrupar salas e pessoas. Adicione uma sala existente, ou crie uma nova, usando o botão direito fundo.";
+"all_chats_empty_view_title" = "%@\nestá parecendo um pouco vazio.";
+"spaces_explore_rooms_format" = "Explorar %@";
+
+// User sessions management
+"user_sessions_settings" = "Gerenciar sessões";
+"invite_to" = "Convidar para %@";
+"device_name_unknown" = "Cliente desconhecido";
+"device_name_mobile" = "%@ Mobile";
+"device_name_web" = "%@ Web";
+"device_name_desktop" = "%@ Desktop";
+"user_session_item_details" = "%@ · Última atividade %@";
+
+// First item is client name and second item is session display name
+"user_session_name" = "%@: %@";
+"user_session_unverified_additional_info" = "Verifique sua sessão atual para mensageria segura melhorada.";
+"user_session_verified_additional_info" = "Sua sessão atual está pronta para mensageria segura.";
+"user_session_learn_more" = "Saber mais";
+"user_session_view_details" = "Visualizar detalhes";
+"user_session_verify_action" = "Verificar sessão";
+"user_session_unverified_short" = "Não-verificada";
+"user_session_verified_short" = "Verificada";
+"user_session_unverified" = "Sessão não-verificada";
+"user_session_verified" = "Sessão verificada";
+"user_sessions_overview_current_session_section_title" = "SESSÃO ATUAL";
+"user_sessions_overview_other_sessions_section_info" = "Para melhor segurança, verifique suas sessões e faça signout de qualquer sessão que você não reconhece ou usa mais.";
+"user_sessions_overview_other_sessions_section_title" = "OUTRAS SESSÕES";
+"settings_labs_enable_new_app_layout" = "Novo Layout de Aplicativo";
+"room_first_message_placeholder" = "Envie sua primeira mensagem…";

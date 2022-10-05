@@ -19,19 +19,18 @@ import SwiftUI
 
 /// An input field style for forms.
 struct FormInputFieldStyle: TextFieldStyle {
-    
     @Environment(\.theme) var theme: ThemeSwiftUI
     @Environment(\.isEnabled) var isEnabled
     
     private var textColor: Color {
         if !isEnabled {
-            return theme.colors.quaternaryContent
+            return theme.colors.quarterlyContent
         }
         return theme.colors.primaryContent
     }
     
     private var backgroundColor: Color {
-        if !isEnabled && theme.identifier == .dark {
+        if !isEnabled, theme.identifier == .dark {
             return theme.colors.quinaryContent
         }
         return theme.colors.background
@@ -47,7 +46,6 @@ struct FormInputFieldStyle: TextFieldStyle {
     }
 }
 
-
 struct FormInputFieldStyle_Previews: PreviewProvider {
     static var previews: some View {
         Group {
@@ -59,7 +57,6 @@ struct FormInputFieldStyle_Previews: PreviewProvider {
                 TextField("Placeholder", text: .constant("Web"))
                     .textFieldStyle(FormInputFieldStyle())
                     .disabled(true)
-                
             }
             .padding()
             VectorForm {
@@ -70,11 +67,9 @@ struct FormInputFieldStyle_Previews: PreviewProvider {
                 TextField("Placeholder", text: .constant("Web"))
                     .textFieldStyle(FormInputFieldStyle())
                     .disabled(true)
-                
             }
             .padding()
             .theme(ThemeIdentifier.dark)
         }
-
     }
 }

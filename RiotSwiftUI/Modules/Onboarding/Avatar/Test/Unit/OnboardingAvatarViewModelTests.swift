@@ -1,4 +1,4 @@
-// 
+//
 // Copyright 2021 New Vector Ltd
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +14,8 @@
 // limitations under the License.
 //
 
-import XCTest
 import Combine
+import XCTest
 
 @testable import RiotSwiftUI
 
@@ -23,7 +23,7 @@ class OnboardingAvatarViewModelTests: XCTestCase {
     private enum Constants {
         static let userId = "@user:matrix.org"
         static let displayName = "Alice"
-        static let avatarColorCount = DefaultThemeSwiftUI().colors.contentAndAvatars.count
+        static let avatarColorCount = DefaultThemeSwiftUI().colors.namesAndAvatars.count
         static let avatarImage = Asset.Images.appSymbol.image
     }
     
