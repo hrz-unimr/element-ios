@@ -1,21 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "element-design-tokens",
+      "identity" : "devicekit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/vector-im/element-design-tokens.git",
+      "location" : "https://github.com/devicekit/DeviceKit",
       "state" : {
-        "revision" : "02ba42d9ec02f90370a6cfc35a68d7312696636c",
-        "version" : "0.0.2"
-      }
-    },
-    {
-      "identity" : "element-x-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/vector-im/element-x-ios",
-      "state" : {
-        "revision" : "0a199ee61126feb8c8a462200cb4749d6eb3ba77",
-        "version" : "1.0.1-202207011447"
+        "revision" : "20e0991f3975916ab0f6d58db84d8bc64f883537",
+        "version" : "4.7.0"
       }
     },
     {
@@ -60,16 +51,7 @@
       "location" : "https://github.com/vector-im/swift-ogg",
       "state" : {
         "branch" : "main",
-        "revision" : "0ffad3f7b45a6a4760db090d503b00f094bbecc0"
-      }
-    },
-    {
-      "identity" : "swiftui-introspect",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/siteline/SwiftUI-Introspect.git",
-      "state" : {
-        "revision" : "f2616860a41f9d9932da412a8978fec79c06fe24",
-        "version" : "0.1.4"
+        "revision" : "e9a9e7601da662fd8b97d93781ff5c60b4becf88"
       }
     }
   ],

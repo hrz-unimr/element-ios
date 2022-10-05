@@ -68,9 +68,9 @@ const CGFloat kTypingCellHeight = 24;
 
 @implementation RoomDataSource
 
-- (instancetype)initWithRoomId:(NSString *)roomId andMatrixSession:(MXSession *)matrixSession
+- (instancetype)initWithRoomId:(NSString *)roomId andMatrixSession:(MXSession *)matrixSession threadId:(NSString *)threadId
 {
-    self = [super initWithRoomId:roomId andMatrixSession:matrixSession];
+    self = [super initWithRoomId:roomId andMatrixSession:matrixSession threadId:threadId];
     if (self)
     {
         // Replace default Cell data class
@@ -162,7 +162,6 @@ const CGFloat kTypingCellHeight = 24;
     self.eventFormatter.treatMatrixUserIdAsLink = YES;
     self.eventFormatter.treatMatrixRoomIdAsLink = YES;
     self.eventFormatter.treatMatrixRoomAliasAsLink = YES;
-    self.eventFormatter.treatMatrixGroupIdAsLink = YES;
     
     // Apply the event types filter to display only the wanted event types.
     self.eventFormatter.eventTypesFilterForMessages = [MXKAppSettings standardAppSettings].eventsFilterForMessages;

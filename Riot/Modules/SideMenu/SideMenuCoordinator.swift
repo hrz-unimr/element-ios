@@ -265,7 +265,7 @@ final class SideMenuCoordinator: NSObject, SideMenuCoordinatorType {
             return
         }
         
-        let coordinator = SpaceCreationCoordinator(parameters: SpaceCreationCoordinatorParameters(session: session))
+        let coordinator = SpaceCreationCoordinator(parameters: SpaceCreationCoordinatorParameters(session: session, parentSpaceId: nil))
         let presentable = coordinator.toPresentable()
         presentable.presentationController?.delegate = self
         self.sideMenuViewController.present(presentable, animated: true, completion: nil)
@@ -320,7 +320,9 @@ final class SideMenuCoordinator: NSObject, SideMenuCoordinatorType {
     
     func showSpaceInvite(spaceId: String, session: MXSession) {
         guard let space = session.spaceService.getSpace(withId: spaceId), let spaceRoom = space.room else {
-            MXLog.error("[SideMenuCoordinator] showSpaceInvite: failed to find space with id \(spaceId)")
+            MXLog.error("[SideMenuCoordinator] showSpaceInvite: failed to find space", context: [
+                "space_id": spaceId
+            ])
             return
         }
         

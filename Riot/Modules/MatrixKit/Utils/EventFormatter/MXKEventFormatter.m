@@ -1022,21 +1022,6 @@ static NSString *const kHTMLATagRegexPattern = @"<a href=(?:'|\")(.*?)(?:'|\")>(
             }
             break;
         }
-        case MXEventTypeRoomRelatedGroups:
-        {
-            NSArray *groups;
-            MXJSONModelSetArray(groups, event.content[@"groups"]);
-            if (groups)
-            {
-                displayText = [VectorL10n noticeRoomRelatedGroups:[groups componentsJoinedByString:@", "]];
-                // Append redacted info if any
-                if (redactedInfo)
-                {
-                    displayText = [NSString stringWithFormat:@"%@\n %@", displayText, redactedInfo];
-                }
-            }
-            break;
-        }
         case MXEventTypeRoomEncrypted:
         {
             // Is redacted?
@@ -1861,7 +1846,17 @@ static NSString *const kHTMLATagRegexPattern = @"<a href=(?:'|\")(.*?)(?:'|\")>(
         }
         else
         {
-            MXJSONModelSetString(repliedEventContent, repliedEvent.content[@"formatted_body"]);
+            MXReplyEventParser *parser = [[MXReplyEventParser alloc] init];
+            MXReplyEventParts *parts = [parser parse:repliedEvent];
+            MXJSONModelSetString(repliedEventContent, parts.formattedBodyParts.replyText)
+            if (!repliedEventContent)
+            {
+                MXJSONModelSetString(repliedEventContent, parts.bodyParts.replyText)
+            }
+            if (!repliedEventContent)
+            {
+                MXJSONModelSetString(repliedEventContent, repliedEvent.content[@"formatted_body"]);
+            }
             if (!repliedEventContent)
             {
                 MXJSONModelSetString(repliedEventContent, repliedEvent.content[kMXMessageBodyKey]);
@@ -2080,12 +2075,6 @@ static NSString *const kHTMLATagRegexPattern = @"<a href=(?:'|\")(.*?)(?:'|\")>(
     if (_treatMatrixEventIdAsLink)
     {
         enabledMatrixIdsBitMask |= MXKTOOLS_EVENT_IDENTIFIER_BITWISE;
-    }
-    
-    // If enabled, make group id clickable
-    if (_treatMatrixGroupIdAsLink)
-    {
-        enabledMatrixIdsBitMask |= MXKTOOLS_GROUP_IDENTIFIER_BITWISE;
     }
 
     [MXKTools createLinksInMutableAttributedString:mutableAttributedString forEnabledMatrixIds:enabledMatrixIdsBitMask];

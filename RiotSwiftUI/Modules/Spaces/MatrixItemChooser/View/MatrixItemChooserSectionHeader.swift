@@ -1,4 +1,4 @@
-// 
+//
 // Copyright 2021 New Vector Ltd
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,6 @@
 import SwiftUI
 
 struct MatrixItemChooserSectionHeader: View {
-
     // MARK: - Properties
     
     // MARK: Private
@@ -52,7 +51,7 @@ struct MatrixItemChooserSectionHeader: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.vertical, 8)
                 .padding(.horizontal)
-                .background(theme.colors.system)
+                .background(theme.colors.navigation)
                 .cornerRadius(8)
             }
         }

@@ -1,4 +1,4 @@
-// 
+//
 // Copyright 2021 New Vector Ltd
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,6 @@
 import SwiftUI
 
 struct SpaceSettingsOptionListItem: View {
-    
     // MARK: Private
     
     @Environment(\.theme) private var theme: ThemeSwiftUI
@@ -67,7 +66,7 @@ struct SpaceSettingsOptionListItem: View {
                 Image(systemName: "chevron.right")
                     .renderingMode(.template)
                     .font(.system(size: 16, weight: .regular))
-                    .foregroundColor(theme.colors.quaternaryContent)
+                    .foregroundColor(theme.colors.quarterlyContent)
             }
             .opacity(isEnabled ? 1 : 0.5)
         }
@@ -85,7 +84,6 @@ struct SpaceSettingsOptionListItem: View {
 // MARK: - Previews
 
 struct SpaceSettingsOptionListItem_Previews: PreviewProvider {
-    
     static var previews: some View {
         sampleView.theme(.light).preferredColorScheme(.light)
         sampleView.theme(.dark).preferredColorScheme(.dark)
@@ -100,5 +98,4 @@ struct SpaceSettingsOptionListItem_Previews: PreviewProvider {
                 .disabled(true)
         }
     }
-
 }

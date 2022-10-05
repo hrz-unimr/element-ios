@@ -24,6 +24,9 @@ schemes:
       disableMainThreadChecker: true
       targets:
       - RiotTests
+      gatherCoverageData: true
+      coverageTargets:
+        - Riot
 
 targets:
   Riot:
@@ -34,11 +37,12 @@ targets:
     - target: RiotShareExtension
     - target: SiriIntents
     - target: RiotNSE
+    - target: DesignKit
     - target: CommonKit
-    - package: DesignKit
     - package: Mapbox
     - package: OrderedCollections
     - package: SwiftOGG
+    - package: DeviceKit
 
     configFiles:
       Debug: Debug.xcconfig
