@@ -18,13 +18,12 @@ import CommonKit
 import SwiftUI
 
 struct UserOtherSessionsCoordinatorParameters {
-    let sessionsInfo: [UserSessionInfo]
-    let filter: OtherUserSessionsFilter
+    let sessionInfos: [UserSessionInfo]
+    let filter: UserOtherSessionsFilter
     let title: String
 }
 
 final class UserOtherSessionsCoordinator: Coordinator, Presentable {
-    
     private let parameters: UserOtherSessionsCoordinatorParameters
     private let userOtherSessionsHostingController: UIViewController
     private var userOtherSessionsViewModel: UserOtherSessionsViewModelProtocol
@@ -38,9 +37,10 @@ final class UserOtherSessionsCoordinator: Coordinator, Presentable {
     init(parameters: UserOtherSessionsCoordinatorParameters) {
         self.parameters = parameters
         
-        let viewModel = UserOtherSessionsViewModel(sessionsInfo: parameters.sessionsInfo,
+        let viewModel = UserOtherSessionsViewModel(sessionInfos: parameters.sessionInfos,
                                                    filter: parameters.filter,
-                                                   title: parameters.title)
+                                                   title: parameters.title,
+                                                   settingsService: RiotSettings.shared)
         let view = UserOtherSessions(viewModel: viewModel.context)
         userOtherSessionsViewModel = viewModel
         userOtherSessionsHostingController = VectorHostingController(rootView: view)
@@ -56,7 +56,11 @@ final class UserOtherSessionsCoordinator: Coordinator, Presentable {
             guard let self = self else { return }
             switch result {
             case let .showUserSessionOverview(sessionInfo: session):
-                self.completion?(.openSessionDetails(sessionInfo: session))
+                self.completion?(.openSessionOverview(sessionInfo: session))
+            case let .logoutFromUserSessions(sessionInfos: sessionInfos):
+                self.completion?(.logoutFromUserSessions(sessionInfos: sessionInfos))
+            case .showSessionStateInfo(filter: let filter):
+                self.completion?(.showSessionStateByFilter(filter: filter))
             }
             MXLog.debug("[UserOtherSessionsCoordinator] UserOtherSessionsViewModel did complete with result: \(result).")
         }

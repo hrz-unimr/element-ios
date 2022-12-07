@@ -234,6 +234,8 @@ final class BuildSettings: NSObject {
     
     static let allowInviteExernalUsers: Bool = true
     
+    static let allowBackgroundAudioMessagePlayback: Bool = true
+    
     // MARK: - Side Menu
     static let enableSideMenu: Bool = true && !newAppLayoutEnabled
     static let sideMenuShowInviteFriends: Bool = true
@@ -404,6 +406,10 @@ final class BuildSettings: NSObject {
     static let defaultTileServerMapStyleURL = URL(string: "https://api.maptiler.com/maps/streets/style.json?key=fU3vlMsMn4Jb6dnEIFsx")!
     
     static let locationSharingEnabled = true
+    
+    // MARK: - Voice Broadcast
+    static let voiceBroadcastChunkLength: Int = 120
+    static let voiceBroadcastMaxLength: UInt = 14400 // 240min.
 
     // MARK: - MXKAppSettings
     static let enableBotCreation: Bool = false
@@ -420,4 +426,18 @@ final class BuildSettings: NSObject {
     
     // MARK: - New App Layout
     static let newAppLayoutEnabled = true
+
+    // MARK: - QR Login
+    
+    /// Flag indicating whether the QR login enabled from login screen
+    static let qrLoginEnabledFromNotAuthenticated = true
+    /// Flag indicating whether the QR login enabled from Device Manager screen
+    static let qrLoginEnabledFromAuthenticated = false
+    /// Flag indicating whether displaying QRs enabled for the QR login screens
+    static let qrLoginEnableDisplayingQRs = false
+    
+    static let rendezvousServerBaseURL = URL(string: "https://rendezvous.lab.element.dev/")!
+    
+    // MARK: - Alerts
+    static let showUnverifiedSessionsAlert = true
 }

@@ -19,6 +19,12 @@ import Foundation
 typealias UserSessionDetailsViewModelType = StateStoreViewModel<UserSessionDetailsViewState, UserSessionDetailsViewAction>
 
 class UserSessionDetailsViewModel: UserSessionDetailsViewModelType, UserSessionDetailsViewModelProtocol {
+    private static var lastSeenDateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EE, d MMM · HH:mm"
+        return dateFormatter
+    }()
+    
     var completion: ((UserSessionDetailsViewModelResult) -> Void)?
     
     init(sessionInfo: UserSessionInfo) {
@@ -57,6 +63,12 @@ class UserSessionDetailsViewModel: UserSessionDetailsViewModelType, UserSessionD
         sessionItems.append(.init(title: VectorL10n.keyVerificationManuallyVerifyDeviceIdTitle,
                                   value: sessionInfo.id))
         
+        if let lastSeenTimestamp = sessionInfo.lastSeenTimestamp {
+            let date = Date(timeIntervalSince1970: lastSeenTimestamp)
+            sessionItems.append(.init(title: VectorL10n.userSessionDetailsLastActivity,
+                                      value: Self.lastSeenDateFormatter.string(from: date)))
+        }
+        
         return .init(header: VectorL10n.userSessionDetailsSessionSectionHeader.uppercased(),
                      footer: VectorL10n.userSessionDetailsSessionSectionFooter,
                      items: sessionItems)
@@ -65,15 +77,15 @@ class UserSessionDetailsViewModel: UserSessionDetailsViewModelType, UserSessionD
     private func applicationSection(sessionInfo: UserSessionInfo) -> UserSessionDetailsSectionViewData? {
         var sessionItems: [UserSessionDetailsSectionItemViewData] = []
 
-        if let name = sessionInfo.applicationName {
+        if let name = sessionInfo.applicationName, !name.isEmpty {
             sessionItems.append(.init(title: VectorL10n.userSessionDetailsApplicationName,
                                       value: name))
         }
-        if let version = sessionInfo.applicationVersion {
+        if let version = sessionInfo.applicationVersion, !version.isEmpty {
             sessionItems.append(.init(title: VectorL10n.userSessionDetailsApplicationVersion,
                                       value: version))
         }
-        if let url = sessionInfo.applicationURL {
+        if let url = sessionInfo.applicationURL, !url.isEmpty {
             sessionItems.append(.init(title: VectorL10n.userSessionDetailsApplicationUrl,
                                       value: url))
         }

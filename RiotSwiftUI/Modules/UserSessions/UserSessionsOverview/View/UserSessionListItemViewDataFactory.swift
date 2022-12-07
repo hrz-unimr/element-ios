@@ -17,55 +17,72 @@
 import Foundation
 
 struct UserSessionListItemViewDataFactory {
-    
-    func create(from session: UserSessionInfo) -> UserSessionListItemViewData {
-        let sessionName = UserSessionNameFormatter.sessionName(deviceType: session.deviceType,
-                                                               sessionDisplayName: session.name)
-        let sessionDetails = buildSessionDetails(isVerified: session.isVerified,
-                                                 lastActivityDate: session.lastSeenTimestamp,
-                                                 isActive: session.isActive)
-        let deviceAvatarViewData = DeviceAvatarViewData(deviceType: session.deviceType,
-                                                        isVerified: session.isVerified)
-        return UserSessionListItemViewData(sessionId: session.id,
+    func create(from sessionInfo: UserSessionInfo,
+                isSelected: Bool = false) -> UserSessionListItemViewData {
+        let sessionName = UserSessionNameFormatter.sessionName(deviceType: sessionInfo.deviceType,
+                                                               sessionDisplayName: sessionInfo.name)
+        let sessionDetails = buildSessionDetails(sessionInfo: sessionInfo)
+        let deviceAvatarViewData = DeviceAvatarViewData(deviceType: sessionInfo.deviceType,
+                                                        verificationState: sessionInfo.verificationState)
+        return UserSessionListItemViewData(sessionId: sessionInfo.id,
                                            sessionName: sessionName,
                                            sessionDetails: sessionDetails,
                                            deviceAvatarViewData: deviceAvatarViewData,
-                                           sessionDetailsIcon: getSessionDetailsIcon(isActive: session.isActive))
+                                           sessionDetailsIcon: getSessionDetailsIcon(isActive: sessionInfo.isActive),
+                                           isSelected: isSelected,
+                                           lastSeenIP: sessionInfo.lastSeenIP,
+                                           lastSeenIPLocation: sessionInfo.lastSeenIPLocation)
     }
     
-    private func buildSessionDetails(isVerified: Bool, lastActivityDate: TimeInterval?, isActive: Bool) -> String {
-        if isActive {
-            return activeSessionDetails(isVerified: isVerified, lastActivityDate: lastActivityDate)
+    private func buildSessionDetails(sessionInfo: UserSessionInfo) -> String {
+        if sessionInfo.isActive {
+            return activeSessionDetails(sessionInfo: sessionInfo)
         } else {
-            return inactiveSessionDetails(lastActivityDate: lastActivityDate)
+            return inactiveSessionDetails(sessionInfo: sessionInfo)
         }
     }
     
-    private func inactiveSessionDetails(lastActivityDate: TimeInterval?) -> String {
-        if let lastActivityDate = lastActivityDate {
+    private func inactiveSessionDetails(sessionInfo: UserSessionInfo) -> String {
+        if let lastActivityDate = sessionInfo.lastSeenTimestamp {
             let lastActivityDateString = InactiveUserSessionLastActivityFormatter.lastActivityDateString(from: lastActivityDate)
             return VectorL10n.userInactiveSessionItemWithDate(lastActivityDateString)
         }
         return VectorL10n.userInactiveSessionItem
     }
     
-    private func activeSessionDetails(isVerified: Bool, lastActivityDate: TimeInterval?) -> String {
-        let sessionDetailsString: String
-        
-        let sessionStatusText = isVerified ? VectorL10n.userSessionVerifiedShort : VectorL10n.userSessionUnverifiedShort
+    private func activeSessionDetails(sessionInfo: UserSessionInfo) -> String {
+        // Start by creating the main part of the details string.
         
         var lastActivityDateString: String?
-        
-        if let lastActivityDate = lastActivityDate {
+        if let lastActivityDate = sessionInfo.lastSeenTimestamp {
             lastActivityDateString = UserSessionLastActivityFormatter.lastActivityDateString(from: lastActivityDate)
         }
-        
+        var sessionDetailsString = ""
         if let lastActivityDateString = lastActivityDateString, lastActivityDateString.isEmpty == false {
-            sessionDetailsString = VectorL10n.userSessionItemDetails(sessionStatusText, lastActivityDateString)
-        } else {
-            sessionDetailsString = sessionStatusText
+            sessionDetailsString = VectorL10n.userSessionItemDetailsLastActivity(lastActivityDateString)
         }
         
+        // Prepend the verification state if one is known.
+        let sessionStatusText: String?
+        switch sessionInfo.verificationState {
+        case .verified:
+            sessionStatusText = VectorL10n.userSessionVerifiedShort
+        case .unverified, .permanentlyUnverified:
+            sessionStatusText = VectorL10n.userSessionUnverifiedShort
+        case .unknown:
+            sessionStatusText = nil
+        }
+        
+        if let sessionStatusText = sessionStatusText {
+            if sessionDetailsString.isEmpty {
+                sessionDetailsString = sessionStatusText
+            } else {
+                sessionDetailsString = VectorL10n.userSessionItemDetails(sessionStatusText, sessionDetailsString)
+            }
+        } else if sessionDetailsString.isEmpty {
+            sessionDetailsString = VectorL10n.userSessionVerificationUnknownShort
+        }
+            
         return sessionDetailsString
     }
     

@@ -60,7 +60,7 @@ class AllChatsViewController: HomeViewController {
     
     private let tableViewPaginationThrottler = MXThrottler(minimumDelay: 0.1)
     
-    private var reviewSessionAlertHasBeenDisplayed: Bool = false
+    private let reviewSessionAlertSnoozeController = ReviewSessionAlertSnoozeController()
     
     private var bannerView: UIView? {
         didSet {
@@ -73,8 +73,10 @@ class AllChatsViewController: HomeViewController {
 
     private var allChatsOnboardingCoordinatorBridgePresenter: AllChatsOnboardingCoordinatorBridgePresenter?
     
-    private var currentAlert: UIAlertController?
-    
+    private var theme: Theme {
+        ThemeService.shared().theme
+    }
+
     @IBOutlet private var toolbar: UIToolbar!
     private var isToolbarHidden: Bool = false {
         didSet {
@@ -139,12 +141,13 @@ class AllChatsViewController: HomeViewController {
         searchController.delegate = self
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.setupEditOptions), name: AllChatsLayoutSettingsManager.didUpdateSettings, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.updateBadgeButton), name: MXSpaceNotificationCounter.didUpdateNotificationCount, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.toolbar.tintColor = ThemeService.shared().theme.colors.accent
+        self.toolbar.tintColor = theme.colors.accent
         if self.navigationItem.searchController == nil {
             self.navigationItem.searchController = searchController
         }
@@ -439,7 +442,7 @@ class AllChatsViewController: HomeViewController {
     }
     
     override func shouldShowEmptyView() -> Bool {
-        let shouldShowEmptyView = super.shouldShowEmptyView()
+        let shouldShowEmptyView = super.shouldShowEmptyView() && !AllChatsLayoutSettingsManager.shared.hasAnActiveFilter
         
         if shouldShowEmptyView {
             self.navigationItem.searchController = nil
@@ -462,7 +465,7 @@ class AllChatsViewController: HomeViewController {
             return
         }
         
-        self.update(with: ThemeService.shared().theme)
+        self.update(with: theme)
     }
     
     private func update(with theme: Theme) {
@@ -502,10 +505,33 @@ class AllChatsViewController: HomeViewController {
             self?.updateToolbar(with: menu)
         }))
         updateEmptyView()
+        updateBadgeButton()
     }
     
     private func updateRightNavigationItem(with menu: UIMenu) {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), menu: menu)
+    }
+    
+    private lazy var spacesButton: BadgedBarButtonItem = {
+        let innerButton = UIButton(type: .system)
+        innerButton.accessibilityLabel = VectorL10n.spaceSelectorTitle
+        innerButton.addTarget(self, action: #selector(self.showSpaceSelectorAction(sender:)), for: .touchUpInside)
+        innerButton.setImage(Asset.Images.allChatsSpacesIcon.image, for: .normal)
+        return BadgedBarButtonItem(withBaseButton: innerButton, theme: theme)
+    }()
+    
+    @objc private func updateBadgeButton() {
+        guard isViewLoaded, let session = mainSession else {
+            return
+        }
+        
+        let notificationCount = session.spaceService.missedNotificationsCount
+        let hasSpaceInvite = session.spaceService.hasSpaceInvite
+        let isBadgeHighlighed = session.spaceService.hasHighlightNotification || hasSpaceInvite
+        let badgeValue = (notificationCount == 0 && hasSpaceInvite) ? "!" : String(notificationCount)
+        
+        spacesButton.badgeText = badgeValue
+        spacesButton.badgeBackgroundColor = isBadgeHighlighed ? theme.noticeColor : theme.noticeSecondaryColor
     }
     
     private func updateToolbar(with menu: UIMenu) {
@@ -514,10 +540,7 @@ class AllChatsViewController: HomeViewController {
         }
         
         self.isToolbarHidden = false
-        self.update(with: ThemeService.shared().theme)
-        
-        let spacesButton = UIBarButtonItem(image: Asset.Images.allChatsSpacesIcon.image, style: .done, target: self, action: #selector(self.showSpaceSelectorAction(sender: )))
-        spacesButton.accessibilityLabel = VectorL10n.spaceSelectorTitle
+        self.update(with: theme)
         
         self.toolbar.items = [
             spacesButton,
@@ -821,12 +844,13 @@ extension AllChatsViewController: SplitViewMasterViewControllerProtocol {
     /// - Parameters:
     ///   - session: the matrix session.
     func presentVerifyCurrentSessionAlertIfNeeded(with session: MXSession) {
-        guard !RiotSettings.shared.hideVerifyThisSessionAlert, !reviewSessionAlertHasBeenDisplayed, !isOnboardingInProgress else {
+        guard !RiotSettings.shared.hideVerifyThisSessionAlert,
+              !isOnboardingInProgress,
+              presentedViewController == nil,
+              viewIfLoaded?.window != nil else {
             return
         }
         
-        reviewSessionAlertHasBeenDisplayed = true
-
         // Force verification if required by the HS configuration
         guard !session.vc_homeserverConfiguration().encryption.isSecureBackupRequired else {
             MXLog.debug("[AllChatsViewController] presentVerifyCurrentSessionAlertIfNeededWithSession: Force verification of the device")
@@ -842,21 +866,16 @@ extension AllChatsViewController: SplitViewMasterViewControllerProtocol {
     /// - Parameters:
     ///   - session: the matrix session.
     func presentReviewUnverifiedSessionsAlertIfNeeded(with session: MXSession) {
-        guard !RiotSettings.shared.hideReviewSessionsAlert, !reviewSessionAlertHasBeenDisplayed else {
+        guard BuildSettings.showUnverifiedSessionsAlert,
+              !reviewSessionAlertSnoozeController.isSnoozed(),
+              presentedViewController == nil,
+              viewIfLoaded?.window != nil else {
             return
         }
-        
+
         let devices = mainSession.crypto.devices(forUser: mainSession.myUserId).values
-        var userHasOneUnverifiedDevice = false
-        for device in devices {
-            if !device.trustLevel.isCrossSigningVerified {
-                userHasOneUnverifiedDevice = true
-                break
-            }
-        }
-        
+        let userHasOneUnverifiedDevice = devices.contains(where: {!$0.trustLevel.isCrossSigningVerified})
         if userHasOneUnverifiedDevice {
-            reviewSessionAlertHasBeenDisplayed = true
             presentReviewUnverifiedSessionsAlert(with: session)
         }
     }
@@ -968,8 +987,6 @@ extension AllChatsViewController: SplitViewMasterViewControllerProtocol {
     private func presentVerifyCurrentSessionAlert(with session: MXSession) {
         MXLog.debug("[AllChatsViewController] presentVerifyCurrentSessionAlertWithSession")
         
-        currentAlert?.dismiss(animated: true, completion: nil)
-        
         let alert = UIAlertController(title: VectorL10n.keyVerificationSelfVerifyCurrentSessionAlertTitle,
                                       message: VectorL10n.keyVerificationSelfVerifyCurrentSessionAlertMessage,
                                       preferredStyle: .alert)
@@ -989,16 +1006,13 @@ extension AllChatsViewController: SplitViewMasterViewControllerProtocol {
         }))
         
         self.present(alert, animated: true)
-        currentAlert = alert
     }
 
     private func presentReviewUnverifiedSessionsAlert(with session: MXSession) {
         MXLog.debug("[AllChatsViewController] presentReviewUnverifiedSessionsAlert")
         
-        currentAlert?.dismiss(animated: true, completion: nil)
-        
-        let alert = UIAlertController(title: VectorL10n.keyVerificationSelfVerifyUnverifiedSessionsAlertTitle,
-                                      message: VectorL10n.keyVerificationSelfVerifyUnverifiedSessionsAlertMessage,
+        let alert = UIAlertController(title: VectorL10n.keyVerificationAlertTitle,
+                                      message: VectorL10n.keyVerificationAlertBody,
                                       preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: VectorL10n.keyVerificationSelfVerifyUnverifiedSessionsAlertValidateAction,
@@ -1007,14 +1021,11 @@ extension AllChatsViewController: SplitViewMasterViewControllerProtocol {
             self.showSettingsSecurityScreen(with: session)
         }))
         
-        alert.addAction(UIAlertAction(title: VectorL10n.later, style: .cancel))
-        
-        alert.addAction(UIAlertAction(title: VectorL10n.doNotAskAgain, style: .destructive, handler: { action in
-            RiotSettings.shared.hideReviewSessionsAlert = true
+        alert.addAction(UIAlertAction(title: VectorL10n.later, style: .cancel, handler: { [weak self] _ in
+            self?.reviewSessionAlertSnoozeController.snooze()
         }))
         
         present(alert, animated: true)
-        currentAlert = alert
     }
 
     private func showSettingsSecurityScreen(with session: MXSession) {
@@ -1030,7 +1041,12 @@ extension AllChatsViewController: SplitViewMasterViewControllerProtocol {
         
         settingsViewController.loadViewIfNeeded()
         AppDelegate.theDelegate().restoreInitialDisplay {
-            self.navigationController?.viewControllers = [self, settingsViewController, securityViewController]
+            if RiotSettings.shared.enableNewSessionManager {
+                self.navigationController?.viewControllers = [self, settingsViewController]
+                settingsViewController.showUserSessionsFlow()
+            } else {
+                self.navigationController?.viewControllers = [self, settingsViewController, securityViewController]
+            }
         }
     }
     
@@ -1053,9 +1069,7 @@ extension AllChatsViewController: SplitViewMasterViewControllerProtocol {
     }
 
     private func resetReviewSessionsFlags() {
-        reviewSessionAlertHasBeenDisplayed = false
         RiotSettings.shared.hideVerifyThisSessionAlert = false
-        RiotSettings.shared.hideReviewSessionsAlert = false
     }
     
     private func presentOnboardingFlow() {
@@ -1085,5 +1099,24 @@ extension AllChatsViewController: SplitViewMasterViewControllerProtocol {
         
         // Refresh selected cell without scrolling the selected cell (We suppose it's visible here)
         self.refreshCurrentSelectedCell(false)
+    }
+}
+
+private extension MXSpaceService {
+    var hasSpaceInvite: Bool {
+        spaceSummaries.contains(where: { $0.isJoined == false })
+    }
+    
+    var missedNotificationsCount: UInt {
+        let notificationState = notificationCounter.homeNotificationState
+        let groupNotifications = notificationState.groupMissedDiscussionsCount
+        let directNotifications = notificationState.directMissedDiscussionsCount
+        
+        // `notificationState.allCount` returns twice the messages for favourite rooms. Fixing it here.
+        return groupNotifications + directNotifications
+    }
+    
+    var hasHighlightNotification: Bool {
+        notificationCounter.homeNotificationState.allHighlightCount > 0
     }
 }

@@ -17,13 +17,12 @@
 import SwiftUI
 
 struct UserOtherSessionsHeaderViewData: Hashable {
-    var title: String?
-    var subtitle: String
-    var iconName: String?
+    let title: String?
+    let subtitle: String
+    let iconName: String?
 }
 
 struct UserOtherSessionsHeaderView: View {
-    
     private var backgroundShape: RoundedRectangle {
         RoundedRectangle(cornerRadius: 8)
     }
@@ -31,16 +30,17 @@ struct UserOtherSessionsHeaderView: View {
     @Environment(\.theme) private var theme
     
     let viewData: UserOtherSessionsHeaderViewData
+    var onLearnMoreAction: (() -> Void)?
     
     var body: some View {
-        HStack (alignment: .top, spacing: 0) {
+        HStack(alignment: .top, spacing: 0) {
             if let iconName = viewData.iconName {
                 Image(iconName)
-                    .foregroundColor(.red)
                     .frame(width: 40, height: 40)
                     .background(theme.colors.background)
                     .clipShape(backgroundShape)
                     .shapedBorder(color: theme.colors.quinaryContent, borderWidth: 1.0, shape: backgroundShape)
+                    .padding(.trailing, 16)
             }
             VStack(alignment: .leading, spacing: 0, content: {
                 if let title = viewData.title {
@@ -49,12 +49,13 @@ struct UserOtherSessionsHeaderView: View {
                         .foregroundColor(theme.colors.primaryContent)
                         .padding(.vertical, 9.0)
                 }
-                Text(viewData.subtitle)
-                    .font(theme.fonts.footnote)
-                    .foregroundColor(theme.colors.secondaryContent)
-                    .padding(.bottom, 20.0)
+                InlineTextButton(viewData.subtitle, tappableText: VectorL10n.userSessionLearnMore, alwaysCallAction: false) {
+                    onLearnMoreAction?()
+                }
+                .font(theme.fonts.footnote)
+                .foregroundColor(theme.colors.secondaryContent)
+                .padding(.bottom, 20.0)
             })
-            .padding(.leading, 16)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)
@@ -64,20 +65,37 @@ struct UserOtherSessionsHeaderView: View {
 // MARK: - Previews
 
 struct UserOtherSessionsHeaderView_Previews: PreviewProvider {
+    private static let headerWithTitleSubtitleIcon = UserOtherSessionsHeaderViewData(title: VectorL10n.userSessionsOverviewSecurityRecommendationsInactiveTitle,
+                                                                                     subtitle: VectorL10n.userSessionsOverviewSecurityRecommendationsInactiveInfo,
+                                                                                     iconName: Asset.Images.userOtherSessionsInactive.name)
+    
+    private static let headerWithSubtitle = UserOtherSessionsHeaderViewData(title: nil,
+                                                                            subtitle: VectorL10n.userSessionsOverviewOtherSessionsSectionInfo,
+                                                                            iconName: nil)
     
     private static let inactiveSessionViewData = UserOtherSessionsHeaderViewData(title: VectorL10n.userSessionsOverviewSecurityRecommendationsInactiveTitle,
                                                                                  subtitle: VectorL10n.userSessionsOverviewSecurityRecommendationsInactiveInfo,
                                                                                  iconName: Asset.Images.userOtherSessionsInactive.name)
-    
-    
     static var previews: some View {
         Group {
-            UserOtherSessionsHeaderView(viewData: self.inactiveSessionViewData)
-                .theme(.light)
-                .preferredColorScheme(.light)
-            UserOtherSessionsHeaderView(viewData: self.inactiveSessionViewData)
-                .theme(.dark)
-                .preferredColorScheme(.dark)
+            VStack {
+                Divider()
+                UserOtherSessionsHeaderView(viewData: self.headerWithTitleSubtitleIcon)
+                Divider()
+                UserOtherSessionsHeaderView(viewData: self.headerWithSubtitle)
+                Divider()
+            }
+            .theme(.light)
+            .preferredColorScheme(.light)
+            VStack {
+                Divider()
+                UserOtherSessionsHeaderView(viewData: self.headerWithTitleSubtitleIcon)
+                Divider()
+                UserOtherSessionsHeaderView(viewData: self.headerWithSubtitle)
+                Divider()
+            }
+            .theme(.dark)
+            .preferredColorScheme(.dark)
         }
     }
 }

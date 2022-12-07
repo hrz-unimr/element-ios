@@ -19,35 +19,38 @@ import Foundation
 // MARK: - Coordinator
 
 enum UserSessionsOverviewCoordinatorResult {
+    case verifyCurrentSession
     case renameSession(UserSessionInfo)
     case logoutOfSession(UserSessionInfo)
     case openSessionOverview(sessionInfo: UserSessionInfo)
-    case openOtherSessions(sessionsInfo: [UserSessionInfo], filter: OtherUserSessionsFilter)
+    case openOtherSessions(sessionInfos: [UserSessionInfo], filter: UserOtherSessionsFilter)
+    case linkDevice
+    case logoutFromUserSessions(sessionInfos: [UserSessionInfo])
 }
 
 // MARK: View model
 
 enum UserSessionsOverviewViewModelResult: Equatable {
-    case showOtherSessions(sessionsInfo: [UserSessionInfo], filter: OtherUserSessionsFilter)
+    case showOtherSessions(sessionInfos: [UserSessionInfo], filter: UserOtherSessionsFilter)
     case verifyCurrentSession
     case renameSession(UserSessionInfo)
     case logoutOfSession(UserSessionInfo)
     case showCurrentSessionOverview(sessionInfo: UserSessionInfo)
     case showUserSessionOverview(sessionInfo: UserSessionInfo)
+    case linkDevice
+    case logoutFromUserSessions(sessionInfos: [UserSessionInfo])
 }
 
 // MARK: View
 
 struct UserSessionsOverviewViewState: BindableState {
     var currentSessionViewData: UserSessionCardViewData?
-    
     var unverifiedSessionsViewData = [UserSessionListItemViewData]()
-    
     var inactiveSessionsViewData = [UserSessionListItemViewData]()
-    
     var otherSessionsViewData = [UserSessionListItemViewData]()
-    
     var showLoadingIndicator = false
+    var linkDeviceButtonVisible = false
+    var showLocationInfo: Bool
 }
 
 enum UserSessionsOverviewViewAction {
@@ -60,4 +63,7 @@ enum UserSessionsOverviewViewAction {
     case viewAllInactiveSessions
     case viewAllOtherSessions
     case tapUserSession(_ sessionId: String)
+    case linkDevice
+    case logoutOtherSessions
+    case showLocationInfo
 }

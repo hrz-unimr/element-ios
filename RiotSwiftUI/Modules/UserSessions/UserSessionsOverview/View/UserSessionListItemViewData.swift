@@ -16,20 +16,20 @@
 
 import Foundation
 
+typealias SessionId = String
+
 /// View data for UserSessionListItem
 struct UserSessionListItemViewData: Identifiable, Hashable {
-
     var id: String {
         sessionId
     }
     
-    let sessionId: String
-    
+    let sessionId: SessionId
     let sessionName: String
-    
     let sessionDetails: String
-    
     let deviceAvatarViewData: DeviceAvatarViewData
-
     let sessionDetailsIcon: String?
+    let isSelected: Bool
+    let lastSeenIP: String?
+    let lastSeenIPLocation: String?
 }

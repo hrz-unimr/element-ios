@@ -23,8 +23,12 @@ enum MockUserOtherSessionsScreenState: MockScreenState, CaseIterable {
     // A case for each state you want to represent
     // with specific, minimal associated data that will allow you
     // mock that screen.
-
+    
+    case all
+    case none
     case inactiveSessions
+    case unverifiedSessions
+    case verifiedSessions
     
     /// The associated screen
     var screenType: Any.Type {
@@ -34,16 +38,40 @@ enum MockUserOtherSessionsScreenState: MockScreenState, CaseIterable {
     /// A list of screen state definitions
     static var allCases: [MockUserOtherSessionsScreenState] {
         // Each of the presence statuses
-        [.inactiveSessions]
+        [.all, .none, .inactiveSessions, .unverifiedSessions, .verifiedSessions]
     }
     
     /// Generate the view struct for the screen state.
     var screenView: ([Any], AnyView) {
-        
-        let viewModel = UserOtherSessionsViewModel(sessionsInfo: inactiveSessions(),
+        let viewModel: UserOtherSessionsViewModel
+        switch self {
+        case .all:
+            viewModel = UserOtherSessionsViewModel(sessionInfos: allSessions(),
+                                                   filter: .all,
+                                                   title: VectorL10n.userSessionsOverviewOtherSessionsSectionTitle,
+                                                   settingsService: MockUserSessionSettings())
+        case .none:
+            viewModel = UserOtherSessionsViewModel(sessionInfos: [],
+                                                   filter: .all,
+                                                   title: VectorL10n.userSessionsOverviewOtherSessionsSectionTitle,
+                                                   settingsService: MockUserSessionSettings())
+        case .inactiveSessions:
+            viewModel = UserOtherSessionsViewModel(sessionInfos: inactiveSessions(),
                                                    filter: .inactive,
-                                                   title: VectorL10n.userOtherSessionSecurityRecommendationTitle)
-
+                                                   title: VectorL10n.userOtherSessionSecurityRecommendationTitle,
+                                                   settingsService: MockUserSessionSettings())
+        case .unverifiedSessions:
+            viewModel = UserOtherSessionsViewModel(sessionInfos: unverifiedSessions(),
+                                                   filter: .unverified,
+                                                   title: VectorL10n.userOtherSessionSecurityRecommendationTitle,
+                                                   settingsService: MockUserSessionSettings())
+        case .verifiedSessions:
+            viewModel = UserOtherSessionsViewModel(sessionInfos: verifiedSessions(),
+                                                   filter: .verified,
+                                                   title: VectorL10n.userOtherSessionSecurityRecommendationTitle,
+                                                   settingsService: MockUserSessionSettings())
+        }
+        
         // can simulate service and viewModel actions here if needs be.
         
         return (
@@ -56,7 +84,7 @@ enum MockUserOtherSessionsScreenState: MockScreenState, CaseIterable {
         [UserSessionInfo(id: "0",
                          name: "iOS",
                          deviceType: .mobile,
-                         isVerified: false,
+                         verificationState: .unverified,
                          lastSeenIP: "10.0.0.10",
                          lastSeenTimestamp: nil,
                          applicationName: nil,
@@ -72,9 +100,9 @@ enum MockUserOtherSessionsScreenState: MockScreenState, CaseIterable {
          UserSessionInfo(id: "1",
                          name: "macOS",
                          deviceType: .desktop,
-                         isVerified: true,
+                         verificationState: .verified,
                          lastSeenIP: "1.0.0.1",
-                         lastSeenTimestamp: Date().timeIntervalSince1970 - 8000000,
+                         lastSeenTimestamp: Date().timeIntervalSince1970 - 8_000_000,
                          applicationName: nil,
                          applicationVersion: nil,
                          applicationURL: nil,
@@ -88,9 +116,9 @@ enum MockUserOtherSessionsScreenState: MockScreenState, CaseIterable {
          UserSessionInfo(id: "2",
                          name: "Firefox on Windows",
                          deviceType: .web,
-                         isVerified: true,
+                         verificationState: .verified,
                          lastSeenIP: "2.0.0.2",
-                         lastSeenTimestamp: Date().timeIntervalSince1970 - 9000000,
+                         lastSeenTimestamp: Date().timeIntervalSince1970 - 9_000_000,
                          applicationName: nil,
                          applicationVersion: nil,
                          applicationURL: nil,
@@ -104,9 +132,178 @@ enum MockUserOtherSessionsScreenState: MockScreenState, CaseIterable {
          UserSessionInfo(id: "3",
                          name: "Android",
                          deviceType: .mobile,
-                         isVerified: false,
+                         verificationState: .unverified,
                          lastSeenIP: "3.0.0.3",
-                         lastSeenTimestamp: Date().timeIntervalSince1970 - 10000000,
+                         lastSeenTimestamp: Date().timeIntervalSince1970 - 10_000_000,
+                         applicationName: nil,
+                         applicationVersion: nil,
+                         applicationURL: nil,
+                         deviceModel: nil,
+                         deviceOS: nil,
+                         lastSeenIPLocation: nil,
+                         clientName: nil,
+                         clientVersion: nil,
+                         isActive: false,
+                         isCurrent: false)]
+    }
+    
+    private func unverifiedSessions() -> [UserSessionInfo] {
+        [UserSessionInfo(id: "0",
+                         name: "iOS",
+                         deviceType: .mobile,
+                         verificationState: .unverified,
+                         lastSeenIP: "10.0.0.10",
+                         lastSeenTimestamp: nil,
+                         applicationName: nil,
+                         applicationVersion: nil,
+                         applicationURL: nil,
+                         deviceModel: nil,
+                         deviceOS: nil,
+                         lastSeenIPLocation: nil,
+                         clientName: nil,
+                         clientVersion: nil,
+                         isActive: true,
+                         isCurrent: true),
+         UserSessionInfo(id: "1",
+                         name: "macOS",
+                         deviceType: .desktop,
+                         verificationState: .unverified,
+                         lastSeenIP: "1.0.0.1",
+                         lastSeenTimestamp: Date().timeIntervalSince1970 - 8_000_000,
+                         applicationName: nil,
+                         applicationVersion: nil,
+                         applicationURL: nil,
+                         deviceModel: nil,
+                         deviceOS: nil,
+                         lastSeenIPLocation: nil,
+                         clientName: nil,
+                         clientVersion: nil,
+                         isActive: true,
+                         isCurrent: false)]
+    }
+    
+    private func verifiedSessions() -> [UserSessionInfo] {
+        [UserSessionInfo(id: "0",
+                         name: "iOS",
+                         deviceType: .mobile,
+                         verificationState: .verified,
+                         lastSeenIP: "10.0.0.10",
+                         lastSeenTimestamp: nil,
+                         applicationName: nil,
+                         applicationVersion: nil,
+                         applicationURL: nil,
+                         deviceModel: nil,
+                         deviceOS: nil,
+                         lastSeenIPLocation: nil,
+                         clientName: nil,
+                         clientVersion: nil,
+                         isActive: true,
+                         isCurrent: true),
+         UserSessionInfo(id: "1",
+                         name: "macOS",
+                         deviceType: .desktop,
+                         verificationState: .verified,
+                         lastSeenIP: "1.0.0.1",
+                         lastSeenTimestamp: Date().timeIntervalSince1970 - 8_000_000,
+                         applicationName: nil,
+                         applicationVersion: nil,
+                         applicationURL: nil,
+                         deviceModel: nil,
+                         deviceOS: nil,
+                         lastSeenIPLocation: nil,
+                         clientName: nil,
+                         clientVersion: nil,
+                         isActive: true,
+                         isCurrent: false)]
+    }
+    
+    func allSessions() -> [UserSessionInfo] {
+        [UserSessionInfo(id: "0",
+                         name: "iOS",
+                         deviceType: .mobile,
+                         verificationState: .unverified,
+                         lastSeenIP: "10.0.0.10",
+                         lastSeenTimestamp: Date().timeIntervalSince1970 - 500_000,
+                         applicationName: nil,
+                         applicationVersion: nil,
+                         applicationURL: nil,
+                         deviceModel: nil,
+                         deviceOS: nil,
+                         lastSeenIPLocation: nil,
+                         clientName: nil,
+                         clientVersion: nil,
+                         isActive: false,
+                         isCurrent: false),
+         UserSessionInfo(id: "1",
+                         name: "macOS",
+                         deviceType: .desktop,
+                         verificationState: .verified,
+                         lastSeenIP: "1.0.0.1",
+                         lastSeenTimestamp: Date().timeIntervalSince1970 - 8_000_000,
+                         applicationName: nil,
+                         applicationVersion: nil,
+                         applicationURL: nil,
+                         deviceModel: nil,
+                         deviceOS: nil,
+                         lastSeenIPLocation: nil,
+                         clientName: nil,
+                         clientVersion: nil,
+                         isActive: false,
+                         isCurrent: false),
+         UserSessionInfo(id: "2",
+                         name: "Firefox on Windows",
+                         deviceType: .web,
+                         verificationState: .verified,
+                         lastSeenIP: "2.0.0.2",
+                         lastSeenTimestamp: Date().timeIntervalSince1970 - 9_000_000,
+                         applicationName: nil,
+                         applicationVersion: nil,
+                         applicationURL: nil,
+                         deviceModel: nil,
+                         deviceOS: nil,
+                         lastSeenIPLocation: nil,
+                         clientName: nil,
+                         clientVersion: nil,
+                         isActive: false,
+                         isCurrent: false),
+         UserSessionInfo(id: "3",
+                         name: "Android",
+                         deviceType: .mobile,
+                         verificationState: .unverified,
+                         lastSeenIP: "3.0.0.3",
+                         lastSeenTimestamp: Date().timeIntervalSince1970 - 10_000_000,
+                         applicationName: nil,
+                         applicationVersion: nil,
+                         applicationURL: nil,
+                         deviceModel: nil,
+                         deviceOS: nil,
+                         lastSeenIPLocation: nil,
+                         clientName: nil,
+                         clientVersion: nil,
+                         isActive: false,
+                         isCurrent: false),
+         UserSessionInfo(id: "4",
+                         name: "iOS",
+                         deviceType: .mobile,
+                         verificationState: .unverified,
+                         lastSeenIP: "10.0.0.10",
+                         lastSeenTimestamp: Date().timeIntervalSince1970 - 11_000_000,
+                         applicationName: nil,
+                         applicationVersion: nil,
+                         applicationURL: nil,
+                         deviceModel: nil,
+                         deviceOS: nil,
+                         lastSeenIPLocation: nil,
+                         clientName: nil,
+                         clientVersion: nil,
+                         isActive: false,
+                         isCurrent: false),
+         UserSessionInfo(id: "5",
+                         name: "macOS",
+                         deviceType: .desktop,
+                         verificationState: .verified,
+                         lastSeenIP: "1.0.0.1",
+                         lastSeenTimestamp: Date().timeIntervalSince1970 - 20_000_000,
                          applicationName: nil,
                          applicationVersion: nil,
                          applicationURL: nil,
