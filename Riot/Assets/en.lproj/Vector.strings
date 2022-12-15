@@ -794,7 +794,7 @@ Tap the + to start adding people.";
 "settings_labs_message_reaction" = "React to messages with emoji";
 "settings_labs_enable_ringing_for_group_calls" = "Ring for group calls";
 "settings_labs_enabled_polls" = "Polls";
-"settings_labs_enable_threads" = "Threaded messaging";
+"settings_labs_enable_threads" = "Threaded messages";
 "settings_labs_enable_auto_report_decryption_errors" = "Auto Report Decryption Errors";
 "settings_labs_use_only_latest_user_avatar_and_name" = "Show latest avatar and name for users in message history";
 "settings_labs_enable_live_location_sharing" = "Live location sharing - share current location (active development, and temporarily, locations persist in room history)";
@@ -2549,6 +2549,13 @@ To enable access, tap Settings> Location and select Always";
 "wysiwyg_composer_format_action_italic" = "Apply italic format";
 "wysiwyg_composer_format_action_underline" = "Apply strikethrough format";
 "wysiwyg_composer_format_action_strikethrough" = "Apply underline format";
+"wysiwyg_composer_format_action_link" = "Apply link format";
+
+// Links
+"wysiwyg_composer_link_action_text" = "Text";
+"wysiwyg_composer_link_action_link" = "Link";
+"wysiwyg_composer_link_action_create_title" = "Create a link";
+"wysiwyg_composer_link_action_edit_title" = "Edit link";
 
 // MARK: - MatrixKit
 

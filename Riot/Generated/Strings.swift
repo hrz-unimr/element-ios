@@ -7563,7 +7563,7 @@ public class VectorL10n: NSObject {
   public static var settingsLabsEnableRingingForGroupCalls: String { 
     return VectorL10n.tr("Vector", "settings_labs_enable_ringing_for_group_calls") 
   }
-  /// Threaded messaging
+  /// Threaded messages
   public static var settingsLabsEnableThreads: String { 
     return VectorL10n.tr("Vector", "settings_labs_enable_threads") 
   }
@@ -9315,6 +9315,10 @@ public class VectorL10n: NSObject {
   public static var wysiwygComposerFormatActionItalic: String { 
     return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_italic") 
   }
+  /// Apply link format
+  public static var wysiwygComposerFormatActionLink: String { 
+    return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_link") 
+  }
   /// Apply underline format
   public static var wysiwygComposerFormatActionStrikethrough: String { 
     return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_strikethrough") 
@@ -9322,6 +9326,22 @@ public class VectorL10n: NSObject {
   /// Apply strikethrough format
   public static var wysiwygComposerFormatActionUnderline: String { 
     return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_underline") 
+  }
+  /// Create a link
+  public static var wysiwygComposerLinkActionCreateTitle: String { 
+    return VectorL10n.tr("Vector", "wysiwyg_composer_link_action_create_title") 
+  }
+  /// Edit link
+  public static var wysiwygComposerLinkActionEditTitle: String { 
+    return VectorL10n.tr("Vector", "wysiwyg_composer_link_action_edit_title") 
+  }
+  /// Link
+  public static var wysiwygComposerLinkActionLink: String { 
+    return VectorL10n.tr("Vector", "wysiwyg_composer_link_action_link") 
+  }
+  /// Text
+  public static var wysiwygComposerLinkActionText: String { 
+    return VectorL10n.tr("Vector", "wysiwyg_composer_link_action_text") 
   }
   /// Attachments
   public static var wysiwygComposerStartActionAttachments: String { 
