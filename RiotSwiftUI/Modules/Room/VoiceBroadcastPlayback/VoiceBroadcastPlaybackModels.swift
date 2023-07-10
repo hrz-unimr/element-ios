@@ -23,6 +23,7 @@ enum VoiceBroadcastPlaybackViewAction {
     case sliderChange(didChange: Bool)
     case backward
     case forward
+    case redact
 }
 
 enum VoiceBroadcastPlaybackState {
@@ -40,10 +41,15 @@ struct VoiceBroadcastPlaybackDetails {
 
 struct VoiceBroadcastPlayingState {
     var duration: Float
-    var durationLabel: String?
+    var elapsedTimeLabel: String?
+    var remainingTimeLabel: String?
     var isLive: Bool
     var canMoveForward: Bool
     var canMoveBackward: Bool
+}
+
+struct VoiceBroadcastPlaybackDecryptionState {
+    var errorCount: Int
 }
 
 struct VoiceBroadcastPlaybackViewState: BindableState {
@@ -52,6 +58,8 @@ struct VoiceBroadcastPlaybackViewState: BindableState {
     var playbackState: VoiceBroadcastPlaybackState
     var playingState: VoiceBroadcastPlayingState
     var bindings: VoiceBroadcastPlaybackViewStateBindings
+    var decryptionState: VoiceBroadcastPlaybackDecryptionState
+    var showPlaybackError: Bool
 }
 
 struct VoiceBroadcastPlaybackViewStateBindings {

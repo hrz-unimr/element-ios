@@ -2668,14 +2668,6 @@
 // Mark: - Room invites
 
 "room_invites_empty_view_title" = "Nič nové.";
-"all_chats_onboarding_try_it" = "Vyskúšajte si to";
-"all_chats_onboarding_title" = "Čo je nové";
-"all_chats_onboarding_page_message3" = "Ťuknite na svoj profil a dajte nám vedieť, čo si myslíte.";
-"all_chats_onboarding_page_title3" = "Poskytnite spätnú väzbu";
-"all_chats_onboarding_page_title2" = "Prístup k priestorom";
-"all_chats_onboarding_page_message2" = "Získajte prístup k svojim priestorom (vľavo dole) rýchlejšie a jednoduchšie ako kedykoľvek predtým.";
-"all_chats_onboarding_page_message1" = "Pre zjednodušenie vašej aplikácie Element, sú teraz karty voliteľné. Spravujte ich pomocou ponuky vpravo hore.";
-"all_chats_onboarding_page_title1" = "Vitajte v novom zobrazení!";
 "all_chats_nothing_found_placeholder_message" = "Skúste upraviť svoje hľadanie.";
 "all_chats_nothing_found_placeholder_title" = "Nič sa nenašlo.";
 "all_chats_empty_unreads_placeholder_message" = "Tu sa zobrazia neprečítané správy, ak nejaké máte.";
@@ -2748,7 +2740,6 @@
 "user_inactive_session_item_with_date" = "Neaktívna viac ako 90 dní (%@)";
 "user_inactive_session_item" = "Neaktívna viac ako 90 dní";
 "user_other_session_unverified_sessions_header_subtitle" = "Overte si relácie pre vylepšené bezpečné zasielanie správ alebo sa odhláste z tých, ktoré už nepoznáte alebo nepoužívate.";
-"user_other_session_security_recommendation_title" = "Bezpečnostné odporúčania";
 "user_sessions_overview_link_device" = "Prepojiť zariadenie";
 
 // MARK: User sessions management
@@ -2835,7 +2826,7 @@
 
 // Mark: - Voice broadcast
 "voice_broadcast_unauthorized_title" = "Nie je možné spustiť nové hlasové vysielanie";
-"settings_labs_enable_voice_broadcast" = "Hlasové vysielanie (v štádiu aktívneho vývoja)";
+"settings_labs_enable_voice_broadcast" = "Hlasové vysielanie";
 "voice_broadcast_playback_loading_error" = "Toto hlasové vysielanie nie je možné prehrať.";
 "deselect_all" = "Zrušiť výber všetkých";
 "user_other_session_selected_count" = "%@ vybratých";
@@ -2859,3 +2850,113 @@
 
 // Unverified sessions
 "key_verification_alert_title" = "Máte neoverené relácie";
+"user_other_session_permanently_unverified_additional_info" = "Táto relácia nepodporuje šifrovanie, a preto ju nemožno overiť.";
+"voice_broadcast_time_left" = "%@ ostáva";
+"voice_broadcast_buffering" = "Načítavanie do vyrovnávacej pamäte…";
+"voice_broadcast_stop_alert_agree_button" = "Áno, zastaviť";
+"voice_broadcast_stop_alert_description" = "Určite chcete zastaviť vysielanie naživo? Tým sa vysielanie ukončí a v miestnosti bude k dispozícii celý záznam.";
+"voice_broadcast_stop_alert_title" = "Zastaviť vysielanie naživo?";
+"password_policy_pwd_in_dict_error" = "Toto heslo bolo nájdené v slovníku a nie je povolené.";
+"password_policy_weak_pwd_error" = "Toto heslo je príliš slabé. Musí obsahovať aspoň 8 znakov, pričom musí obsahovať aspoň jeden znak z každého typu: veľké a malé písmená, číslice a špeciálny symbol.";
+
+// MARK: Password policy errors
+"password_policy_too_short_pwd_error" = "Príliš krátke heslo";
+"user_session_permanently_unverified_session_description" = "Táto relácia nepodporuje šifrovanie, takže ju nemožno overiť.\n\nPri používaní tejto relácie sa nebudete môcť zúčastňovať konverzácií v miestnostiach, kde je zapnuté šifrovanie.\n\nNa dosiahnutie čo najlepšieho zabezpečenia a súkromia sa odporúča používať Matrix klientov, ktoré podporujú šifrovanie.";
+"wysiwyg_composer_link_action_edit_title" = "Upraviť odkaz";
+"wysiwyg_composer_link_action_create_title" = "Vytvoriť odkaz";
+"wysiwyg_composer_link_action_link" = "Odkaz";
+
+// Links
+"wysiwyg_composer_link_action_text" = "Text";
+"wysiwyg_composer_format_action_link" = "Použiť formát odkazu";
+"wysiwyg_composer_format_action_inline_code" = "Použiť formát riadkového kódu";
+"notice_voice_broadcast_ended_by_you" = "Ukončili ste hlasové vysielanie.";
+"notice_voice_broadcast_ended" = "%@ ukončil/a hlasové vysielanie.";
+"notice_voice_broadcast_live" = "Živé vysielanie";
+"user_other_session_security_recommendation_title" = "Iné relácie";
+"poll_timeline_decryption_error" = "Z dôvodu chýb v dešifrovaní sa niektoré hlasy nemusia započítať";
+"voice_message_broadcast_in_progress_message" = "Nemôžete spustiť hlasovú správu, pretože práve nahrávate živé vysielanie. Ukončite prosím živé vysielanie, aby ste mohli začať nahrávať hlasovú správu";
+"voice_message_broadcast_in_progress_title" = "Nemožno spustiť hlasovú správu";
+"poll_timeline_ended_text" = "Ukončil anketu";
+"voice_broadcast_voip_cannot_start_description" = "Nemôžete spustiť hovor, pretože práve nahrávate živé vysielanie. Ukončite živé vysielanie, aby ste mohli začať hovor.";
+"voice_broadcast_voip_cannot_start_title" = "Nie je možné začať hovor";
+"poll_history_no_past_poll_text" = "V tejto miestnosti nie sú žiadne predchádzajúce ankety";
+"poll_history_no_active_poll_text" = "V tejto miestnosti nie sú žiadne aktívne ankety";
+"poll_history_past_segment_title" = "Predchádzajúce ankety";
+"poll_history_active_segment_title" = "Aktívne ankety";
+
+// MARK: - Polls history
+
+"poll_history_title" = "História ankety";
+"room_details_polls" = "História ankety";
+"accessibility_selected" = "vybrané";
+"voice_broadcast_connection_error_message" = "Bohužiaľ teraz nemôžeme spustiť nahrávanie. Skúste to prosím neskôr.";
+"voice_broadcast_connection_error_title" = "Chyba pripojenia";
+"voice_broadcast_playback_lock_screen_placeholder" = "Hlasové vysielanie";
+"wysiwyg_composer_format_action_quote" = "Prepínanie citácie";
+"wysiwyg_composer_format_action_code_block" = "Prepnutie bloku kódu";
+"wysiwyg_composer_format_action_ordered_list" = "Prepínanie číslovaného zoznamu";
+"wysiwyg_composer_format_action_unordered_list" = "Prepnúť zoznam s odrážkami";
+"voice_broadcast_recorder_connection_error" = "Chyba pripojenia - nahrávanie pozastavené";
+"poll_timeline_reply_ended_poll" = "Ukončená anketa";
+"settings_labs_disable_crypto_sdk" = "Rust end-to-end šifrovanie (odhláste sa, aby ste ho vypli)";
+"settings_labs_confirm_crypto_sdk" = "Upozorňujeme, že táto funkcia je stále v experimentálnej fáze, preto nemusí fungovať podľa očakávaní a môže mať potenciálne nezamýšľané dôsledky. Ak chcete funkciu vrátiť späť, jednoducho sa odhláste a znova prihláste. Používajte ju podľa vlastného uváženia a s opatrnosťou.";
+"settings_labs_enable_crypto_sdk" = "Rust end-to-end šifrovanie";
+"poll_history_load_more" = "Načítať ďalšie ankety";
+"poll_history_no_past_poll_period_text" = "Za posledných %@ dní nie sú aktívne žiadne ankety. Načítaním ďalších ankiet zobrazíte ankety za predchádzajúce mesiace";
+"poll_history_no_active_poll_period_text" = "Za posledných %@ dní nie sú aktívne žiadne ankety. Načítaním ďalších ankiet zobrazíte ankety za predchádzajúce mesiace";
+"poll_history_loading_text" = "Zobrazenie ankiet";
+"poll_history_fetching_error" = "Chyba pri načítavaní ankiet.";
+"voice_broadcast_playback_unable_to_decrypt" = "Toto hlasové vysielanie sa nedá dešifrovať.";
+"home_context_menu_mark_as_unread" = "Označiť ako neprečítané";
+"key_backup_recover_from_private_key_progress" = "%@%% Dokončené";
+"wysiwyg_composer_format_action_indent" = "Zväčšenie odsadenia";
+"wysiwyg_composer_format_action_un_indent" = "Zmenšenie odsadenia";
+"poll_history_detail_view_in_timeline" = "Zobraziť anketu na časovej osi";
+"settings_push_rules_error" = "Pri aktualizácii vašich predvolieb oznámení došlo k chybe. Skúste prosím prepnúť možnosť znova.";
+"authentication_qr_login_failure_device_not_supported" = "Prepojenie s týmto zariadením nie je podporované.";
+"room_waiting_other_participants_message" = "Keď sa pozvaní používatelia pripoja k aplikácii %@, budete môcť konverzovať a miestnosť bude end-to-end šifrovaná";
+"room_waiting_other_participants_title" = "Čaká sa na používateľov, kým sa pripoja k aplikácii %@";
+"key_verification_scan_qr_code_information_new_session" = "Nasmerujte kameru na QR kód zobrazený na vašom druhom zariadení a overte vašu novú reláciu";
+"key_verification_scan_qr_code_information_other_session" = "Nasmerujte kameru na QR kód zobrazený na vašom druhom zariadení a overte vašu reláciu";
+"key_verification_scan_qr_code_information_other_device" = "Nasmerujte kameru na QR kód zobrazený na vašom druhom zariadení a overte túto reláciu";
+"key_verification_scan_qr_code_information_other_user" = "Nasmerujte kameru na QR kód zobrazený na ich zariadení a overte ich reláciu";
+"key_verification_scan_qr_code_title" = "Skenovať QR kód";
+"device_verification_self_verify_wait_recover_secrets_additional_help" = "Nemôžete získať prístup k existujúcej relácii %@?";
+"device_verification_self_verify_open_on_other_device_information" = "Ak si chcete prečítať históriu zabezpečených správ, musíte túto reláciu overiť.\n\nOtvorte aplikáciu Element na jednom z vašich iných zariadení a postupujte podľa pokynov.";
+"device_verification_self_verify_open_on_other_device_title" = "Otvorte %@ na vašom druhom zariadení";
+"room_creation_only_one_email_invite" = "Naraz môžete pozvať len jeden e-mail";
+"launch_loading_delay_warning" = "Môže to trvať trochu dlhšie.\nĎakujeme za vašu trpezlivosť.";
+
+// MARK: - Launch loading
+
+"launch_loading_generic" = "Synchronizácia vašich konverzácií";
+"pill_message_in" = "Správa v %@";
+"pill_message_from" = "Správa od %@";
+"pill_message" = "Správa";
+
+// Pills
+"pill_room_fallback_display_name" = "Priestor/miestnosť";
+"key_verification_self_verify_security_upgrade_alert_message" = "Najnovšou aktualizáciou sa zlepšilo bezpečné zasielanie správ. Overte prosím znova svoje zariadenie.";
+
+// Legacy to Rust security upgrade
+
+"key_verification_self_verify_security_upgrade_alert_title" = "Aplikácia bola aktualizovaná";
+"settings_acceptable_use" = "Zásady prijateľného používania";
+"room_command_error_unknown_command" = "Neplatný alebo nespracovaný príkaz";
+"room_command_discard_session_description" = "Vynúti zrušenie aktuálnej relácie odchádzajúcej skupiny v zašifrovanej miestnosti";
+"room_command_change_room_topic_description" = "Nastaví tému aktuálnej miestnosti";
+"room_command_reset_user_power_level_description" = "Zruší stav moderátora používateľovi so zadaným ID";
+"room_command_set_user_power_level_description" = "Určuje úroveň oprávnenia pre zadaného používateľa";
+"room_command_unban_user_description" = "Zruší zákaz vstúpiť používateľovi so zadaným ID";
+"room_command_ban_user_description" = "Zakáže vstup používateľovi so zadaným ID";
+"room_command_kick_user_description" = "Odstráni používateľa s daným ID z tejto miestnosti";
+"room_command_invite_user_description" = "Pozve zadaného používateľa do aktuálnej miestnosti";
+"room_command_part_room_description" = "Opustiť miestnosť";
+"room_command_join_room_description" = "Pripojí sa do miestnosti s danou adresou";
+"room_command_emote_description" = "Zobrazí akciu";
+
+// Room commands descriptions
+"room_command_change_display_name_description" = "Mení vaše zobrazované meno / prezývku";
+"notice_display_name_changed_to" = "%@ zmenil/a svoje zobrazované meno na %@";
+"poll_timeline_loading" = "Načítavanie…";

@@ -44,6 +44,9 @@ class VoiceBroadcastRecorderService: VoiceBroadcastRecorderServiceProtocol {
     // MARK: Public
     
     weak var serviceDelegate: VoiceBroadcastRecorderServiceDelegate?
+    var isRecording: Bool {
+        return audioEngine.isRunning
+    }
 
     // MARK: - Setup
     
@@ -113,6 +116,8 @@ class VoiceBroadcastRecorderService: VoiceBroadcastRecorderServiceProtocol {
             // Discard the service on VoiceBroadcastService error. We keep the service in case of other error type
             if error as? VoiceBroadcastServiceError != nil {
                 self.tearDownVoiceBroadcastService()
+            } else {
+                AppDelegate.theDelegate().showError(asAlert: error)
             }
         })
     }
@@ -133,11 +138,22 @@ class VoiceBroadcastRecorderService: VoiceBroadcastRecorderServiceProtocol {
             }
         }, failure: { error in
             MXLog.error("[VoiceBroadcastRecorderService] Failed to pause voice broadcast", context: error)
+            // Pause voice broadcast recording without sending pending events.
+            if error is VoiceBroadcastServiceError == false {
+                AppDelegate.theDelegate().showError(asAlert: error)
+            }
         })
     }
     
     func resumeRecordingVoiceBroadcast() {
-        try? audioEngine.start()
+        do {
+            // If we paused the recording because of an error, playing a sound mostly changed the category so we need to set it back to .playAndRecord
+            try AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .default)
+            try audioEngine.start()
+        } catch {
+            MXLog.error("[VoiceBroadcastRecorderService] failed to resume recording", context: error)
+            return
+        }
         startTimer()
         
         voiceBroadcastService?.resumeVoiceBroadcast(success: { [weak self] _ in
@@ -148,7 +164,41 @@ class VoiceBroadcastRecorderService: VoiceBroadcastRecorderServiceProtocol {
             UIApplication.shared.isIdleTimerDisabled = true
         }, failure: { error in
             MXLog.error("[VoiceBroadcastRecorderService] Failed to resume voice broadcast", context: error)
+            if error is VoiceBroadcastServiceError == false {
+                AppDelegate.theDelegate().showError(asAlert: error)
+            }
         })
+    }
+    
+    func cancelRecordingVoiceBroadcast() {
+        MXLog.debug("[VoiceBroadcastRecorderService] Cancel recording voice broadcast")
+        audioEngine.stop()
+        audioEngine.inputNode.removeTap(onBus: audioNodeBus)
+        UIApplication.shared.isIdleTimerDisabled = false
+        
+        // Remove current chunk
+        if self.chunkFile != nil {
+            self.deleteRecording(at: self.chunkFile.url)
+            self.chunkFile = nil
+        }
+        
+        self.tearDownVoiceBroadcastService()
+    }
+    
+    func pauseOnErrorRecordingVoiceBroadcast() {
+        guard audioEngine.isRunning else {
+            return
+        }
+        
+        audioEngine.pause()
+        UIApplication.shared.isIdleTimerDisabled = false
+        invalidateTimer()
+        
+        // Update state
+        serviceDelegate?.voiceBroadcastRecorderService(self, didUpdateState: .error)
+        
+        // Play a sound
+        playSound(soundName: "vberror")
     }
     
     // MARK: - Private
@@ -351,6 +401,23 @@ class VoiceBroadcastRecorderService: VoiceBroadcastRecorderServiceProtocol {
                 MXLog.debug("[VoiceBroadcastRecorderService] convertAACToM4A other cases.")
                 completion(nil)
             }
+        }
+    }
+
+    private func playSound(soundName: String, delay: TimeInterval = 1.0) {
+        if let audioFileUrl = audioURLWithName(soundName: soundName) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                MXLog.debug("[VoiceBroadcastRecorderService] Playing sound: \(audioFileUrl.absoluteString)")
+                MXKSoundPlayer.sharedInstance().playSound(at: audioFileUrl, repeat: false, vibrate: false, routeToBuiltInReceiver: false)
+            }
+        }
+    }
+    
+    private func audioURLWithName(soundName: String) -> URL? {
+        if let path = Bundle.main.path(forResource: soundName, ofType: "mp3") {
+           return URL(fileURLWithPath: path)
+        } else {
+            return Bundle.mxk_audioURLFromMXKAssetsBundle(withName: soundName)
         }
     }
 }

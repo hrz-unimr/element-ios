@@ -17,7 +17,7 @@
 import UIKit
 
 @objcMembers
-class RoomCreationIntroCell: MXKRoomBubbleTableViewCell {
+class RoomCreationIntroCell: MXKRoomBubbleTableViewCell, Themable {
     
     // MARK: - Constants
     
@@ -164,6 +164,11 @@ class RoomCreationIntroCell: MXKRoomBubbleTableViewCell {
         roomCellContentView.didTapAddParticipants = { [weak self] in
             self?.notifyDelegate(with: RoomCreationIntroCell.tapOnAddParticipants)
         }
+        
+        self.accessibilityElements = [roomCellContentView.roomAvatarView as Any,
+                                      roomCellContentView.titleLabel as Any,
+                                      roomCellContentView.informationLabel as Any,
+                                      roomCellContentView.addParticipantsContainerView as Any]
     }
     
     
@@ -189,7 +194,7 @@ class RoomCreationIntroCell: MXKRoomBubbleTableViewCell {
             discussionType = .room(topic: roomSummary.topic, canInvitePeople: bubbleData.canInvitePeople)
         }
         
-        let displayName = roomSummary.displayname ?? ""
+        let displayName = roomSummary.displayName ?? ""
         
         let roomAvatarViewData = RoomAvatarViewData(roomId: roomId,
                                                     displayName: displayName,

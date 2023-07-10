@@ -32,7 +32,9 @@ targets:
     type: app-extension
 
     dependencies:
+    - package: AnalyticsEvents
     - package: DeviceKit
+    - package: DTCoreText
 
     configFiles:
       Debug: Debug.xcconfig
@@ -44,6 +46,7 @@ targets:
     - path: ../Config/BuildSettings.swift
     - path: ../Riot/Utils/DataProtectionHelper.swift
     - path: ../Config/CommonConfiguration.swift
+    - path: ../Riot/Experiments/
     - path: ../Riot/Managers/PushNotification/PushNotificationStore.swift
     - path: ../Riot/Modules/SetPinCode/PinCodePreferences.swift
     - path: ../Riot/Managers/KeyValueStorage/Extensions/Keychain.swift
@@ -54,6 +57,7 @@ targets:
     - path: ../Riot/Managers/Locale/LocaleProviderType.swift
     - path: ../Riot/Managers/EncryptionKeyManager/EncryptionKeyManager.swift
     - path: ../Riot/Categories/Bundle.swift
+    - path: ../Riot/Categories/MXEvent.swift
     - path: ../Riot/Generated/Strings.swift
     - path: ../Riot/Generated/Images.swift
     - path: ../Riot/Managers/KeyValueStorage/KeychainStore.swift
@@ -76,4 +80,6 @@ targets:
       excludes:
         - "**/*.md" # excludes all files with the .md extension
     - path: ../Riot/Modules/Room/TimelineCells/Styles/RoomTimelineStyleIdentifier.swift
-    - path: ../Riot/Modules/VoiceBroadcast/VoiceBroadcastSDK/VoiceBroadcastSettings.swift
+    - path: ../Riot/Modules/VoiceBroadcast/VoiceBroadcastSDK/MatrixSDK
+    - path: ../Riot/Managers/Theme
+    - path: ../Riot/Categories/UIColor.swift

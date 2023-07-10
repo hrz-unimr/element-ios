@@ -28,9 +28,7 @@
     [super customizeTableViewCellRendering];
     
     self.roomNameLabel.textColor = ThemeService.shared.theme.textSecondaryColor;
-    
-    self.messageTextView.tintColor = ThemeService.shared.theme.tintColor;
-    
+        
     [self updateUserNameColor];
 }
 
@@ -43,7 +41,7 @@
         MXRoom* room = [bubbleData.mxSession roomWithRoomId:bubbleData.roomId];
         if (room)
         {
-            self.roomNameLabel.text = room.summary.displayname;
+            self.roomNameLabel.text = room.summary.displayName;
             if (!self.roomNameLabel.text.length)
             {
                 self.roomNameLabel.text = [VectorL10n roomDisplaynameEmptyRoom];

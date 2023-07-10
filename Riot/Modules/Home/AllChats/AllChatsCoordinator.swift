@@ -366,7 +366,8 @@ class AllChatsCoordinator: NSObject, SplitViewMasterCoordinatorProtocol {
         view.backgroundColor = .clear
         
         let avatarInsets: UIEdgeInsets = .init(top: 7, left: 7, bottom: 7, right: 7)
-        let button: UIButton = .init(frame: view.bounds.inset(by: avatarInsets))
+        let button: UIButton = .init(frame: view.bounds)
+        button.imageEdgeInsets = avatarInsets
         button.setImage(Asset.Images.tabPeople.image, for: .normal)
         button.menu = avatarMenu
         button.showsMenuAsPrimaryAction = true
@@ -378,20 +379,28 @@ class AllChatsCoordinator: NSObject, SplitViewMasterCoordinatorProtocol {
         let avatarView = UserAvatarView(frame: view.bounds.inset(by: avatarInsets))
         avatarView.isUserInteractionEnabled = false
         avatarView.update(theme: ThemeService.shared().theme)
-        avatarView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        avatarView.autoresizingMask = [.flexibleTopMargin, .flexibleBottomMargin]
         view.addSubview(avatarView)
+        NSLayoutConstraint.activate([
+            view.widthAnchor.constraint(equalToConstant: 36),
+            view.heightAnchor.constraint(equalToConstant: 36)
+        ])
         self.avatarMenuView = avatarView
         updateAvatarButtonItem()
         viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: view)
     }
     
     private func updateAvatarButtonItem() {
-        guard let avatarView = avatarMenuView, let button = avatarMenuButton, let avatar = userAvatarViewData(from: currentMatrixSession) else {
-            return
+        MXLog.info("[AllChatsCoordinator] updating avatar button item.")
+        if let avatar = userAvatarViewData(from: currentMatrixSession) {
+            if avatarMenuView == nil {
+                MXLog.warning("[AllChatsCoordinator] updateAvatarButtonItem: avatarMenuView is nil.")
+            }
+            avatarMenuView?.fill(with: avatar)
+            avatarMenuButton?.setImage(nil, for: .normal)
+        } else {
+            avatarMenuButton?.setImage(Asset.Images.tabPeople.image, for: .normal)
         }
-        
-        button.setImage(nil, for: .normal)
-        avatarView.fill(with: avatar)
     }
     
     private func showRoom(withId roomId: String, eventId: String? = nil) {

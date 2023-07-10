@@ -32,6 +32,7 @@ include:
   - path: RiotShareExtension/target.yml
   - path: SiriIntents/target.yml
   - path: RiotNSE/target.yml
+  - path: BroadcastUploadExtension/target.yml
   - path: DesignKit/target.yml
   - path: RiotSwiftUI/target.yml
   - path: RiotSwiftUI/targetUnitTests.yml
@@ -40,6 +41,9 @@ include:
   - path: CommonKit/targetUnitTests.yml
 
 packages:
+  AnalyticsEvents:
+    url: https://github.com/matrix-org/matrix-analytics-events
+    exactVersion: 0.5.0
   Mapbox:
     url: https://github.com/maplibre/maplibre-gl-native-distribution
     minVersion: 5.12.2
@@ -50,10 +54,13 @@ packages:
     maxVersion: 2.0.0
   SwiftOGG:
     url: https://github.com/vector-im/swift-ogg
-    branch: main
+    branch: 0.0.1
   WysiwygComposer:
     url: https://github.com/matrix-org/matrix-wysiwyg-composer-swift
-    revision: 55266ea8f338e9c1d5c4db375713b3f902317b00
+    version: 2.2.2
   DeviceKit:
     url: https://github.com/devicekit/DeviceKit
     majorVersion: 4.7.0
+  DTCoreText:
+    url: https://github.com/Cocoanetics/DTCoreText
+    version: 1.6.27

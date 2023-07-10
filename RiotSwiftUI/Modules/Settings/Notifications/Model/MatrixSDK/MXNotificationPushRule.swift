@@ -41,6 +41,10 @@ extension MXPushRule: NotificationPushRuleType {
         return false
     }
     
+    var ruleActions: NotificationActions? {
+        .init(notify: notify, highlight: highlight, sound: sound)
+    }
+    
     private func getAction(actionType: MXPushRuleActionType, tweakType: String? = nil) -> MXPushRuleAction? {
         guard let actions = actions as? [MXPushRuleAction] else {
             return nil
@@ -78,6 +82,10 @@ extension MXPushRule: NotificationPushRuleType {
     }
     
     var dontNotify: Bool {
-        getAction(actionType: MXPushRuleActionTypeDontNotify) != nil
+        guard let actions = actions as? [MXPushRuleAction] else {
+            return true
+        }
+        // Support for MSC3987: The dont_notify push rule action is deprecated and replaced by an empty actions list.
+        return actions.isEmpty || getAction(actionType: MXPushRuleActionTypeDontNotify) != nil
     }
 }

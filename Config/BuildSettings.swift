@@ -98,10 +98,15 @@ final class BuildSettings: NSObject {
     
     // MARK: - Server configuration
     
-    // Default servers proposed on the authentication screen
+    /// Force the user to set a homeserver instead of using the default one
+    static let forceHomeserverSelection = false
+
+    /// Default server proposed on the authentication screen
     static let serverConfigDefaultHomeserverUrlString = "https://matrix-homeserver.uni-marburg.de"
-    static let serverConfigDefaultIdentityServerUrlString = "https://matrix-homeserver.uni-marburg.de"
     
+    /// Default identity server
+    static let serverConfigDefaultIdentityServerUrlString = "https://matrix-homeserver.uni-marburg.de"
+        
     static let serverConfigSygnalAPIUrlString = "https://matrix-pushgateway.hrz.uni-marburg.de/_matrix/push/v1/notify"
     
     
@@ -110,7 +115,7 @@ final class BuildSettings: NSObject {
     // Note: Set empty strings to hide the related entry in application settings
     static let applicationCopyrightUrlString = "https://element.io/copyright"
     static let applicationPrivacyPolicyUrlString = "https://element.io/privacy"
-    static let applicationTermsConditionsUrlString = "https://element.io/terms-of-service"
+    static let applicationAcceptableUsePolicyUrlString = "https://element.io/acceptable-use-policy-terms"
     static let applicationHelpUrlString =
     "https://element.io/help"
     

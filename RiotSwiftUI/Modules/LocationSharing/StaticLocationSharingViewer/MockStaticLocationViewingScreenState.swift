@@ -46,10 +46,11 @@ enum MockStaticLocationViewingScreenState: MockScreenState, CaseIterable {
         let viewModel = StaticLocationViewingViewModel(mapStyleURL: mapStyleURL,
                                                        avatarData: AvatarInput(mxContentUri: "", matrixItemId: "alice:matrix.org", displayName: "Alice"),
                                                        location: location,
-                                                       coordinateType: coordinateType)
+                                                       coordinateType: coordinateType,
+                                                       service: MockStaticLocationSharingViewerService())
         
         return ([viewModel],
                 AnyView(StaticLocationView(viewModel: viewModel.context)
-                    .addDependency(MockAvatarService.example)))
+                    .environmentObject(AvatarViewModel.withMockedServices())))
     }
 }

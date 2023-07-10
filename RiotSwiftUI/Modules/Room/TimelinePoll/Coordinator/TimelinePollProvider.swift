@@ -15,6 +15,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 @objcMembers
 class TimelinePollProvider: NSObject {
@@ -43,9 +44,9 @@ class TimelinePollProvider: NSObject {
             return coordinator.toPresentable()
         }
         
-        let parameters = TimelinePollCoordinatorParameters(session: session, room: room, pollStartEvent: event)
+        let parameters = TimelinePollCoordinatorParameters(session: session, room: room, pollEvent: event)
         guard let coordinator = try? TimelinePollCoordinator(parameters: parameters) else {
-            return nil
+            return messageViewController(for: event)
         }
         
         coordinatorsForEventIdentifiers[event.eventId] = coordinator
@@ -60,5 +61,16 @@ class TimelinePollProvider: NSObject {
     
     func reset() {
         coordinatorsForEventIdentifiers.removeAll()
+    }
+}
+
+private extension TimelinePollProvider {
+    func messageViewController(for event: MXEvent) -> UIViewController? {
+        switch event.eventType {
+        case .pollEnd:
+            return VectorHostingController(rootView: TimelinePollMessageView(message: VectorL10n.pollTimelineReplyEndedPoll))
+        default:
+            return nil
+        }
     }
 }

@@ -46,10 +46,10 @@ extension MXBugReportRestClient {
         // User info (TODO: handle multi-account and find a way to expose them in rageshake API)
         var userInfo = [String: String]()
         let mainAccount = MXKAccountManager.shared().accounts.first
-        if let userId = mainAccount?.mxSession.myUser.userId {
+        if let userId = mainAccount?.mxSession?.myUser?.userId {
             userInfo["user_id"] = userId
         }
-        if let deviceId = mainAccount?.mxSession.matrixRestClient.credentials.deviceId {
+        if let deviceId = mainAccount?.mxSession?.myDeviceId {
             userInfo["device_id"] = deviceId
         }
         
@@ -67,6 +67,12 @@ extension MXBugReportRestClient {
         
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         userInfo["utc_time"] = dateFormatter.string(from: currentDate)
+        
+        // SDKs
+        userInfo["matrix_sdk_version"] = MatrixSDKVersion
+        if let crypto = mainAccount?.mxSession?.crypto {
+            userInfo["crypto_module_version"] = crypto.version
+        }
         
         if let customFields = customFields {
             // combine userInfo with custom fields overriding with custom where there is a conflict

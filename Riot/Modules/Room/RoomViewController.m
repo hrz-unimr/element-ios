@@ -97,7 +97,7 @@ static CGSize kThreadListBarButtonItemImageSize;
 @interface RoomViewController () <UISearchBarDelegate, UIGestureRecognizerDelegate, UIScrollViewAccessibilityDelegate, RoomTitleViewTapGestureDelegate, MXKRoomMemberDetailsViewControllerDelegate, ContactsTableViewControllerDelegate, MXServerNoticesDelegate, RoomContextualMenuViewControllerDelegate,
     ReactionsMenuViewModelCoordinatorDelegate, EditHistoryCoordinatorBridgePresenterDelegate, MXKDocumentPickerPresenterDelegate, EmojiPickerCoordinatorBridgePresenterDelegate,
     ReactionHistoryCoordinatorBridgePresenterDelegate, CameraPresenterDelegate, MediaPickerCoordinatorBridgePresenterDelegate,
-    RoomDataSourceDelegate, RoomCreationModalCoordinatorBridgePresenterDelegate, RoomInfoCoordinatorBridgePresenterDelegate, DialpadViewControllerDelegate, RemoveJitsiWidgetViewDelegate, VoiceMessageControllerDelegate, SpaceDetailPresenterDelegate, UserSuggestionCoordinatorBridgeDelegate, ThreadsCoordinatorBridgePresenterDelegate, ThreadsBetaCoordinatorBridgePresenterDelegate, MXThreadingServiceDelegate, RoomParticipantsInviteCoordinatorBridgePresenterDelegate, RoomInputToolbarViewDelegate, ComposerCreateActionListBridgePresenterDelegate>
+    RoomDataSourceDelegate, RoomCreationModalCoordinatorBridgePresenterDelegate, RoomInfoCoordinatorBridgePresenterDelegate, DialpadViewControllerDelegate, RemoveJitsiWidgetViewDelegate, VoiceMessageControllerDelegate, SpaceDetailPresenterDelegate, CompletionSuggestionCoordinatorBridgeDelegate, ThreadsCoordinatorBridgePresenterDelegate, ThreadsBetaCoordinatorBridgePresenterDelegate, MXThreadingServiceDelegate, RoomParticipantsInviteCoordinatorBridgePresenterDelegate, RoomInputToolbarViewDelegate, ComposerCreateActionListBridgePresenterDelegate>
 {
     
     // The preview header
@@ -185,6 +185,9 @@ static CGSize kThreadListBarButtonItemImageSize;
     
     // Time to display notification content in the timeline
     MXTaskProfile *notificationTaskProfile;
+    
+    // Observe kMXEventTypeStringRoomMember events
+    __weak id roomMemberEventListener;
 }
 
 @property (nonatomic, strong) RemoveJitsiWidgetView *removeJitsiWidgetView;
@@ -220,8 +223,8 @@ static CGSize kThreadListBarButtonItemImageSize;
 @property (nonatomic, strong) ShareManager *shareManager;
 @property (nonatomic, strong) EventMenuBuilder *eventMenuBuilder;
 
-@property (nonatomic, strong) UserSuggestionCoordinatorBridge *userSuggestionCoordinator;
-@property (nonatomic, weak) IBOutlet UIView *userSuggestionContainerView;
+@property (nonatomic, strong) CompletionSuggestionCoordinatorBridge *completionSuggestionCoordinator;
+@property (nonatomic, weak) IBOutlet UIView *completionSuggestionContainerView;
 
 @property (nonatomic, readwrite) RoomDisplayConfiguration *displayConfiguration;
 
@@ -232,6 +235,9 @@ static CGSize kThreadListBarButtonItemImageSize;
 // to autoscroll to the bottom again or not. Instead we need to capture the
 // scroll state just before the layout change, and restore it after the layout.
 @property (nonatomic) BOOL wasScrollAtBottomBeforeLayout;
+
+// Check if we should wait for other participants
+@property (nonatomic, readonly) BOOL shouldWaitForOtherParticipants;
 
 @end
 
@@ -329,6 +335,7 @@ static CGSize kThreadListBarButtonItemImageSize;
     
     _showMissedDiscussionsBadge = YES;
     _scrollToBottomHidden = YES;
+    _isWaitingForOtherParticipants = NO;
     
     // Listen to the event sent state changes
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventDidChangeSentState:) name:kMXEventDidChangeSentStateNotification object:nil];
@@ -372,7 +379,10 @@ static CGSize kThreadListBarButtonItemImageSize;
     
     // Prepare missed dicussion badge (if any)
     self.showMissedDiscussionsBadge = _showMissedDiscussionsBadge;
-    
+
+    // Refresh the waiting for other participants state
+    [self refreshWaitForOtherParticipantsState];
+
     // Set up the room title view according to the data source (if any)
     [self refreshRoomTitle];
     
@@ -406,7 +416,7 @@ static CGSize kThreadListBarButtonItemImageSize;
     
     [self setupActions];
     
-    [self setupUserSuggestionViewIfNeeded];
+    [self setupCompletionSuggestionViewIfNeeded];
     
     [self.topBannersStackView vc_removeAllSubviews];
 }
@@ -683,7 +693,7 @@ static CGSize kThreadListBarButtonItemImageSize;
     {
         // Retrieve the potential message partially typed during last room display.
         // Note: We have to wait for viewDidAppear before updating growingTextView (viewWillAppear is too early)
-        self.inputToolbarView.attributedTextMessage = self.roomDataSource.partialAttributedTextMessage;
+        [self.inputToolbarView setPartialContent:self.roomDataSource.partialAttributedTextMessage];
     }
     
     [self setMaximisedToolbarIsHiddenIfNeeded: NO];
@@ -1064,6 +1074,9 @@ static CGSize kThreadListBarButtonItemImageSize;
         
         // Set room title view
         [self refreshRoomTitle];
+        
+        // Stop any pending voice broadcast if needed
+        [self stopUncompletedVoiceBroadcastIfNeeded];
     }
     else
     {
@@ -1075,11 +1088,14 @@ static CGSize kThreadListBarButtonItemImageSize;
     [VoiceMessageMediaServiceProvider.sharedProvider setCurrentRoomSummary:dataSource.room.summary];
     _voiceMessageController.roomId = dataSource.roomId;
     
-    _userSuggestionCoordinator = [[UserSuggestionCoordinatorBridge alloc] initWithMediaManager:self.roomDataSource.mxSession.mediaManager
-                                                                                          room:dataSource.room];
-    _userSuggestionCoordinator.delegate = self;
+    _completionSuggestionCoordinator = [[CompletionSuggestionCoordinatorBridge alloc] initWithMediaManager:self.roomDataSource.mxSession.mediaManager
+                                                                                          room:dataSource.room
+                                                                                        userID:self.roomDataSource.mxSession.myUserId];
+    _completionSuggestionCoordinator.delegate = self;
     
-    [self setupUserSuggestionViewIfNeeded];
+    [self setupCompletionSuggestionViewIfNeeded];
+
+    [self updateRoomInputToolbarViewClassIfNeeded];
     
     [self updateTopBanners];
 }
@@ -1180,6 +1196,12 @@ static CGSize kThreadListBarButtonItemImageSize;
 - (void)updateRoomInputToolbarViewClassIfNeeded
 {
     Class roomInputToolbarViewClass = [RoomViewController mainToolbarClass];
+
+    // If RTE is enabled, delay the toolbar setup until `completionSuggestionCoordinator` is ready.
+    if (roomInputToolbarViewClass == WysiwygInputToolbarView.class && _completionSuggestionCoordinator == nil)
+    {
+        return;
+    }
     
     BOOL shouldDismissContextualMenu = NO;
     
@@ -1191,9 +1213,9 @@ static CGSize kThreadListBarButtonItemImageSize;
         
         BOOL canSend = (userPowerLevel >= [powerLevels minimumPowerLevelForSendingEventAsMessage:kMXEventTypeStringRoomMessage]);
         BOOL isRoomObsolete = self.roomDataSource.roomState.isObsolete;
-        BOOL isResourceLimitExceeded = [self.roomDataSource.mxSession.syncError.errcode isEqualToString:kMXErrCodeStringResourceLimitExceeded];
+        BOOL isResourceLimitExceeded = [self.roomDataSource.mxSession.syncError.errcode isEqualToString:kMXErrCodeStringResourceLimitExceeded];        
         
-        if (isRoomObsolete || isResourceLimitExceeded)
+        if (isRoomObsolete || isResourceLimitExceeded || _isWaitingForOtherParticipants)
         {
             roomInputToolbarViewClass = nil;
             shouldDismissContextualMenu = YES;
@@ -1267,6 +1289,8 @@ static CGSize kThreadListBarButtonItemImageSize;
 - (BOOL)sendAsIRCStyleCommandIfPossible:(NSString*)string
 {
     // Override the default behavior for `/join` command in order to open automatically the joined room
+
+    NSString* kMXKSlashCmdJoinRoom = [MXKSlashCommandsHelper commandNameFor:MXKSlashCommandJoinRoom];
     
     if ([string hasPrefix:kMXKSlashCmdJoinRoom])
     {
@@ -1303,7 +1327,7 @@ static CGSize kThreadListBarButtonItemImageSize;
         else
         {
             // Display cmd usage in text input as placeholder
-            self.inputToolbarView.placeholder = @"Usage: /join <room_alias>";
+            self.inputToolbarView.placeholder = [MXKSlashCommandsHelper commandUsageFor:MXKSlashCommandJoinRoom];
         }
         return YES;
     }
@@ -1529,6 +1553,8 @@ static CGSize kThreadListBarButtonItemImageSize;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kMXEventDidChangeSentStateNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kMXEventDidChangeIdentifierNotification object:nil];
     
+    [self waitForOtherParticipant:NO];
+    
     [super destroy];
 }
 
@@ -1633,6 +1659,57 @@ static CGSize kThreadListBarButtonItemImageSize;
 - (BOOL)shouldShowLiveLocationSharingBannerView
 {
     return self.customizedRoomDataSource.isCurrentUserSharingActiveLocation;
+}
+
+#pragma mark - Wait for 3rd party invitee
+
+- (void)setIsWaitingForOtherParticipants:(BOOL)isWaitingForOtherParticipants
+{
+    if (_isWaitingForOtherParticipants == isWaitingForOtherParticipants)
+    {
+        return;
+    }
+
+    _isWaitingForOtherParticipants = isWaitingForOtherParticipants;
+    [self updateRoomInputToolbarViewClassIfNeeded];
+    
+    if (_isWaitingForOtherParticipants)
+    {
+        if (self->roomMemberEventListener == nil)
+        {
+            MXWeakify(self);
+            self->roomMemberEventListener = [self.roomDataSource.room listenToEventsOfTypes:@[kMXEventTypeStringRoomMember] onEvent:^(MXEvent *event, MXTimelineDirection direction, MXRoomState *roomState) {
+                MXStrongifyAndReturnIfNil(self);
+                if (direction != MXTimelineDirectionForwards)
+                {
+                    return;
+                }
+                [self refreshWaitForOtherParticipantsState];
+            }];
+        }
+    }
+    else
+    {
+        if (self->roomMemberEventListener != nil)
+        {
+            [self.roomDataSource.room removeListener:self->roomMemberEventListener];
+            self->roomMemberEventListener = nil;
+        }
+    }
+}
+
+- (BOOL)shouldWaitForOtherParticipants
+{
+    MXRoomState *roomState = self.roomDataSource.roomState;
+    BOOL isDirect = self.roomDataSource.room.isDirect;
+    
+    // Wait for the other participant only if it is a direct encrypted room with only one member waiting for a third party guest.
+    return (isDirect && roomState.isEncrypted && roomState.membersCount.members == 1 && roomState.thirdPartyInvites.count > 0);
+}
+
+- (void)refreshWaitForOtherParticipantsState
+{
+    [self waitForOtherParticipant:self.shouldWaitForOtherParticipants];
 }
 
 #pragma mark - Internals
@@ -1945,7 +2022,7 @@ static CGSize kThreadListBarButtonItemImageSize;
         
         [self refreshMissedDiscussionsCount:YES];
         
-        if (RiotSettings.shared.enableThreads)
+        if (RiotSettings.shared.enableThreads && !_isWaitingForOtherParticipants)
         {
             if (self.roomDataSource.threadId)
             {
@@ -1979,7 +2056,7 @@ static CGSize kThreadListBarButtonItemImageSize;
         {
             [userPictureView vc_setRoomAvatarImageWith:self.directChatTargetUser.avatarUrl
                                                 roomId:self.directChatTargetUser.userId
-                                           displayName:self.directChatTargetUser.displayname
+                                           displayName:self.directChatTargetUser.displayname ?: self.directChatTargetUser.userId
                                           mediaManager:self.mainSession.mediaManager];
         }
     }
@@ -2257,8 +2334,8 @@ static CGSize kThreadListBarButtonItemImageSize;
 
 - (void)showRoomInfoWithInitialSection:(RoomInfoSection)roomInfoSection animated:(BOOL)animated
 {
-    RoomInfoCoordinatorParameters *parameters = [[RoomInfoCoordinatorParameters alloc] initWithSession:self.roomDataSource.mxSession room:self.roomDataSource.room parentSpaceId:self.parentSpaceId initialSection:roomInfoSection];
-    
+    RoomInfoCoordinatorParameters *parameters = [[RoomInfoCoordinatorParameters alloc] initWithSession:self.roomDataSource.mxSession room:self.roomDataSource.room parentSpaceId:self.parentSpaceId initialSection:roomInfoSection canAddParticipants: !self.isWaitingForOtherParticipants];
+
     self.roomInfoCoordinatorBridgePresenter = [[RoomInfoCoordinatorBridgePresenter alloc] initWithParameters:parameters];
     
     self.roomInfoCoordinatorBridgePresenter.delegate = self;
@@ -2448,13 +2525,22 @@ static CGSize kThreadListBarButtonItemImageSize;
         return;
     }
     
+    // Prevents listening a VB when recording a new one
+    [VoiceBroadcastPlaybackProvider.shared pausePlaying];
+    
+    // Check connectivity
+    if ([AppDelegate theDelegate].isOffline)
+    {
+        [self showAlertWithTitle:[VectorL10n voiceBroadcastConnectionErrorTitle] message:[VectorL10n voiceBroadcastConnectionErrorMessage]];
+        return;
+    }
+    
     // Request the voice broadcast service to start recording - No service is returned if someone else is already broadcasting in the room
     [session getOrCreateVoiceBroadcastServiceFor:self.roomDataSource.room completion:^(VoiceBroadcastService *voiceBroadcastService) {
         if (voiceBroadcastService) {
-            [voiceBroadcastService startVoiceBroadcastWithSuccess:^(NSString * _Nullable success) {
-            
-            } failure:^(NSError * _Nonnull error) {
-                
+            [voiceBroadcastService startVoiceBroadcastWithSuccess:^(NSString * _Nullable success) { } failure:^(NSError * _Nonnull error) {
+                [self showAlertWithTitle:[VectorL10n voiceBroadcastConnectionErrorTitle] message:[VectorL10n voiceBroadcastConnectionErrorMessage]];
+                [session tearDownVoiceBroadcastService];
             }];
         }
         else
@@ -2650,13 +2736,13 @@ static CGSize kThreadListBarButtonItemImageSize;
     }
 }
 
-- (void)setupUserSuggestionViewIfNeeded
+- (void)setupCompletionSuggestionViewIfNeeded
 {
     if(!self.isViewLoaded) {
         return;
     }
     
-    UIViewController *suggestionsViewController = self.userSuggestionCoordinator.toPresentable;
+    UIViewController *suggestionsViewController = self.completionSuggestionCoordinator.toPresentable;
     
     if (!suggestionsViewController)
     {
@@ -2666,12 +2752,12 @@ static CGSize kThreadListBarButtonItemImageSize;
     [suggestionsViewController.view setTranslatesAutoresizingMaskIntoConstraints:NO];
     
     [self addChildViewController:suggestionsViewController];
-    [self.userSuggestionContainerView addSubview:suggestionsViewController.view];
+    [self.completionSuggestionContainerView addSubview:suggestionsViewController.view];
     
-    [NSLayoutConstraint activateConstraints:@[[suggestionsViewController.view.topAnchor constraintEqualToAnchor:self.userSuggestionContainerView.topAnchor],
-                                              [suggestionsViewController.view.leadingAnchor constraintEqualToAnchor:self.userSuggestionContainerView.leadingAnchor],
-                                              [suggestionsViewController.view.trailingAnchor constraintEqualToAnchor:self.userSuggestionContainerView.trailingAnchor],
-                                              [suggestionsViewController.view.bottomAnchor constraintEqualToAnchor:self.userSuggestionContainerView.bottomAnchor],]];
+    [NSLayoutConstraint activateConstraints:@[[suggestionsViewController.view.topAnchor constraintEqualToAnchor:self.completionSuggestionContainerView.topAnchor],
+                                              [suggestionsViewController.view.leadingAnchor constraintEqualToAnchor:self.completionSuggestionContainerView.leadingAnchor],
+                                              [suggestionsViewController.view.trailingAnchor constraintEqualToAnchor:self.completionSuggestionContainerView.trailingAnchor],
+                                              [suggestionsViewController.view.bottomAnchor constraintEqualToAnchor:self.completionSuggestionContainerView.bottomAnchor],]];
     
     [suggestionsViewController didMoveToParentViewController:self];
 }
@@ -3968,7 +4054,7 @@ static CGSize kThreadListBarButtonItemImageSize;
             }]];
         }
 
-        if (!isJitsiCallEvent && selectedEvent.eventType != MXEventTypePollStart &&
+        if (!isJitsiCallEvent && !selectedEvent.isTimelinePollEvent &&
             selectedEvent.eventType != MXEventTypeBeaconInfo)
         {
             [self.eventMenuBuilder addItemWithType:EventMenuItemTypeQuote
@@ -3989,7 +4075,7 @@ static CGSize kThreadListBarButtonItemImageSize;
         }
         
         if (selectedEvent.sentState == MXEventSentStateSent &&
-            selectedEvent.eventType != MXEventTypePollStart &&
+            !selectedEvent.isTimelinePollEvent &&
             // Forwarding of live-location shares still to be implemented
             selectedEvent.eventType != MXEventTypeBeaconInfo)
         {
@@ -4005,7 +4091,7 @@ static CGSize kThreadListBarButtonItemImageSize;
             }]];
         }
         
-        if (!isJitsiCallEvent && BuildSettings.messageDetailsAllowShare && selectedEvent.eventType != MXEventTypePollStart &&
+        if (!isJitsiCallEvent && BuildSettings.messageDetailsAllowShare && !selectedEvent.isTimelinePollEvent &&
             selectedEvent.eventType != MXEventTypeBeaconInfo)
         {
             [self.eventMenuBuilder addItemWithType:EventMenuItemTypeShare
@@ -4290,8 +4376,14 @@ static CGSize kThreadListBarButtonItemImageSize;
                 
                 [self startActivityIndicator];
                 
+                NSArray<NSString *>* relationTypes = nil;
+                // If it's a voice broadcast, delete the selected event and all related events.
+                if (selectedEvent.eventType == MXEventTypeCustom && [selectedEvent.type isEqualToString:VoiceBroadcastSettings.voiceBroadcastInfoContentKeyType]) {
+                    relationTypes = @[MXEventRelationTypeReference];
+                }
+                
                 MXWeakify(self);
-                [self.roomDataSource.room redactEvent:selectedEvent.eventId reason:nil success:^{
+                [self.roomDataSource.room redactEvent:selectedEvent.eventId withRelations:relationTypes reason:nil success:^{
                     MXStrongifyAndReturnIfNil(self);
                     [self stopActivityIndicator];
                 } failure:^(NSError *error) {
@@ -5065,7 +5157,22 @@ static CGSize kThreadListBarButtonItemImageSize;
  
 - (void)roomInputToolbarViewDidChangeTextMessage:(RoomInputToolbarView *)toolbarView
 {
-    [self.userSuggestionCoordinator processTextMessage:toolbarView.textMessage];
+    [self.completionSuggestionCoordinator processTextMessage:toolbarView.textMessage];
+}
+
+- (void)didDetectTextPattern:(SuggestionPatternWrapper *)suggestionPattern
+{
+    [self.completionSuggestionCoordinator processSuggestionPattern:suggestionPattern];
+}
+
+- (CompletionSuggestionViewModelContextWrapper *)completionSuggestionContext
+{
+    return [self.completionSuggestionCoordinator sharedContext];
+}
+
+- (MXMediaManager *)mediaManager
+{
+    return self.mainSession.mediaManager;
 }
 
 - (void)roomInputToolbarViewDidOpenActionMenu:(RoomInputToolbarView*)toolbarView
@@ -5088,6 +5195,27 @@ static CGSize kThreadListBarButtonItemImageSize;
             [self sendFormattedTextMessage:rawText htmlMsg:formattedTextMessage];
         }
         // Errors are handled at the request level. This should be improved in case of code rewriting.
+    }];
+}
+
+- (void)roomInputToolbarView:(MXKRoomInputToolbarView *)toolbarView sendCommand:(NSString *)commandText
+{
+    // Create before sending the message in case of a discussion (direct chat)
+    MXWeakify(self);
+    [self createDiscussionIfNeeded:^(BOOL readyToSend) {
+        MXStrongifyAndReturnIfNil(self);
+
+        if (readyToSend) {
+            if (![self sendAsIRCStyleCommandIfPossible:commandText])
+            {
+                // Display an error for unknown command
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
+                                                                               message:[VectorL10n roomCommandErrorUnknownCommand]
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:[VectorL10n ok] style:UIAlertActionStyleDefault handler:nil]];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+        }
     }];
 }
 
@@ -5140,7 +5268,7 @@ static CGSize kThreadListBarButtonItemImageSize;
         if (readyToSend) {
             BOOL isMessageAHandledCommand = NO;
             // "/me" command is supported with Pills in RoomDataSource.
-            if (![attributedTextMessage.string hasPrefix:kMXKSlashCmdEmote])
+            if (![attributedTextMessage.string hasPrefix:[MXKSlashCommandsHelper commandNameFor:MXKSlashCommandEmote]])
             {
                 // Other commands currently work with identifiers (e.g. ban, invite, op, etc).
                 NSString *message;
@@ -5165,6 +5293,11 @@ static CGSize kThreadListBarButtonItemImageSize;
     }];
 }
 
+- (void)roomInputToolbarView:(MXKRoomInputToolbarView *)toolbarView shouldStorePartialContent:(NSAttributedString *)partialAttributedTextMessage
+{
+    self.roomDataSource.partialAttributedTextMessage = partialAttributedTextMessage;
+}
+
 #pragma mark - MXKRoomMemberDetailsViewControllerDelegate
 
 - (void)roomMemberDetailsViewController:(MXKRoomMemberDetailsViewController *)roomMemberDetailsViewController startChatWithMemberId:(NSString *)matrixId completion:(void (^)(void))completion
@@ -5181,7 +5314,14 @@ static CGSize kThreadListBarButtonItemImageSize;
 
 - (IBAction)onVoiceCallPressed:(id)sender
 {
-    if (self.isCallActive)
+    // Manage case of a Voice broadcast listening -> Pause Voice broadcast playback
+    [VoiceBroadcastPlaybackProvider.shared pausePlaying];
+    
+    if (VoiceBroadcastRecorderProvider.shared.isVoiceBroadcastRecording) {
+        [[AppDelegate theDelegate] showAlertWithTitle:VectorL10n.voiceBroadcastVoipCannotStartTitle
+                                              message:VectorL10n.voiceBroadcastVoipCannotStartDescription];
+    }
+    else if (self.isCallActive)
     {
         [self hangupCall];
     }
@@ -5193,7 +5333,15 @@ static CGSize kThreadListBarButtonItemImageSize;
 
 - (IBAction)onVideoCallPressed:(id)sender
 {
-    [self placeCallWithVideo:YES];
+    // Manage case of a Voice broadcast listening -> Pause Voice broadcast playback
+    [VoiceBroadcastPlaybackProvider.shared pausePlaying];
+
+    if (VoiceBroadcastRecorderProvider.shared.isVoiceBroadcastRecording) {
+        [[AppDelegate theDelegate] showAlertWithTitle:VectorL10n.voiceBroadcastVoipCannotStartTitle
+                                              message:VectorL10n.voiceBroadcastVoipCannotStartDescription];
+    } else {
+        [self placeCallWithVideo:YES];
+    }
 }
 
 - (IBAction)onThreadListTapped:(id)sender
@@ -5224,25 +5372,9 @@ static CGSize kThreadListBarButtonItemImageSize;
     {
         // Dismiss potential keyboard.
         [self dismissKeyboard];
-        
-        // Jump to the last unread event by using a temporary room data source initialized with the last unread event id.
-        MXWeakify(self);
-        [RoomDataSource loadRoomDataSourceWithRoomId:self.roomDataSource.roomId
-                                      initialEventId:self.roomDataSource.room.accountData.readMarkerEventId
-                                            threadId:self.roomDataSource.threadId
-                                    andMatrixSession:self.mainSession
-                                          onComplete:^(id roomDataSource) {
-            MXStrongifyAndReturnIfNil(self);
-            
-            [roomDataSource finalizeInitialization];
-            
-            // Center the bubbles table content on the bottom of the read marker event in order to display correctly the read marker view.
-            self.centerBubblesTableViewContentOnTheInitialEventBottom = YES;
-            [self displayRoom:roomDataSource];
-            
-            // Give the data source ownership to the room view controller.
-            self.hasRoomDataSourceOwnership = YES;
-        }];
+        NSString *eventId = self.roomDataSource.room.accountData.readMarkerEventId;
+        NSString *threadId = self.roomDataSource.threadId;
+        [self reloadRoomWihtEventId:eventId threadId:threadId forceUpdateRoomMarker:YES];
     }
     else if (sender == self.resetReadMarkerButton)
     {
@@ -6008,7 +6140,7 @@ static CGSize kThreadListBarButtonItemImageSize;
             if (self.saveProgressTextInput)
             {
                 // Restore the potential message partially typed before jump to last unread messages.
-                self.inputToolbarView.attributedTextMessage = roomDataSource.partialAttributedTextMessage;
+                [self.inputToolbarView setPartialContent:roomDataSource.partialAttributedTextMessage];
             }
         };
 
@@ -6260,21 +6392,10 @@ static CGSize kThreadListBarButtonItemImageSize;
                 self->currentAlert = nil;
                 
                 // Acknowledge the existence of all devices
-                [self startActivityIndicator];
+                self->unknownDevices = nil;
                 
-                if (![self.mainSession.crypto isKindOfClass:[MXLegacyCrypto class]])
-                {
-                    MXLogFailure(@"[RoomVC] eventDidChangeSentState: Only legacy crypto supports manual setting of known devices");
-                    return;
-                }
-                [(MXLegacyCrypto *)self.mainSession.crypto setDevicesKnown:self->unknownDevices complete:^{
-                    
-                    self->unknownDevices = nil;
-                    [self stopActivityIndicator];
-                    
-                    // And resend pending messages
-                    [self resendAllUnsentMessages];
-                }];
+                // And resend pending messages
+                [self resendAllUnsentMessages];
             }
             
         }]];
@@ -6531,8 +6652,12 @@ static CGSize kThreadListBarButtonItemImageSize;
     // Check whether the read marker exists and has not been rendered yet.
     if (self.roomDataSource.isLive && !self.roomDataSource.isPeeking && self.roomDataSource.showReadMarker && self.roomDataSource.room.accountData.readMarkerEventId)
     {
-        UITableViewCell *cell = [self.bubblesTableView visibleCells].firstObject;
-        if ([cell isKindOfClass:MXKRoomBubbleTableViewCell.class] && ![cell isKindOfClass:MXKRoomEmptyBubbleTableViewCell.class])
+        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            return [evaluatedObject isKindOfClass:MXKRoomBubbleTableViewCell.class];
+        }];
+        NSArray *visibleCells = [[self.bubblesTableView visibleCells] filteredArrayUsingPredicate:predicate];
+        UITableViewCell *cell = visibleCells.firstObject;
+        if (cell)
         {
             MXKRoomBubbleTableViewCell *roomBubbleTableViewCell = (MXKRoomBubbleTableViewCell*)cell;
             // Check whether the read marker is inside the first displayed cell.
@@ -6559,6 +6684,9 @@ static CGSize kThreadListBarButtonItemImageSize;
                 else
                 {
                     self.jumpToLastUnreadBannerContainer.hidden = YES;
+                    
+                    // Force the read marker position in order to not depend on the read marker animation (https://github.com/vector-im/element-ios/issues/7420)
+                    self.updateRoomReadMarker = YES;
                 }
             }
         }
@@ -7144,6 +7272,7 @@ static CGSize kThreadListBarButtonItemImageSize;
             case MXEventTypeKeyVerificationDone:
             case MXEventTypeKeyVerificationCancel:
             case MXEventTypePollStart:
+            case MXEventTypePollEnd:
             case MXEventTypeBeaconInfo:
                 result = NO;
                 break;
@@ -7380,23 +7509,47 @@ static CGSize kThreadListBarButtonItemImageSize;
         return;
     }
     
+    NSMutableArray<NSIndexPath *> *rowsToReload = [[NSMutableArray alloc] init];
+    // Get the current hightlighted event because we will need to reload it
+    NSString *currentHiglightedEventId = self.customizedRoomDataSource.highlightedEventId;
+    if (currentHiglightedEventId)
+    {
+        NSInteger currentHiglightedRow = [self.roomDataSource indexOfCellDataWithEventId:currentHiglightedEventId];
+        if (currentHiglightedRow != NSNotFound)
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentHiglightedRow inSection:0];
+            if ([[self.bubblesTableView indexPathsForVisibleRows] containsObject:indexPath])
+            {
+                [rowsToReload addObject:indexPath];
+            }
+        }
+    }
+    
     self.customizedRoomDataSource.highlightedEventId = eventId;
     
+    // Add the new highligted event to the list of rows to reload
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-    if ([[self.bubblesTableView indexPathsForVisibleRows] containsObject:indexPath])
+    BOOL indexPathIsVisible = [[self.bubblesTableView indexPathsForVisibleRows] containsObject:indexPath];
+    if (indexPathIsVisible)
     {
-        [self.bubblesTableView reloadRowsAtIndexPaths:@[indexPath]
+        [rowsToReload addObject:indexPath];
+    }
+    
+    // Reload rows
+    if (rowsToReload.count > 0)
+    {
+        [self.bubblesTableView reloadRowsAtIndexPaths:rowsToReload
                                      withRowAnimation:UITableViewRowAnimationNone];
-        [self.bubblesTableView scrollToRowAtIndexPath:indexPath
-                                     atScrollPosition:UITableViewScrollPositionMiddle
-                                             animated:YES];
     }
-    else if ([self.bubblesTableView vc_hasIndexPath:indexPath])
+    
+    // Scroll to the newly highlighted row
+    if (indexPathIsVisible || [self.bubblesTableView vc_hasIndexPath:indexPath])
     {
         [self.bubblesTableView scrollToRowAtIndexPath:indexPath
                                      atScrollPosition:UITableViewScrollPositionMiddle
                                              animated:YES];
     }
+
     if (completion)
     {
         completion();
@@ -7432,7 +7585,7 @@ static CGSize kThreadListBarButtonItemImageSize;
 
 - (void)updateThreadListBarButtonItem:(UIBarButtonItem *)barButtonItem with:(MXThreadingService *)service
 {
-    if (!service)
+    if (!service || _isWaitingForOtherParticipants)
     {
         return;
     }
@@ -7838,6 +7991,40 @@ static CGSize kThreadListBarButtonItemImageSize;
     }
 }
 
+- (void)roomInfoCoordinatorBridgePresenter:(RoomInfoCoordinatorBridgePresenter *)coordinator
+                       viewEventInTimeline:(MXEvent *)event
+{
+    [self.navigationController popToViewController:self animated:true];
+    [self reloadRoomWihtEventId:event.eventId threadId:event.threadId forceUpdateRoomMarker:NO];
+}
+
+-(void)reloadRoomWihtEventId:(NSString *)eventId
+                    threadId:(NSString *)threadId
+       forceUpdateRoomMarker:(BOOL)forceUpdateRoomMarker
+{
+    // Jump to the last unread event by using a temporary room data source initialized with the last unread event id.
+    MXWeakify(self);
+    [RoomDataSource loadRoomDataSourceWithRoomId:self.roomDataSource.roomId
+                                  initialEventId:eventId
+                                        threadId:threadId
+                                andMatrixSession:self.mainSession
+                                      onComplete:^(id roomDataSource) {
+        MXStrongifyAndReturnIfNil(self);
+        
+        [roomDataSource finalizeInitialization];
+        
+        // Center the bubbles table content on the bottom of the read marker event in order to display correctly the read marker view.
+        self.centerBubblesTableViewContentOnTheInitialEventBottom = YES;
+        [self displayRoom:roomDataSource];
+        
+        // Give the data source ownership to the room view controller.
+        self.hasRoomDataSourceOwnership = YES;
+        
+        // Force the read marker update if needed (e.g if we jumped on the last unread message using the banner).
+        self.updateRoomReadMarker |= forceUpdateRoomMarker;
+    }];
+}
+
 #pragma mark - RemoveJitsiWidgetViewDelegate
 
 - (void)removeJitsiWidgetViewDidCompleteSliding:(RemoveJitsiWidgetView *)view
@@ -7884,13 +8071,27 @@ static CGSize kThreadListBarButtonItemImageSize;
     }];
 }
 
+- (BOOL)voiceMessageControllerDidRequestRecording:(VoiceMessageController *)voiceMessageController
+{
+    MXSession* session = self.roomDataSource.mxSession;
+    // Check whether the user is not already broadcasting here or in another room
+    if (session.voiceBroadcastService)
+    {
+        [self showAlertWithTitle:[VectorL10n voiceMessageBroadcastInProgressTitle] message:[VectorL10n voiceMessageBroadcastInProgressMessage]];
+
+        return NO;
+    }
+
+    return YES;
+}
+
 - (void)voiceMessageController:(VoiceMessageController *)voiceMessageController
     didRequestSendForFileAtURL:(NSURL *)url
                       duration:(NSUInteger)duration
                        samples:(NSArray<NSNumber *> *)samples
                     completion:(void (^)(BOOL))completion
 {
-    [self.roomDataSource sendVoiceMessage:url mimeType:nil duration:duration samples:samples success:^(NSString *eventId) {
+    [self.roomDataSource sendVoiceMessage:url additionalContentParams:nil mimeType:nil duration:duration samples:samples success:^(NSString *eventId) {
         MXLogDebug(@"Success with event id %@", eventId);
         completion(YES);
     } failure:^(NSError *error) {
@@ -7918,13 +8119,42 @@ static CGSize kThreadListBarButtonItemImageSize;
     [[LegacyAppDelegate theDelegate] openSpaceWithId:spaceId];
 }
 
-#pragma mark - UserSuggestionCoordinatorBridgeDelegate
+#pragma mark - CompletionSuggestionCoordinatorBridgeDelegate
 
-- (void)userSuggestionCoordinatorBridge:(UserSuggestionCoordinatorBridge *)coordinator
+- (void)completionSuggestionCoordinatorBridge:(CompletionSuggestionCoordinatorBridge *)coordinator
              didRequestMentionForMember:(MXRoomMember *)member
                             textTrigger:(NSString *)textTrigger
 {
+    [self removeTriggerTextFromComposer:textTrigger];
+    [self mention:member];
+}
+
+- (void)completionSuggestionCoordinatorBridgeDidRequestMentionForRoom:(CompletionSuggestionCoordinatorBridge *)coordinator
+                                                    textTrigger:(NSString *)textTrigger
+{
+    [self removeTriggerTextFromComposer:textTrigger];
+    [self.inputToolbarView pasteText:[CompletionSuggestionUserID.room stringByAppendingString:@" "]];
+}
+
+- (void)completionSuggestionCoordinatorBridge:(CompletionSuggestionCoordinatorBridge *)coordinator
+                           didRequestCommand:(NSString *)command
+                                 textTrigger:(NSString *)textTrigger
+{
+    [self removeTriggerTextFromComposer:textTrigger];
+    [self setCommand:command];
+}
+
+- (void)removeTriggerTextFromComposer:(NSString *)textTrigger
+{
     RoomInputToolbarView *toolbar = (RoomInputToolbarView *)self.inputToolbarView;
+    Class roomInputToolbarViewClass = [RoomViewController mainToolbarClass];
+
+    // RTE handles removing the text trigger by itself.
+    if (roomInputToolbarViewClass == WysiwygInputToolbarView.class && RiotSettings.shared.enableWysiwygTextFormatting)
+    {
+        return;
+    }
+
     if (toolbar && textTrigger.length) {
         NSMutableAttributedString *attributedTextMessage = [[NSMutableAttributedString alloc] initWithAttributedString:toolbar.attributedTextMessage];
         [[attributedTextMessage mutableString] replaceOccurrencesOfString:textTrigger
@@ -7933,15 +8163,13 @@ static CGSize kThreadListBarButtonItemImageSize;
                                                                     range:NSMakeRange(0, attributedTextMessage.length)];
         [toolbar setAttributedTextMessage:attributedTextMessage];
     }
-    
-    [self mention:member];
 }
 
-- (void)userSuggestionCoordinatorBridge:(UserSuggestionCoordinatorBridge *)coordinator didUpdateViewHeight:(CGFloat)height
+- (void)completionSuggestionCoordinatorBridge:(CompletionSuggestionCoordinatorBridge *)coordinator didUpdateViewHeight:(CGFloat)height
 {
-    if (self.userSuggestionContainerHeightConstraint.constant != height)
+    if (self.completionSuggestionContainerHeightConstraint.constant != height)
     {
-        self.userSuggestionContainerHeightConstraint.constant = height;
+        self.completionSuggestionContainerHeightConstraint.constant = height;
 
         [self.view layoutIfNeeded];
     }

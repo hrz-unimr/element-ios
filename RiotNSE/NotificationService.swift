@@ -198,11 +198,14 @@ class NotificationService: UNNotificationServiceExtension {
                 if NotificationService.backgroundSyncService?.credentials != userAccount.mxCredentials {
                     MXLog.debug("[NotificationService] setup: MXBackgroundSyncService init: BEFORE")
                     self.logMemory()
-                    NotificationService.backgroundSyncService = MXBackgroundSyncService(withCredentials: userAccount.mxCredentials, persistTokenDataHandler: { persistTokenDataHandler in
-                        MXKAccountManager.shared().readAndWriteCredentials(persistTokenDataHandler)
-                    }, unauthenticatedHandler: { error, softLogout, refreshTokenAuth, completion in
-                        userAccount.handleUnauthenticatedWithError(error, isSoftLogout: softLogout, isRefreshTokenAuth: refreshTokenAuth, andCompletion: completion)
-                    })
+                    
+                    NotificationService.backgroundSyncService = MXBackgroundSyncService(
+                        withCredentials: userAccount.mxCredentials,
+                        persistTokenDataHandler: { persistTokenDataHandler in
+                            MXKAccountManager.shared().readAndWriteCredentials(persistTokenDataHandler)
+                        }, unauthenticatedHandler: { error, softLogout, refreshTokenAuth, completion in
+                            userAccount.handleUnauthenticatedWithError(error, isSoftLogout: softLogout, isRefreshTokenAuth: refreshTokenAuth, andCompletion: completion)
+                        })
                     MXLog.debug("[NotificationService] setup: MXBackgroundSyncService init: AFTER")
                     self.logMemory()
                 }
@@ -226,7 +229,7 @@ class NotificationService: UNNotificationServiceExtension {
         
         // If a room summary is available, use the displayname for the best attempt title.
         guard let roomSummary = NotificationService.backgroundSyncService.roomSummary(forRoomId: roomId) else { return }
-        guard let roomDisplayName = roomSummary.displayname else { return }
+        guard let roomDisplayName = roomSummary.displayName else { return }
         bestAttemptContents[eventId]?.title = roomDisplayName
         
         // At this stage we don't know the message type, so leave the body as set in didReceive.
@@ -368,9 +371,15 @@ class NotificationService: UNNotificationServiceExtension {
                     var ignoreBadgeUpdate = false
                     var threadIdentifier: String? = roomId
                     let currentUserId = account.mxCredentials.userId
-                    let roomDisplayName = roomSummary?.displayname
+                    let roomDisplayName = roomSummary?.displayName
                     let pushRule = NotificationService.backgroundSyncService.pushRule(matching: event, roomState: roomState)
-                    
+                
+                    // if the push rule must not be notified we complete and return
+                    if pushRule?.dontNotify == true {
+                        onComplete(nil, false)
+                        return
+                    }
+
                     switch event.eventType {
                         case .callInvite:
                             let offer = event.content["offer"] as? [AnyHashable: Any]
@@ -471,7 +480,14 @@ class NotificationService: UNNotificationServiceExtension {
                                 notificationBody = NotificationService.localizedString(forKey: "VIDEO_FROM_USER", eventSenderName)
                             case kMXMessageTypeAudio:
                                 if event.isVoiceMessage() {
-                                    notificationBody = NotificationService.localizedString(forKey: "VOICE_MESSAGE_FROM_USER", eventSenderName)
+                                    // Ignore voice broadcast chunk event except the first one.
+                                    if let chunkInfo = event.content[VoiceBroadcastSettings.voiceBroadcastContentKeyChunkType] as? [String: UInt] {
+                                        if chunkInfo[VoiceBroadcastSettings.voiceBroadcastContentKeyChunkSequence] == 1 {
+                                            notificationBody = NotificationService.localizedString(forKey: "VOICE_BROADCAST_FROM_USER", eventSenderName)
+                                        }
+                                    } else {
+                                        notificationBody = NotificationService.localizedString(forKey: "VOICE_MESSAGE_FROM_USER", eventSenderName)
+                                    }
                                 } else {
                                     notificationBody = NotificationService.localizedString(forKey: "AUDIO_FROM_USER", eventSenderName, messageContent)
                                 }
@@ -544,7 +560,7 @@ class NotificationService: UNNotificationServiceExtension {
                                 // Otherwise show a generic reaction.
                                 notificationBody = NotificationService.localizedString(forKey: "GENERIC_REACTION_FROM_USER", eventSenderName)
                             }
-                            
+
                         case .custom:
                             if (event.type == kWidgetMatrixEventTypeString || event.type == kWidgetModularEventTypeString),
                                let type = event.content?["type"] as? String,
@@ -561,13 +577,18 @@ class NotificationService: UNNotificationServiceExtension {
                                     additionalUserInfo = [Constants.userInfoKeyPresentNotificationOnForeground: true]
                                 }
                             }
+
                         case .pollStart:
                             notificationTitle = self.messageTitle(for: eventSenderName, in: roomDisplayName)
                             notificationBody = MXEventContentPollStart(fromJSON: event.content)?.question
+                        
+                        case .pollEnd:
+                            notificationTitle = self.messageTitle(for: eventSenderName, in: roomDisplayName)
+                            notificationBody = VectorL10n.pollTimelineEndedText
+                        
                         default:
                             break
                     }
-                    
                     
                     self.validateNotificationContentAndComplete(
                         notificationTitle: notificationTitle,
@@ -861,5 +882,13 @@ class NotificationService: UNNotificationServiceExtension {
         let locale = LocaleProvider.locale ?? Locale.current
         
         return String(format: format, locale: locale, arguments: args)
+    }
+}
+
+private extension MXPushRule {
+    var dontNotify: Bool {
+        let actions = (actions as? [MXPushRuleAction]) ?? []
+        // Support for MSC3987: The dont_notify push rule action is deprecated and replaced by an empty actions list.
+        return actions.isEmpty || actions.contains { $0.actionType == MXPushRuleActionTypeDontNotify }
     }
 }

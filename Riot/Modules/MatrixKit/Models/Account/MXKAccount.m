@@ -946,14 +946,7 @@ static NSArray<NSNumber*> *initialSyncSilentErrorsHTTPStatusCodes;
         [MXKRoomDataSourceManager removeSharedManagerForMatrixSession:mxSession];
 
         if (clearStore)
-        {
-            // Force a reload of device keys at the next session start.
-            // This will fix potential UISIs other peoples receive for our messages.
-            if ([mxSession.crypto isKindOfClass:[MXLegacyCrypto class]])
-            {
-                [(MXLegacyCrypto *)mxSession.crypto resetDeviceKeys];
-            }
-            
+        {   
             // Clean other stores
             [mxSession.scanManager deleteAllAntivirusScans];
             [mxSession.aggregations resetData];
@@ -1909,8 +1902,15 @@ static NSArray<NSNumber*> *initialSyncSilentErrorsHTTPStatusCodes;
             MXRoomSummary *summary = room.summary;
             if (summary)
             {
+                NSString *eventId = summary.lastMessage.eventId;
+                if (!eventId)
+                {
+                    MXLogFailure(@"[MXKAccount] onDateTimeFormatUpdate: Missing event id");
+                    continue;
+                }
+                
                 dispatch_group_enter(dispatchGroup);
-                [summary.mxSession eventWithEventId:summary.lastMessage.eventId
+                [summary.mxSession eventWithEventId:eventId
                                              inRoom:summary.roomId
                                             success:^(MXEvent *event) {
                     

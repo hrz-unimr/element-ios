@@ -41,6 +41,7 @@ extension ComposerLinkActionViewState {
         switch linkAction {
         case .createWithText, .create: return VectorL10n.wysiwygComposerLinkActionCreateTitle
         case .edit: return VectorL10n.wysiwygComposerLinkActionEditTitle
+        case .disabled: return ""
         }
     }
     
@@ -59,20 +60,32 @@ extension ComposerLinkActionViewState {
     }
     
     var isSaveButtonDisabled: Bool {
-        guard isValidLink else { return true }
+        guard !bindings.linkUrl.isEmpty else { return true }
         switch linkAction {
         case .createWithText: return bindings.text.isEmpty
-        default: return false
+        case .create: return false
+        case .edit: return !bindings.hasEditedUrl
+        case .disabled: return false
         }
-    }
-    
-    private var isValidLink: Bool {
-        guard let url = URL(string: bindings.linkUrl) else { return false }
-        return UIApplication.shared.canOpenURL(url)
     }
 }
 
 struct ComposerLinkActionBindings {
     var text: String
-    var linkUrl: String
+    
+    private let initialLinkUrl: String
+    fileprivate var hasEditedUrl = false
+    var linkUrl: String {
+        didSet {
+            if !hasEditedUrl && linkUrl != initialLinkUrl {
+                hasEditedUrl = true
+            }
+        }
+    }
+    
+    init(text: String, linkUrl: String) {
+        self.text = text
+        self.linkUrl = linkUrl
+        self.initialLinkUrl = linkUrl
+    }
 }

@@ -39,10 +39,12 @@
 #import "MXKEncryptionKeysImportView.h"
 
 #import "NSBundle+MatrixKit.h"
-#import "MXKSlashCommands.h"
 #import "MXKSwiftHeader.h"
 
 #import "MXKPreviewViewController.h"
+
+// Constant used to determine whether an event is visible at the bottom of the tableview, based on its visible height
+static const CGFloat kCellVisibilityMinimumHeight = 8.0;
 
 @interface MXKRoomViewController () <MXKPreviewViewControllerDelegate>
 {
@@ -358,7 +360,7 @@
     {
         // Retrieve the potential message partially typed during last room display.
         // Note: We have to wait for viewDidAppear before updating growingTextView (viewWillAppear is too early)
-        inputToolbarView.attributedTextMessage = roomDataSource.partialAttributedTextMessage;
+        [inputToolbarView setPartialContent:roomDataSource.partialAttributedTextMessage];
     }
     
     if (!hasAppearedOnce)
@@ -370,6 +372,11 @@
     [self.roomDataSource.room.summary markAllAsReadLocally];
     
     [self updateCurrentEventIdAtTableBottom:YES];
+    
+    if (!self.isContextPreview)
+    {
+        [self.roomDataSource.room resetUnread];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -755,7 +762,7 @@
         else
         {
             // set default title
-            self.navigationItem.title = roomDataSource.room.summary.displayname;
+            self.navigationItem.title = roomDataSource.room.summary.displayName;
         }
         
         // Show input tool bar
@@ -775,7 +782,7 @@
                 }
                 else
                 {
-                    self.navigationItem.title = roomDataSource.room.summary.displayname;
+                    self.navigationItem.title = roomDataSource.room.summary.displayName;
                 }
             }
             else
@@ -885,7 +892,7 @@
         
     } failure:^(NSError *error) {
         cancelIndicator();
-        MXLogDebug(@"[MXKRoomVC] Failed to join room (%@)", self->roomDataSource.room.summary.displayname);
+        MXLogDebug(@"[MXKRoomVC] Failed to join room (%@)", self->roomDataSource.room.summary.displayName);
         [self processRoomJoinFailureWithError:error completion:completion];
     }];
 }
@@ -1276,8 +1283,14 @@
     
     // TODO: display an alert with the cmd usage in case of error or unrecognized cmd.
     NSString *cmdUsage;
+
+    NSString* kMXKSlashCmdChangeDisplayName = [MXKSlashCommandsHelper commandNameFor:MXKSlashCommandChangeDisplayName];
+    NSString* kMXKSlashCmdJoinRoom = [MXKSlashCommandsHelper commandNameFor:MXKSlashCommandJoinRoom];
+    NSString* kMXKSlashCmdPartRoom = [MXKSlashCommandsHelper commandNameFor:MXKSlashCommandPartRoom];
+    NSString* kMXKSlashCmdChangeRoomTopic = [MXKSlashCommandsHelper commandNameFor:MXKSlashCommandChangeRoomTopic];
+
     
-    if ([cmd isEqualToString:kMXKSlashCmdEmote])
+    if ([cmd isEqualToString:[MXKSlashCommandsHelper commandNameFor:MXKSlashCommandEmote]])
     {
         // send message as an emote
         [self sendTextMessage:string];
@@ -1312,7 +1325,7 @@
         else
         {
             // Display cmd usage in text input as placeholder
-            cmdUsage = @"Usage: /nick <display_name>";
+            cmdUsage = [MXKSlashCommandsHelper commandUsageFor:MXKSlashCommandChangeDisplayName];
         }
     }
     else if ([string hasPrefix:kMXKSlashCmdJoinRoom])
@@ -1347,7 +1360,7 @@
         else
         {
             // Display cmd usage in text input as placeholder
-            cmdUsage = @"Usage: /join <room_alias>";
+            cmdUsage = [MXKSlashCommandsHelper commandUsageFor:MXKSlashCommandJoinRoom];
         }
     }
     else if ([string hasPrefix:kMXKSlashCmdPartRoom])
@@ -1405,7 +1418,7 @@
         else
         {
             // Display cmd usage in text input as placeholder
-            cmdUsage = @"Usage: /part [<room_alias>]";
+            cmdUsage = [MXKSlashCommandsHelper commandUsageFor:MXKSlashCommandPartRoom];
         }
     }
     else if ([string hasPrefix:kMXKSlashCmdChangeRoomTopic])
@@ -1437,10 +1450,10 @@
         else
         {
             // Display cmd usage in text input as placeholder
-            cmdUsage = @"Usage: /topic <topic>";
+            cmdUsage = [MXKSlashCommandsHelper commandUsageFor:MXKSlashCommandChangeRoomTopic];
         }
     }
-    else if ([string hasPrefix:kMXKSlashCmdDiscardSession])
+    else if ([string hasPrefix:[MXKSlashCommandsHelper commandNameFor:MXKSlashCommandDiscardSession]])
     {
         [roomDataSource.mxSession.crypto discardOutboundGroupSessionForRoomWithRoomId:roomDataSource.roomId onComplete:^{
             MXLogDebug(@"[MXKRoomVC] Manually discarded outbound group session");
@@ -1462,7 +1475,7 @@
             userId = nil;
         }
         
-        if ([cmd isEqualToString:kMXKSlashCmdInviteUser])
+        if ([cmd isEqualToString:[MXKSlashCommandsHelper commandNameFor:MXKSlashCommandInviteUser]])
         {
             if (userId)
             {
@@ -1481,10 +1494,10 @@
             else
             {
                 // Display cmd usage in text input as placeholder
-                cmdUsage = @"Usage: /invite <userId>";
+                cmdUsage = [MXKSlashCommandsHelper commandUsageFor:MXKSlashCommandInviteUser];
             }
         }
-        else if ([cmd isEqualToString:kMXKSlashCmdKickUser])
+        else if ([cmd isEqualToString:[MXKSlashCommandsHelper commandNameFor:MXKSlashCommandKickUser]])
         {
             if (userId)
             {
@@ -1516,10 +1529,10 @@
             else
             {
                 // Display cmd usage in text input as placeholder
-                cmdUsage = @"Usage: /kick <userId> [<reason>]";
+                cmdUsage = [MXKSlashCommandsHelper commandUsageFor:MXKSlashCommandKickUser];
             }
         }
-        else if ([cmd isEqualToString:kMXKSlashCmdBanUser])
+        else if ([cmd isEqualToString:[MXKSlashCommandsHelper commandNameFor:MXKSlashCommandBanUser]])
         {
             if (userId)
             {
@@ -1551,10 +1564,10 @@
             else
             {
                 // Display cmd usage in text input as placeholder
-                cmdUsage = @"Usage: /ban <userId> [<reason>]";
+                cmdUsage = [MXKSlashCommandsHelper commandUsageFor:MXKSlashCommandBanUser];
             }
         }
-        else if ([cmd isEqualToString:kMXKSlashCmdUnbanUser])
+        else if ([cmd isEqualToString:[MXKSlashCommandsHelper commandNameFor:MXKSlashCommandUnbanUser]])
         {
             if (userId)
             {
@@ -1573,10 +1586,10 @@
             else
             {
                 // Display cmd usage in text input as placeholder
-                cmdUsage = @"Usage: /unban <userId>";
+                cmdUsage = [MXKSlashCommandsHelper commandUsageFor:MXKSlashCommandUnbanUser];
             }
         }
-        else if ([cmd isEqualToString:kMXKSlashCmdSetUserPowerLevel])
+        else if ([cmd isEqualToString:[MXKSlashCommandsHelper commandNameFor:MXKSlashCommandSetUserPowerLevel]])
         {
             // Retrieve power level
             NSString *powerLevel = nil;
@@ -1609,10 +1622,10 @@
             else
             {
                 // Display cmd usage in text input as placeholder
-                cmdUsage = @"Usage: /op <userId> <power level>";
+                cmdUsage = [MXKSlashCommandsHelper commandUsageFor:MXKSlashCommandSetUserPowerLevel];
             }
         }
-        else if ([cmd isEqualToString:kMXKSlashCmdResetUserPowerLevel])
+        else if ([cmd isEqualToString:[MXKSlashCommandsHelper commandNameFor:MXKSlashCommandResetUserPowerLevel]])
         {
             if (userId)
             {
@@ -1631,7 +1644,7 @@
             else
             {
                 // Display cmd usage in text input as placeholder
-                cmdUsage = @"Usage: /deop <userId>";
+                cmdUsage = [MXKSlashCommandsHelper commandUsageFor:MXKSlashCommandResetUserPowerLevel];
             }
         }
         else
@@ -2414,7 +2427,7 @@
             contentBottomOffsetY = _bubblesTableView.contentSize.height;
         }
         // Be a bit less retrictive, consider visible an event at the bottom even if is partially hidden.
-        contentBottomOffsetY += 8;
+        contentBottomOffsetY += kCellVisibilityMinimumHeight;
         
         // Reset the current event id
         currentEventIdAtTableBottom = nil;
@@ -2484,24 +2497,26 @@
                     if (acknowledge && self.isEventsAcknowledgementEnabled)
                     {
                         // Indicate to the homeserver that the user has read this event.
-                        
-                        // Check whether the read marker must be updated.
-                        BOOL updateReadMarker = _updateRoomReadMarker;
-                        if (updateReadMarker && roomDataSource.room.accountData.readMarkerEventId)
-                        {
-                            MXEvent *currentReadMarkerEvent = [roomDataSource.mxSession.store eventWithEventId:roomDataSource.room.accountData.readMarkerEventId inRoom:roomDataSource.roomId];
-                            if (!currentReadMarkerEvent)
-                            {
-                                currentReadMarkerEvent = [roomDataSource eventWithEventId:roomDataSource.room.accountData.readMarkerEventId];
-                            }
-                            
-                            // Update the read marker only if the current event is available, and the new event is posterior to it.
-                            updateReadMarker = (currentReadMarkerEvent && (currentReadMarkerEvent.originServerTs <= component.event.originServerTs));
-                        }
-                        
                         if (self.navigationController.viewControllers.lastObject == self)
                         {
-                            [roomDataSource.room acknowledgeEvent:component.event andUpdateReadMarker:updateReadMarker];
+                            // Check if the selected event is eligible to be the new read marker position too
+                            if (!bubbleData.collapsed && [self eligibleForReadMarkerUpdate:component.event])
+                            {
+                                BOOL updateRoomReadMarker = _updateRoomReadMarker && [self isEventPosteriorToCurrentReadMarker:component.event];
+                                // Acknowledge this event and update the read marker if needed
+                                [roomDataSource.room acknowledgeEvent:component.event andUpdateReadMarker:updateRoomReadMarker];
+                            }
+                            else
+                            {
+                                // Acknowledge only this event. The read marker is handled separately
+                                [roomDataSource.room acknowledgeEvent:component.event andUpdateReadMarker:NO];
+
+                                if (_updateRoomReadMarker)
+                                {
+                                    // Try to find the best event for the new read marker position
+                                    [self updateReadMarkerEvent];
+                                }
+                            }
                         }
                     }
                     break;
@@ -2509,6 +2524,118 @@
                 // else we consider the previous cell.
             }
         }
+    }
+}
+
+- (BOOL)eligibleForReadMarkerUpdate:(MXEvent *)event {
+    // Prevent the readmarker to be placed on a relatesTo or a redaction event
+    if (event.relatesTo || event.redacts)
+    {
+        return NO;
+    }
+    
+    return YES;
+}
+
+- (BOOL)isEventPosteriorToCurrentReadMarker:(MXEvent *)event {
+    if (roomDataSource.room.accountData.readMarkerEventId)
+    {
+        MXEvent *currentReadMarkerEvent = [roomDataSource.mxSession.store eventWithEventId:roomDataSource.room.accountData.readMarkerEventId inRoom:roomDataSource.roomId];
+        if (!currentReadMarkerEvent)
+        {
+            currentReadMarkerEvent = [roomDataSource eventWithEventId:roomDataSource.room.accountData.readMarkerEventId];
+        }
+        
+        // Update the read marker only if the current event is available, and the new event is posterior to it.
+        return currentReadMarkerEvent && (currentReadMarkerEvent.originServerTs <= event.originServerTs);
+    }
+    return YES;
+}
+
+/// Try to update the read marker by looking for an eligible event displayed at the bottom of the tableview
+- (void)updateReadMarkerEvent
+{
+    // Compute the content offset corresponding to the line displayed at the table bottom (just above the toolbar).
+    CGFloat contentBottomOffsetY = _bubblesTableView.contentOffset.y + (_bubblesTableView.frame.size.height - _bubblesTableView.adjustedContentInset.bottom);
+    if (contentBottomOffsetY > _bubblesTableView.contentSize.height)
+    {
+        contentBottomOffsetY = _bubblesTableView.contentSize.height;
+    }
+    // Be a bit less retrictive, consider visible an event at the bottom even if is partially hidden.
+    contentBottomOffsetY += kCellVisibilityMinimumHeight;
+    
+    // Consider the visible cells (starting by those displayed at the bottom)
+    NSArray *visibleCells = [_bubblesTableView visibleCells];
+    NSInteger index = visibleCells.count;
+    UITableViewCell *cell;
+    while (index--)
+    {
+        cell = visibleCells[index];
+        
+        // Check whether the cell is actually visible
+        if (!cell || cell.frame.origin.y > contentBottomOffsetY)
+        {
+            continue;
+        }
+
+        if (![cell isKindOfClass:MXKRoomBubbleTableViewCell.class])
+        {
+            continue;
+        }
+        MXKRoomBubbleTableViewCell *roomBubbleTableViewCell = (MXKRoomBubbleTableViewCell *)cell;
+        MXKRoomBubbleCellData *bubbleData = roomBubbleTableViewCell.bubbleData;
+        if (!bubbleData)
+        {
+            continue;
+        }
+        
+        // Prevent to place the read marker on a collapsed cell
+        if (bubbleData.collapsed)
+        {
+            continue;
+        }
+        
+        // Check which bubble component is displayed at the bottom.
+        // For that update each component position.
+        [bubbleData prepareBubbleComponentsPosition];
+        
+        NSArray *bubbleComponents = bubbleData.bubbleComponents;
+        NSInteger componentIndex = bubbleComponents.count;
+        
+        CGFloat bottomPositionY = cell.frame.size.height;
+        
+        MXKRoomBubbleComponent *component;
+        
+        while (componentIndex --)
+        {
+            component = bubbleComponents[componentIndex];
+            
+            // Prevent the read marker to be placed on an unsupported event (e.g. redactions, reactions, ...)
+            if (![self eligibleForReadMarkerUpdate:component.event])
+            {
+                continue;
+            }
+            
+            // Check whether the bottom part of the component is visible.
+            CGFloat pos = cell.frame.origin.y + bottomPositionY;
+            if (pos <= contentBottomOffsetY)
+            {
+                // We found the component
+                // Check whether the read marker must be updated.
+                if ([self isEventPosteriorToCurrentReadMarker:component.event])
+                {
+                    // Move the read marker to this event
+                    [roomDataSource.room moveReadMarkerToEventId:component.event.eventId];
+                }
+                
+                return;
+            }
+            
+            // Prepare the bottom position for the next component
+            bottomPositionY = roomBubbleTableViewCell.msgTextViewTopConstraint.constant + component.position.y;
+        }
+        
+        // else we consider the previous cell.
     }
 }
 

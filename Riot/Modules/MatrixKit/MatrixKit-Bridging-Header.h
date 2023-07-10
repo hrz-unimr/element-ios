@@ -16,3 +16,5 @@
 #import "MXKImageView.h"
 #import "MXKRoomBubbleCellData.h"
 #import "UserIndicatorCancel.h"
+#import "VoiceBroadcastInfo.h"
+#import "MXKSoundPlayer.h"

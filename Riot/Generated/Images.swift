@@ -22,9 +22,6 @@ internal typealias AssetImageTypeAlias = ImageAsset.Image
 internal class Asset: NSObject {
   @objcMembers
   @objc(AssetImages) internal class Images: NSObject {
-    internal static let allChatsOnboarding1 = ImageAsset(name: "all_chats_onboarding1")
-    internal static let allChatsOnboarding2 = ImageAsset(name: "all_chats_onboarding2")
-    internal static let allChatsOnboarding3 = ImageAsset(name: "all_chats_onboarding3")
     internal static let analyticsCheckmark = ImageAsset(name: "AnalyticsCheckmark")
     internal static let analyticsLogo = ImageAsset(name: "AnalyticsLogo")
     internal static let socialLoginButtonApple = ImageAsset(name: "social_login_button_apple")
@@ -110,6 +107,7 @@ internal class Asset: NSObject {
     internal static let strikethrough = ImageAsset(name: "Strikethrough")
     internal static let underlined = ImageAsset(name: "Underlined")
     internal static let bulletList = ImageAsset(name: "bullet_list")
+    internal static let codeBlock = ImageAsset(name: "code_block")
     internal static let indentDecrease = ImageAsset(name: "indent_decrease")
     internal static let maximiseComposer = ImageAsset(name: "maximise_composer")
     internal static let minimiseComposer = ImageAsset(name: "minimise_composer")
@@ -246,6 +244,7 @@ internal class Asset: NSObject {
     internal static let locationPinIcon = ImageAsset(name: "location_pin_icon")
     internal static let locationShareIcon = ImageAsset(name: "location_share_icon")
     internal static let locationUserMarker = ImageAsset(name: "location_user_marker")
+    internal static let pillUser = ImageAsset(name: "pill_user")
     internal static let pollCheckboxDefault = ImageAsset(name: "poll_checkbox_default")
     internal static let pollCheckboxSelected = ImageAsset(name: "poll_checkbox_selected")
     internal static let pollDeleteIcon = ImageAsset(name: "poll_delete_icon")
@@ -285,6 +284,7 @@ internal class Asset: NSObject {
     internal static let modIcon = ImageAsset(name: "mod_icon")
     internal static let moreReactions = ImageAsset(name: "more_reactions")
     internal static let notifications = ImageAsset(name: "notifications")
+    internal static let pollHistory = ImageAsset(name: "pollHistory")
     internal static let reactionsMoreAction = ImageAsset(name: "reactions_more_action")
     internal static let roomAccessInfoHeaderIcon = ImageAsset(name: "room_access_info_header_icon")
     internal static let scrollup = ImageAsset(name: "scrollup")
@@ -346,6 +346,9 @@ internal class Asset: NSObject {
     internal static let voiceBroadcastPlay = ImageAsset(name: "voice_broadcast_play")
     internal static let voiceBroadcastRecord = ImageAsset(name: "voice_broadcast_record")
     internal static let voiceBroadcastRecordPause = ImageAsset(name: "voice_broadcast_record_pause")
+    internal static let voiceBroadcastSliderMaxTrack = ImageAsset(name: "voice_broadcast_slider_max_track")
+    internal static let voiceBroadcastSliderMinTrack = ImageAsset(name: "voice_broadcast_slider_min_track")
+    internal static let voiceBroadcastSliderThumb = ImageAsset(name: "voice_broadcast_slider_thumb")
     internal static let voiceBroadcastSpinner = ImageAsset(name: "voice_broadcast_spinner")
     internal static let voiceBroadcastStop = ImageAsset(name: "voice_broadcast_stop")
     internal static let voiceBroadcastTileLive = ImageAsset(name: "voice_broadcast_tile_live")

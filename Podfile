@@ -16,7 +16,7 @@ use_frameworks!
 # - `{ :specHash => {sdk spec hash}` to depend on specific pod options (:git => …, :podspec => …) for MatrixSDK repo. Used by Fastfile during CI
 #
 # Warning: our internal tooling depends on the name of this variable name, so be sure not to change it
-$matrixSDKVersion = '= 0.24.6'
+$matrixSDKVersion = '= 0.26.12'
 # $matrixSDKVersion = :local
 # $matrixSDKVersion = { :branch => 'develop'}
 # $matrixSDKVersion = { :specHash => { git: 'https://git.io/fork123', branch: 'fix' } }
@@ -53,8 +53,6 @@ end
 
 def import_MatrixKit_pods
   pod 'libPhoneNumber-iOS', '~> 0.9.13'  
-  pod 'DTCoreText', '~> 1.6.25'
-  #pod 'DTCoreText/Extension', '~> 1.6.25'
   pod 'Down', '~> 0.11.0'
 end
 
@@ -72,10 +70,8 @@ abstract_target 'RiotPods' do
   pod 'WeakDictionary', '~> 2.0'
 
   # PostHog for analytics
-  pod 'PostHog', '~> 1.4.4'
+  pod 'PostHog', '~> 2.0.0'
   pod 'Sentry', '~> 7.15.0'
-  pod 'AnalyticsEvents', :git => 'https://github.com/matrix-org/matrix-analytics-events.git', :branch => 'release/swift', :inhibit_warnings => false
-  # pod 'AnalyticsEvents', :path => '../matrix-analytics-events/AnalyticsEvents.podspec'
 
   pod 'OLMKit'
   pod 'zxcvbn-ios'
@@ -129,6 +125,10 @@ abstract_target 'RiotPods' do
   target "RiotNSE" do
     import_MatrixSDK
     import_MatrixKit_pods
+  end
+
+  target "BroadcastUploadExtension" do
+    import_MatrixSDK
   end
 
 end

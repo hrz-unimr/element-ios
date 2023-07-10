@@ -32,7 +32,7 @@ class PillsFormatter: NSObject {
         case identifier
         case markdown
     }
-
+    
     // MARK: - Internal Methods
     /// Insert text attachments for pills inside given message attributed string.
     ///
@@ -52,22 +52,61 @@ class PillsFormatter: NSObject {
                             roomState: MXRoomState,
                             andLatestRoomState latestRoomState: MXRoomState?,
                             isEditMode: Bool = false) -> NSAttributedString {
+                
         let newAttr = NSMutableAttributedString(attributedString: attributedString)
         newAttr.vc_enumerateAttribute(.link) { (url: URL, range: NSRange, _) in
-            if let userId = userIdFromPermalink(url.absoluteString),
-               let roomMember = roomMember(withUserId: userId,
-                                           roomState: roomState,
-                                           andLatestRoomState: latestRoomState) {
-                let isHighlighted = roomMember.userId == session.myUserId && event.sender != session.myUserId
-                let attachmentString = mentionPill(withRoomMember: roomMember,
-                                                   andUrl: isEditMode ? nil : url,
-                                                   isHighlighted: isHighlighted,
-                                                   font: eventFormatter.defaultTextFont)
+            
+            let provider = PillProvider(withSession: session,
+                                        eventFormatter: eventFormatter,
+                                        event: event,
+                                        roomState: roomState,
+                                        andLatestRoomState: latestRoomState,
+                                        isEditMode: isEditMode)
+                        
+            // try to get a mention pill from the url
+            let label = Range(range, in: newAttr.string).flatMap { String(newAttr.string[$0]) }
+            if let attachmentString: NSAttributedString = provider.pillTextAttachmentString(forUrl: url, withLabel: label ?? "") {
+                // replace the url with the pill
                 newAttr.replaceCharacters(in: range, with: attachmentString)
             }
         }
 
         return newAttr
+    }
+
+    /// Insert text attachments for pills inside given attributed string containing markdown.
+    ///
+    /// - Parameters:
+    ///   - markdownString: An attributed string with markdown formatting
+    ///   - roomState: The current room state
+    ///   - font: The font to use for the pill text
+    /// - Returns: A new attributed string with pills.
+    static func insertPills(in markdownString: NSAttributedString,
+                            withSession session: MXSession,
+                            eventFormatter: MXKEventFormatter,
+                            roomState: MXRoomState,
+                            font: UIFont) -> NSAttributedString {
+        let matches = markdownLinks(in: markdownString)
+
+        // If we have some matches, replace permalinks by a pill version.
+        guard !matches.isEmpty else { return markdownString }
+
+        let pillProvider = PillProvider(withSession: session,
+                                        eventFormatter: eventFormatter,
+                                        event: nil,
+                                        roomState: roomState,
+                                        andLatestRoomState: nil,
+                                        isEditMode: true)
+
+        let mutable = NSMutableAttributedString(attributedString: markdownString)
+
+        matches.reversed().forEach {
+            if let attachmentString = pillProvider.pillTextAttachmentString(forUrl: $0.url, withLabel: $0.label) {
+                mutable.replaceCharacters(in: $0.range, with: attachmentString)
+            }
+        }
+
+        return mutable
     }
 
     /// Creates a string with all pills of given attributed string replaced by display names.
@@ -80,25 +119,27 @@ class PillsFormatter: NSObject {
                                        mode: PillsReplacementTextMode = .displayname) -> String {
         let newAttr = NSMutableAttributedString(attributedString: attributedString)
         newAttr.vc_enumerateAttribute(.attachment) { (attachment: PillTextAttachment, range: NSRange, _) in
-            if let displayText = attachment.data?.displayText,
-               let userId = attachment.data?.matrixItemId,
-               let permalink = MXTools.permalinkToUser(withUserId: userId) {
-                let pillString: String
-                switch mode {
-                case .displayname:
-                    pillString = displayText
-                case .identifier:
-                    pillString = userId
-                case .markdown:
-                    pillString = "[\(displayText)](\(permalink))"
-                }
-                newAttr.replaceCharacters(in: range, with: pillString)
+            guard let data = attachment.data else {
+                return
             }
+
+            let pillString: String
+            switch mode {
+            case .displayname:
+                pillString = data.displayText
+            case .identifier:
+                pillString = data.pillIdentifier
+            case .markdown:
+                pillString = data.markdown
+            }
+
+            newAttr.replaceCharacters(in: range, with: pillString)
         }
 
         return newAttr.string
     }
 
+    
     /// Creates an attributed string containing a pill for given room member.
     ///
     /// - Parameters:
@@ -111,17 +152,27 @@ class PillsFormatter: NSObject {
                             andUrl url: URL? = nil,
                             isHighlighted: Bool,
                             font: UIFont) -> NSAttributedString {
+
         guard let attachment = PillTextAttachment(withRoomMember: roomMember, isHighlighted: isHighlighted, font: font) else {
             return NSAttributedString(string: roomMember.displayname)
         }
-        let string = NSMutableAttributedString(attachment: attachment)
-        string.addAttribute(.font, value: font, range: .init(location: 0, length: string.length))
-        if let url = url {
-            string.addAttribute(.link, value: url, range: .init(location: 0, length: string.length))
-        }
-        return string
+        return attributedStringWithAttachment(attachment, link: url, font: font)
     }
 
+    static func mentionPill(withUrl url: URL,
+                            andLabel label: String,
+                            session: MXSession,
+                            eventFormatter: MXKEventFormatter,
+                            roomState: MXRoomState) -> NSAttributedString? {
+        let pillProvider = PillProvider(withSession: session,
+                                        eventFormatter: eventFormatter,
+                                        event: nil,
+                                        roomState: roomState,
+                                        andLatestRoomState: nil,
+                                        isEditMode: true)
+        return pillProvider.pillTextAttachmentString(forUrl: url, withLabel: label)
+    }
+        
     /// Update alpha of all `PillTextAttachment` contained in given attributed string.
     ///
     /// - Parameters:
@@ -140,43 +191,70 @@ class PillsFormatter: NSObject {
     ///   - roomState: room state for refresh, should be the latest available
     static func refreshPills(in attributedString: NSAttributedString, with roomState: MXRoomState) {
         attributedString.vc_enumerateAttribute(.attachment) { (pill: PillTextAttachment, range: NSRange, _) in
-            guard let userId = pill.data?.matrixItemId,
-                  let roomMember = roomState.members.member(withUserId: userId) else {
-                return
-            }
+            
+            switch pill.data?.pillType {
+            case .user(let userId):
+                guard let roomMember = roomState.members.member(withUserId: userId) else {
+                    return
+                }
 
-            pill.data?.displayName = roomMember.displayname
-            pill.data?.avatarUrl = roomMember.avatarUrl
+                pill.data?.items = [
+                    .avatar(url: roomMember.avatarUrl,
+                            string: roomMember.displayname,
+                            matrixId: roomMember.userId),
+                    .text(roomMember.displayname)
+                ]
+            default:
+                break
+            }
         }
     }
 }
 
 // MARK: - Private Methods
 @available (iOS 15.0, *)
-private extension PillsFormatter {
-    /// Extract user id from given permalink
-    /// - Parameter permalink: the permalink
-    /// - Returns: userId, if any
-    static func userIdFromPermalink(_ permalink: String) -> String? {
-        let baseUrl: String
-        if let clientBaseUrl = BuildSettings.clientPermalinkBaseUrl {
-            baseUrl = String(format: "%@/#/user/", clientBaseUrl)
-        } else {
-            baseUrl = String(format: "%@/#/", kMXMatrixDotToUrl)
-        }
-        return permalink.starts(with: baseUrl) ? String(permalink.dropFirst(baseUrl.count)) : nil
+extension PillsFormatter {
+    struct MarkdownLinkResult: Equatable {
+        let url: URL
+        let label: String
+        let range: NSRange
     }
 
-    /// Retrieve the latest available `MXRoomMember` from given data.
-    ///
-    /// - Parameters:
-    ///   - userId: the id of the user
-    ///   - roomState: room state for message
-    ///   - latestRoomState: latest room state of the room containing this message
-    /// - Returns: the room member, if available
-    static func roomMember(withUserId userId: String,
-                           roomState: MXRoomState,
-                           andLatestRoomState latestRoomState: MXRoomState?) -> MXRoomMember? {
-        return latestRoomState?.members.member(withUserId: userId) ?? roomState.members.member(withUserId: userId)
+    static func markdownLinks(in attributedString: NSAttributedString) -> [MarkdownLinkResult] {
+        // Create a regexp that detects markdown links.
+        // Pattern source: https://gist.github.com/hugocf/66d6cd241eff921e0e02
+        let pattern = "\\[([^\\]]+)\\]\\(([^\\)\"\\s]+)(?:\\s+\"(.*)\")?\\)"
+        guard let regExp = try? NSRegularExpression(pattern: pattern) else { return [] }
+
+        let matches = regExp.matches(in: attributedString.string,
+                                     range: .init(location: 0, length: attributedString.length))
+
+        return matches.compactMap { match in
+            let labelRange = match.range(at: 1)
+            let urlRange = match.range(at: 2)
+            let label = attributedString.attributedSubstring(from: labelRange).string
+            var url = attributedString.attributedSubstring(from: urlRange).string
+
+            // Note: a valid markdown link can be written with
+            // enclosing <..>, remove them for userId detection.
+            if url.first == "<" && url.last == ">" {
+                url = String(url[url.index(after: url.startIndex)...url.index(url.endIndex, offsetBy: -2)])
+            }
+
+            if let url = URL(string: url) {
+                return MarkdownLinkResult(url: url, label: label, range: match.range)
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    static func attributedStringWithAttachment(_ attachment: PillTextAttachment, link: URL?, font: UIFont) -> NSAttributedString {
+        let string = NSMutableAttributedString(attachment: attachment)
+        string.addAttribute(.font, value: font, range: .init(location: 0, length: string.length))
+        if let url = link {
+            string.addAttribute(.link, value: url, range: .init(location: 0, length: string.length))
+        }
+        return string
     }
 }

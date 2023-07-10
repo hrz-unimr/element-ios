@@ -1473,7 +1473,7 @@
 
 // Mark: - Polls
 
-"poll_edit_form_create_poll" = "Koosta üks küsitlus";
+"poll_edit_form_create_poll" = "Loo selline küsitlus";
 "settings_discovery_accept_terms" = "Nõustu isikutuvastusserveri tingimustega";
 "poll_timeline_not_closed_action" = "Sobib";
 "poll_timeline_not_closed_subtitle" = "Palun proovi uuesti";
@@ -1548,9 +1548,9 @@
 // Onboarding
 "onboarding_splash_register_button_title" = "Loo kasutajakonto";
 "poll_edit_form_poll_type_closed_description" = "Tulemusi kuvame vaid siis, kui küsitlus on lõppenud";
-"poll_edit_form_poll_type_closed" = "Küsitlus on lõppenud";
+"poll_edit_form_poll_type_closed" = "Suletud valikutega küsitlus";
 "poll_edit_form_poll_type_open_description" = "Osalejad näevad tulemusi peale oma valiku salvestamist";
-"poll_edit_form_poll_type_open" = "Ava küsitlus";
+"poll_edit_form_poll_type_open" = "Avatud valikutega küsitlus";
 "poll_edit_form_update_failure_subtitle" = "Palun proovi uuesti";
 "poll_edit_form_update_failure_title" = "Küsitluse muutmine ei õnnestunud";
 "poll_edit_form_poll_type" = "Küsitluse tüüp";
@@ -2417,14 +2417,6 @@
 // Mark: - Room invites
 
 "room_invites_empty_view_title" = "Uut teavet ei leidu.";
-"all_chats_onboarding_try_it" = "Proovi nüüd";
-"all_chats_onboarding_title" = "Mida on meil uut";
-"all_chats_onboarding_page_message3" = "Kui soovid meile teada anda oma arvamustest, siis klõpsi oma profiili ikooni.";
-"all_chats_onboarding_page_title3" = "Jaga tagasisidet";
-"all_chats_onboarding_page_message2" = "Kogukonnad leiad alt vasakult kiiremini ja lihtsamini, kui varem.";
-"all_chats_onboarding_page_title2" = "Ligipääs kogukondadele";
-"all_chats_onboarding_page_message1" = "Et Element'i kasutamine oleks lihtsam, siis kaardid on nüüd valikulised. Neid saad hallata ülal paremal avanevast menüüst.";
-"all_chats_onboarding_page_title1" = "Meie liidesel on nüüd uus vaade!";
 "all_chats_nothing_found_placeholder_message" = "Proovi muuta oma otsingut.";
 "all_chats_nothing_found_placeholder_title" = "Mitte midagi ei leidu.";
 "all_chats_empty_unreads_placeholder_message" = "Kui sul on lugemata sõnumeid, siis nad on siit leitavad.";
@@ -2545,7 +2537,6 @@
 "user_other_session_verified_sessions_header_subtitle" = "Parima turvalisuse nimel logi välja neist sessioonidest, mida sa enam ei kasuta või ei tunne ära.";
 "user_other_session_current_session_details" = "Sinu praegune sessioon";
 "user_other_session_unverified_sessions_header_subtitle" = "Turvalise sõnumvahetuse nimel verifitseeri kõik oma sessioonid ning logi neist välja, mida sa enam ei kasuta või ei tunne enam ära.";
-"user_other_session_security_recommendation_title" = "Turvalisusega seotud soovitused";
 "user_other_session_verified_additional_info" = "See sessioon on valmis turvaliseks sõnumivahetuseks.";
 "user_other_session_unverified_additional_info" = "Parima turvalisuse ja töökindluse nimel verifitseeri see sessioon või logi ta võrgust välja.";
 "user_session_verification_unknown_additional_info" = "Selle sessiooni olekut ei saa tuvastada enne kui oled ta verifitseerinud.";
@@ -2574,7 +2565,7 @@
 /* The placeholder will be replaces with manage_session_name_info_link */
 "manage_session_name_info" = "Palun arvesta, et sessioonide nimed on näha ka kõikidele osapooltele, kellega sa suhtled. %@";
 "manage_session_name_hint" = "Sinu enda kirjutatud sessiooninimede alusel on sul oma seadmeid lihtsam ära tunda.";
-"settings_labs_enable_voice_broadcast" = "Ringhäälingukõne (aktiivses arenduses)";
+"settings_labs_enable_voice_broadcast" = "Ringhäälingukõne";
 "settings_labs_enable_wysiwyg_composer" = "Proovi vormindatud teksti alusel töötavat tekstitoimetit";
 "authentication_qr_login_failure_retry" = "Proovi uuesti";
 "authentication_qr_login_failure_request_timed_out" = "Sidumine ei lõppenud etteantud aja jooksul.";
@@ -2608,3 +2599,113 @@
 
 // Unverified sessions
 "key_verification_alert_title" = "Sul on verifitseerimata sessioone";
+"user_other_session_permanently_unverified_additional_info" = "Seda sessiooni ei saa verifitseerida, sest seal puudub krüptimise tugi.";
+"voice_broadcast_time_left" = "aega jäänud %@";
+"voice_broadcast_buffering" = "Andmed on puhverdamisel…";
+"voice_broadcast_stop_alert_agree_button" = "Jah, lõpetame";
+"voice_broadcast_stop_alert_description" = "Kas sa oled kindel, et soovid otseeetri lõpetada? Sellega ringhäälingukõne salvestamine lõppeb ja salvestis on kättesaadav kõigile jututoas.";
+"voice_broadcast_stop_alert_title" = "Kas lõpetame otseeetri?";
+"password_policy_pwd_in_dict_error" = "See salasõna leidub levinud salasõnade sõnastikus ning seda sa ei saa kasutada.";
+"password_policy_weak_pwd_error" = "See salasõna on liiga lihtne. Ta peaks olema vähemalt 8 tähemärki pikk ning seal peaks leiduma vähemalt üks väiketäht, suurtäht, number ja erimärk.";
+
+// MARK: Password policy errors
+"password_policy_too_short_pwd_error" = "Liiga lühike salasõna";
+"user_session_permanently_unverified_session_description" = "Seda sessiooni ei saa verifitseerida, sest seal puudub krüptimise tugi.\n\nSelle sessiooniga ei saa sa osaleda krüptitud jututubades.\n\nParima turvalisuse ja privaatsuse nimel palun kasuta selliseid Matrix'i kliente, mis toetavad krüptimist.";
+"wysiwyg_composer_format_action_link" = "Muuda lingi vormingut";
+
+// Links
+"wysiwyg_composer_link_action_text" = "Tekst";
+"wysiwyg_composer_link_action_link" = "Link";
+"wysiwyg_composer_link_action_edit_title" = "Muuda linki";
+"wysiwyg_composer_link_action_create_title" = "Loo link";
+"wysiwyg_composer_format_action_inline_code" = "Kasuta lõimitud koodi vormingut";
+"notice_voice_broadcast_ended_by_you" = "Sa lõpetasid ringhäälingukõne.";
+"notice_voice_broadcast_ended" = "%@ lõpetas ringhäälingukõne.";
+"notice_voice_broadcast_live" = "Ringhäälingukõne on eetris";
+"user_other_session_security_recommendation_title" = "Muud sessioonid";
+"poll_timeline_decryption_error" = "Dekrüptimisvigade tõttu jääb osa hääli lugemata";
+"voice_message_broadcast_in_progress_title" = "Häälsõnumi salvestamine või esitamine ei õnnestu";
+"voice_message_broadcast_in_progress_message" = "Kuna sa hetkel salvestad ringhäälingukõnet, siis häälsõnumi salvestamine või esitamine ei õnnestu. Selleks palun lõpeta ringhäälingukõne";
+"poll_timeline_ended_text" = "Küsitlus on lõppenud";
+"voice_broadcast_voip_cannot_start_description" = "Kuna sa hetkel salvestad ringhäälingukõnet, siis tavakõne algatamine ei õnnestu. Kõne alustamiseks palun lõpeta ringhäälingukõne.";
+"voice_broadcast_voip_cannot_start_title" = "Kõne algatamine ei õnnestu";
+"poll_history_no_past_poll_text" = "Selles jututoas pole varasemaid küsitlusi";
+"poll_history_no_active_poll_text" = "Selles jututoas pole käimasolevaid küsitlusi";
+"poll_history_past_segment_title" = "Varasemad küsitlused";
+"poll_history_active_segment_title" = "Käimasolevad küsitlused";
+
+// MARK: - Polls history
+
+"poll_history_title" = "Küsitluste ajalugu";
+"room_details_polls" = "Küsitluste ajalugu";
+"accessibility_selected" = "valitud";
+"voice_broadcast_playback_lock_screen_placeholder" = "Ringhäälingukõne";
+"voice_broadcast_connection_error_message" = "Kahjuks me ei saa hetkel salvestamist alustada. Palun proovi hiljem uuesti.";
+"voice_broadcast_connection_error_title" = "Ühenduse viga";
+"wysiwyg_composer_format_action_quote" = "Lülita tsiteerimine sisse/välja";
+"wysiwyg_composer_format_action_code_block" = "Lülita koodiblokk sisse/välja";
+"wysiwyg_composer_format_action_ordered_list" = "Lülita nummerdatud loend sisse/välja";
+"wysiwyg_composer_format_action_unordered_list" = "Lülita täpploend sisse/välja";
+"voice_broadcast_recorder_connection_error" = "Viga võrguühenduses - salvestamine on peatatud";
+"poll_timeline_reply_ended_poll" = "Lõppenud küsitlus";
+"settings_labs_disable_crypto_sdk" = "Rust'i-põhine läbiv krüptimine (väljalülitamiseks pead välja logima)";
+"settings_labs_confirm_crypto_sdk" = "Palun arvesta, et see funktsionaalsus on alles katseline ja ei pruugi toimida eesmärgipäraselt. Kui ta juba on kasutusel, siis väljalülitamiseks pead hiljem korraks võrgust välja logima. Jätka ettevaatlikult ja omal äranägemisel.";
+"settings_labs_enable_crypto_sdk" = "Rust'i-põhine läbiv krüptimine";
+"poll_history_load_more" = "Laadi veel küsitlusi";
+"poll_history_no_active_poll_period_text" = "Möödunud %@ päeva jooksul polnud ühtegi toimumas olnud küsitlust. Varasemate kuude vaatamiseks laadi veel küsitlusi";
+"poll_history_no_past_poll_period_text" = "Möödunud %@ päeva jooksul polnud ühtegi lõppenud küsitlust. Varasemate kuude vaatamiseks laadi veel küsitlusi";
+"poll_history_loading_text" = "Küsitluste kuvamise ootel";
+"poll_history_fetching_error" = "Viga küsitluste laadimisel.";
+"key_backup_recover_from_private_key_progress" = "%@%% tehtud";
+"voice_broadcast_playback_unable_to_decrypt" = "Selle ringhäälingukõne dekrüptimine ei õnnestu.";
+"home_context_menu_mark_as_unread" = "Märgi mitteloetuks";
+"wysiwyg_composer_format_action_un_indent" = "Vähenda taandrida";
+"wysiwyg_composer_format_action_indent" = "Suurenda taandrida";
+"settings_push_rules_error" = "Teavituste eelistuste muutmisel tekkis viga. Palun proovi sama valikut uuesti sisse/välja lülitada.";
+"poll_history_detail_view_in_timeline" = "Näita küsitlust ajajoonel";
+"authentication_qr_login_failure_device_not_supported" = "Sidumine selle seadmega ei ole toetatud.";
+"room_waiting_other_participants_message" = "Kui kutse saanud kasutajad on liitunud jututoaga %@, siis saad sa nendega suhelda ja jututuba on läbivalt krüptitud";
+"room_waiting_other_participants_title" = "Kasutajate liitumise ootel jututoaga %@";
+"key_verification_scan_qr_code_information_new_session" = "Suuna oma nutiseadme kaamera oma seadmes kuvatavale QR-koodile ja verifitseeri oma uus sessioon";
+"key_verification_scan_qr_code_information_other_user" = "Suuna oma nutiseadme kaamera teise kasutaja seadmes kuvatavale QR-koodile ja verifitseeri tema sessioon";
+"key_verification_scan_qr_code_information_other_device" = "Suuna kaamera oma teises seadmes kuvatavale QR-koodile ja verifitseeri see sessioon";
+"key_verification_scan_qr_code_information_other_session" = "Suuna oma seadme kaamera teises seadmes kuvatavale QR-koodile ja verifitseeri oma sessioon";
+"key_verification_scan_qr_code_title" = "Loe QR-koodi";
+"device_verification_self_verify_wait_recover_secrets_additional_help" = "Sul puudub ligipääs olemasolevale %@ sessioonile?";
+"device_verification_self_verify_open_on_other_device_information" = "Oma krüptitud sõnumite ajaloo lugemiseks pead selle seadme verifitseerima.\n\nAva Element või mõni muu ühilduv Matrixi klient on teises seadmes ja järgi juhendit.";
+"device_verification_self_verify_open_on_other_device_title" = "Ava %@ oma teises seadmes";
+"room_creation_only_one_email_invite" = "E-posti teel saad saata kutseid vaid ükshaaval";
+"launch_loading_delay_warning" = "Selleks võib natuke rohkem aega kuluda.\nTänud ootamast.";
+
+// MARK: - Launch loading
+
+"launch_loading_generic" = "Sinu vestlused on sünkroniseerimisel";
+"pill_message_in" = "Sõnum jututoas %@";
+"pill_message_from" = "Sõnum kasutajalt %@";
+"pill_message" = "Sõnum";
+
+// Pills
+"pill_room_fallback_display_name" = "Kogukond/jututuba";
+"settings_acceptable_use" = "Vastuvõetava kasutamise põhimõtted";
+"key_verification_self_verify_security_upgrade_alert_message" = "Turvalisele sõnumivahetusele on lisandunud palju täiendusi. Palun verifitseeri oma seade uuesti.";
+
+// Legacy to Rust security upgrade
+
+"key_verification_self_verify_security_upgrade_alert_title" = "Rakendus on uuendatud";
+"room_command_error_unknown_command" = "Vigane või määratlemata käsk";
+"room_command_discard_session_description" = "Sunnib loobuma praeguse krüptitud jututoa rühmavestluse seansist";
+"room_command_change_room_topic_description" = "Määra jututoa teema";
+"room_command_reset_user_power_level_description" = "Eemalda antud tunnusega kasutajalt haldusõigused selles jututoas";
+"room_command_set_user_power_level_description" = "Määra kasutaja õigused";
+"room_command_unban_user_description" = "Taasta ligipääs antud tunnusega kasutajale";
+"room_command_ban_user_description" = "Keela ligipääs antud tunnusega kasutajale";
+"room_command_kick_user_description" = "Müksa selle tunnusega kasutaja jututoast välja";
+"room_command_invite_user_description" = "Kutsub nimetatud kasutajatunnusega kasutaja sellesse jututuppa";
+"room_command_part_room_description" = "Lahku jututoast";
+"room_command_join_room_description" = "Liitu sellise aadressiga jututoaga";
+"room_command_emote_description" = "Näitab tegevusi";
+
+// Room commands descriptions
+"room_command_change_display_name_description" = "Muudab sinu kuvatavat nime";
+"notice_display_name_changed_to" = "%@ muutis oma kuvatavaks nimeks %@";
+"poll_timeline_loading" = "Laadin...";

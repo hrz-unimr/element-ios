@@ -1,3 +1,328 @@
+## Changes in 1.10.14 (2023-06-21)
+
+🙌 Improvements
+
+- Upgrade MatrixSDK version ([v0.26.12](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.26.12)).
+
+
+## Changes in 1.10.13 (2023-06-13)
+
+✨ Features
+
+- Increase max. length of voice message recordings to 5m ([#7582](https://github.com/vector-im/element-ios/pull/7582))
+- Broadcast Upload Extension added to the app targets to allow Jitsi screen sharing feature. ([#7566](https://github.com/vector-im/element-ios/issues/7566))
+
+🙌 Improvements
+
+- Upgrade MatrixSDK version ([v0.26.11](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.26.11)).
+- Prompt the user when the invited MatrixId is not recognized ([#7558](https://github.com/vector-im/element-ios/issues/7558))
+- MSC3987 implementation: the 'dont_notify' action for a push_rule is now deprecated and replaced by an empty action list. ([#7576](https://github.com/vector-im/element-ios/issues/7576))
+
+🐛 Bugfixes
+
+- Device manager: fix offline state for user's sessions overview. ([#7562](https://github.com/vector-im/element-ios/pull/7562))
+- Prevents user avatar from disappearing due to incorrect width. ([#7587](https://github.com/vector-im/element-ios/pull/7587))
+- App crashes when we make audio and video calls ([#7529](https://github.com/vector-im/element-ios/issues/7529))
+- Timeline: Room creation intro cell now correctly adjusts to light / dark theme changes. ([#7554](https://github.com/vector-im/element-ios/issues/7554))
+- Labs: Fix RTE sometimes inserting characters in wrong locations after multiple new lines ([#7570](https://github.com/vector-im/element-ios/issues/7570))
+- Labs: RTE: Fix a crash when creating a new direct chat ([#7577](https://github.com/vector-im/element-ios/issues/7577))
+- Fixed crashes when mentioning users without display names ([#7579](https://github.com/vector-im/element-ios/issues/7579))
+
+
+## Changes in 1.10.12 (2023-05-16)
+
+✨ Features
+
+- Add composer suggestions for slash commands ([#7493](https://github.com/vector-im/element-ios/issues/7493))
+
+🙌 Improvements
+
+- Crypto: Deprecate MXLegacyCrypto ([#7508](https://github.com/vector-im/element-ios/pull/7508))
+- Add a flag in the build settings to force the user to define a homeserver instead of using the default one. ([#7541](https://github.com/vector-im/element-ios/pull/7541))
+- Upgrade MatrixSDK version ([v0.26.10](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.26.10)).
+- Add an audio alert when the voice broadcast recording is automatically paused ([#7504](https://github.com/vector-im/element-ios/issues/7504))
+- Timeline: Remove the matrix ID displayed when someone has changed its display name. ([#7517](https://github.com/vector-im/element-ios/issues/7517))
+
+🐛 Bugfixes
+
+- Fix an issue where the Secrets Reset screen would open twice. ([#7404](https://github.com/vector-im/element-ios/pull/7404))
+- Make sure to use the chosen language for the VoiceOver voice too. ([#7493](https://github.com/vector-im/element-ios/pull/7493))
+- Fix the position of the send confirmation icon. ([#7512](https://github.com/vector-im/element-ios/pull/7512))
+- Disable accessibility for emojis during session verification. ([#7521](https://github.com/vector-im/element-ios/pull/7521))
+- Fix accessibility when entering the PIN to unlock the app. ([#7522](https://github.com/vector-im/element-ios/pull/7522))
+- Fix voiceover order of room creation header and message composer. ([#7543](https://github.com/vector-im/element-ios/pull/7543))
+- Fix: The last event description text color now matches the active theme. ([#7545](https://github.com/vector-im/element-ios/pull/7545))
+- Fix mention pills display in thread list ([#7322](https://github.com/vector-im/element-ios/issues/7322))
+- Poll: The timeline sometimes displayed closed polls in the wrong order. ([#7497](https://github.com/vector-im/element-ios/issues/7497))
+- Fix a flickering issue when the timeline datasource is reloaded. ([#7523](https://github.com/vector-im/element-ios/issues/7523))
+- Fix the position of the marker highlighting an event. ([#7526](https://github.com/vector-im/element-ios/issues/7526))
+- Fix application crashing when opening a thread with RTE enabled ([#7530](https://github.com/vector-im/element-ios/issues/7530))
+- Labs: Rich Text Editor: Fix partial text messages not being saved for each room ([#7535](https://github.com/vector-im/element-ios/issues/7535))
+
+
+## Changes in 1.10.11 (2023-04-18)
+
+🙌 Improvements
+
+- Upgrade MatrixSDK version ([v0.26.9](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.26.9)).
+- Labs: Rich Text Editor: Integrate version 2.0.0 with mention Pills support. ([#7442](https://github.com/vector-im/element-ios/issues/7442))
+
+🐛 Bugfixes
+
+- Continue to display pills for matrix.to permalinks if a custom permalinkBaseUrl is set. ([#7482](https://github.com/vector-im/element-ios/pull/7482))
+- Add a foreground color attribute for the unformattable event error message. ([#7501](https://github.com/vector-im/element-ios/pull/7501))
+- Fixed a bug that prevented audio messages that were not .mp4 to be played in the timeline ([#7451](https://github.com/vector-im/element-ios/issues/7451))
+- Fix user suggestion list item height on iOS 16+ ([#7492](https://github.com/vector-im/element-ios/issues/7492))
+
+🧱 Build
+
+- Pinned used Xcode version to 14.2 as newer version fail ASC validation ([#7476](https://github.com/vector-im/element-ios/issues/7476))
+
+
+## Changes in 1.10.10 (2023-04-12)
+
+🙌 Improvements
+
+- Crypto: Enable Rust Crypto for all users ([#7485](https://github.com/vector-im/element-ios/pull/7485))
+- Upgrade MatrixSDK version ([v0.26.7](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.26.7)).
+
+
+## Changes in 1.10.9 (2023-04-04)
+
+🙌 Improvements
+
+- Encryption: Simplify event encryption decoration ([#7440](https://github.com/vector-im/element-ios/pull/7440))
+- Add user suggestions for @room and highlight incoming messages containing @room when the room is encrypted. ([#7453](https://github.com/vector-im/element-ios/pull/7453))
+- Crypto: Expand rust crypto rollout to 50% users ([#7466](https://github.com/vector-im/element-ios/pull/7466))
+- Upgrade MatrixSDK version ([v0.26.6](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.26.6)).
+- Replace Terms and Conditions with Acceptable Use Policy. ([#7456](https://github.com/vector-im/element-ios/issues/7456))
+- Crypto: Display correct SDK version ([#7457](https://github.com/vector-im/element-ios/issues/7457))
+
+🐛 Bugfixes
+
+- QR verification: Start scanning as soon as camera ready ([#7469](https://github.com/vector-im/element-ios/pull/7469))
+- Timeline: No event decoration if no decryption result ([#7471](https://github.com/vector-im/element-ios/pull/7471))
+- Long pills are now truncated. ([#7413](https://github.com/vector-im/element-ios/issues/7413))
+- Update the read marker position even if it is not displayed ([#7420](https://github.com/vector-im/element-ios/issues/7420))
+
+
+## Changes in 1.10.8 (2023-03-28)
+
+🙌 Improvements
+
+- Verification: Display upgrade verification prompt ([#7454](https://github.com/vector-im/element-ios/pull/7454))
+- Upgrade MatrixSDK version ([v0.26.5](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.26.5)).
+
+
+## Changes in 1.10.7 (2023-03-22)
+
+🙌 Improvements
+
+- Upgrade MatrixSDK version ([v0.26.4](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.26.4)).
+
+
+## Changes in 1.10.6 (2023-03-21)
+
+🙌 Improvements
+
+- Encryption: Refactor user / room encryption trust level ([#7430](https://github.com/vector-im/element-ios/pull/7430))
+- Crypto: Increase local rust crypto rollout to 20% of all users ([#7434](https://github.com/vector-im/element-ios/pull/7434))
+- Upgrade MatrixSDK version ([v0.26.2](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.26.2)).
+- Permalinks to a room/space are pillified ([#7409](https://github.com/vector-im/element-ios/issues/7409))
+- Permalinks to a matrix user are pillified ([#7411](https://github.com/vector-im/element-ios/issues/7411))
+- Permalinks to messages are pillified ([#7412](https://github.com/vector-im/element-ios/issues/7412))
+- Loading: Update startup progress UX ([#7417](https://github.com/vector-im/element-ios/issues/7417))
+
+🐛 Bugfixes
+
+- Room list: increase tappability area of the avatar button. ([#7427](https://github.com/vector-im/element-ios/pull/7427))
+- Manage bad m.file attachment format. ([#7406](https://github.com/vector-im/element-ios/issues/7406))
+
+
+## Changes in 1.10.5 (2023-03-13)
+
+🙌 Improvements
+
+- Upgrade MatrixSDK version ([v0.26.1](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.26.1)).
+
+
+## Changes in 1.10.4 (2023-03-07)
+
+🙌 Improvements
+
+- CryptoV2: CryptoSDK phased rollout feature ([#7374](https://github.com/vector-im/element-ios/pull/7374))
+- Analytics: Use SwiftPM for AnalyticsEvents instead of CocoaPods ([#7401](https://github.com/vector-im/element-ios/pull/7401))
+- Upgrade MatrixSDK version ([v0.26.0](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.26.0)).
+- Session verification: automatically starts scanning for a QR code if we do not have a QR code to display. ([#3115](https://github.com/vector-im/element-ios/issues/3115))
+- Direct Message: manage encrypted DM in case of invite by email ([#6612](https://github.com/vector-im/element-ios/issues/6612))
+
+🐛 Bugfixes
+
+- fix issue on timeline's bubbles not showing proper content after decrypt ([#7397](https://github.com/vector-im/element-ios/pull/7397))
+- Fixes bug about centring user in live location sharing ([#7398](https://github.com/vector-im/element-ios/pull/7398))
+- Polls: improve rendering of poll ended events. ([#7402](https://github.com/vector-im/element-ios/pull/7402))
+- Fix an issue where SAS verification would fail between two iOS devices ([#3946](https://github.com/vector-im/element-ios/issues/3946))
+- Pin SwiftOGG to a release rather than main branch to avoid breaking changes in SwiftOGG causing bugs in element-ios. ([#7388](https://github.com/vector-im/element-ios/issues/7388))
+
+
+## Changes in 1.10.3 (2023-02-21)
+
+🙌 Improvements
+
+- Polls: add fallback text for poll ended events. ([#7353](https://github.com/vector-im/element-ios/pull/7353))
+- Push Rules: Apply push rules client side for encrypted rooms, hiding in case of dont_notify action ([#7356](https://github.com/vector-im/element-ios/pull/7356))
+- Map Views: Show own location in map views ([#7361](https://github.com/vector-im/element-ios/pull/7361))
+- Do not reset device keys if migrating to CryptoSDK ([#7369](https://github.com/vector-im/element-ios/pull/7369))
+- Labs: Rich Text Editor: Update to version 1.1.1 ([#7370](https://github.com/vector-im/element-ios/pull/7370))
+- Updates to protocol used for Sign in with QR code. ([#7372](https://github.com/vector-im/element-ios/pull/7372))
+- Upgrade MatrixSDK version ([v0.25.2](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.25.2)).
+
+🐛 Bugfixes
+
+- A voice message is now replayable. ([#7217](https://github.com/vector-im/element-ios/issues/7217))
+- Fix an issue where a voice message recording was failing. ([#7325](https://github.com/vector-im/element-ios/issues/7325))
+- Fix an issue where a voice message disappears after being sent. ([#7326](https://github.com/vector-im/element-ios/issues/7326))
+
+
+## Changes in 1.10.2 (2023-02-10)
+
+🐛 Bugfixes
+
+- Fixes #7350 - Fix green dot only to appear for marked action ([#7530](https://github.com/vector-im/element-ios/issues/7530))
+
+
+## Changes in 1.10.1 (2023-02-07)
+
+✨ Features
+
+- Add mark as unread option for rooms ([#7253](https://github.com/vector-im/element-ios/issues/7253))
+
+🙌 Improvements
+
+- Polls: add logic for fetching poll histories in rooms. ([#7293](https://github.com/vector-im/element-ios/pull/7293))
+- Poll: add a feature to load more polls in the poll history. ([#7303](https://github.com/vector-im/element-ios/pull/7303))
+- CryptoV2: Generate Crypto SDK store key ([#7310](https://github.com/vector-im/element-ios/pull/7310))
+- Poll: added poll detail in poll list hisotry with navigation to timeline ([#7314](https://github.com/vector-im/element-ios/pull/7314))
+- Backup: Display backup import progress ([#7319](https://github.com/vector-im/element-ios/pull/7319))
+- Polls: sync push rules with the one of normal messages. ([#7320](https://github.com/vector-im/element-ios/pull/7320))
+- CryptoV2: Reset Crypto SDK on logout ([#7323](https://github.com/vector-im/element-ios/pull/7323))
+- Polls: add error handling when syncing push rules with the ones of normal messages. ([#7324](https://github.com/vector-im/element-ios/pull/7324))
+- CryptoV2: Refresh notification service on crypto change ([#7332](https://github.com/vector-im/element-ios/pull/7332))
+- CryptoV2: Enable Crypto SDK for production ([#7333](https://github.com/vector-im/element-ios/pull/7333))
+- Polls: add automatic synchronization logic for poll push rules. ([#7335](https://github.com/vector-im/element-ios/pull/7335))
+- Polls: update poll history UI. ([#7341](https://github.com/vector-im/element-ios/pull/7341))
+- Upgrade MatrixSDK version ([v0.25.1](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.25.1)).
+- Hide the presence info if the presence status is unknown. ([#6597](https://github.com/vector-im/element-ios/issues/6597))
+- Inform the user about decryption errors during a voice broadcast. ([#7189](https://github.com/vector-im/element-ios/issues/7189))
+- App Layout: Removed the onboarding flow ([#7298](https://github.com/vector-im/element-ios/issues/7298))
+- Improve error handling during a voice broadcast playback. ([#7311](https://github.com/vector-im/element-ios/issues/7311))
+- Labs: Rich text editor: enable list items indentation ([#7316](https://github.com/vector-im/element-ios/issues/7316))
+
+
+## Changes in 1.10.0 (2023-02-02)
+
+🙌 Improvements
+
+- CryptoV2: Generate Crypto SDK store key ([#7310](https://github.com/vector-im/element-ios/pull/7310))
+- Backup: Display backup import progress ([#7319](https://github.com/vector-im/element-ios/pull/7319))
+- CryptoV2: Reset Crypto SDK on logout ([#7323](https://github.com/vector-im/element-ios/pull/7323))
+- CryptoV2: Refresh notification service on crypto change ([#7332](https://github.com/vector-im/element-ios/pull/7332))
+- CryptoV2: Enable Crypto SDK for production ([#7333](https://github.com/vector-im/element-ios/pull/7333))
+- Upgrade MatrixSDK version ([v0.25.0](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.25.0)).
+
+
+## Changes in 1.9.17 (2023-01-26)
+
+🙌 Improvements
+
+- Analytics: Ensure E2EE never tracks UnknownError ([#7304](https://github.com/vector-im/element-ios/pull/7304))
+
+🐛 Bugfixes
+
+- Fix a deadlock when updating the summary of a room that has a voice broadcast. ([#7300](https://github.com/vector-im/element-ios/pull/7300))
+- Space Switcher: Fix a bug where the avatars would all be the same. ([#7305](https://github.com/vector-im/element-ios/issues/7305))
+
+
+## Changes in 1.9.16 (2023-01-24)
+
+✨ Features
+
+- Rich Text Composer: Enable bulleted/numbered lists support ([#7238](https://github.com/vector-im/element-ios/issues/7238))
+- Rich Text Composer: Enable quote & code blocks support ([#7271](https://github.com/vector-im/element-ios/issues/7271))
+- Voice Broadcast: When deleting a voice broadcast, all data is now deleted on server side (MSC3912 implementation). ([#7283](https://github.com/vector-im/element-ios/issues/7283))
+
+🙌 Improvements
+
+- Labs: VoiceBroadcast: Handle VoIP buttons when VB is used ([#7225](https://github.com/vector-im/element-ios/pull/7225))
+- Polls: add UI for active poll history. ([#7267](https://github.com/vector-im/element-ios/pull/7267))
+- CryptoSDK: Add labs settings to enable Crypto SDK ([#7272](https://github.com/vector-im/element-ios/pull/7272))
+- Voice Broadcast: Improved detection of voice broadcast completion during playback. ([#7273](https://github.com/vector-im/element-ios/pull/7273))
+- Remove "Leave" button on Room details screen ([#7275](https://github.com/vector-im/element-ios/pull/7275))
+- Polls: poll history UI for past polls. ([#7278](https://github.com/vector-im/element-ios/pull/7278))
+- Polls: render replies to poll events better. ([#7284](https://github.com/vector-im/element-ios/pull/7284))
+- CryptoV2: Display migration progress during startup ([#7286](https://github.com/vector-im/element-ios/pull/7286))
+- Upgrade MatrixSDK version ([v0.24.8](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.24.8)).
+- Voice broadcast connection error handling while recording. ([#7229](https://github.com/vector-im/element-ios/issues/7229))
+- Handle a connection issue when we try to start a new voice broadcast. ([#7234](https://github.com/vector-im/element-ios/issues/7234))
+- Rich Text Editor: https:// or mailto: scheme is automatically added when creating a link if no scheme is specified. ([#7279](https://github.com/vector-im/element-ios/issues/7279))
+- Rich Text Editor: Adding a link over a blank selection, prompts the user to create a new link with new text to replace such selection. ([#7280](https://github.com/vector-im/element-ios/issues/7280))
+- Voice Broadcast: handle the lost of connectivity with the homeserver while recording. ([#7285](https://github.com/vector-im/element-ios/issues/7285))
+
+🐛 Bugfixes
+
+- Voice Broadcast: The Now Playing Info Center now displays a voice broadcast instead of a voice message when a user is listening to a voice broadcast. ([#7257](https://github.com/vector-im/element-ios/pull/7257))
+- Fix a crash caused by the missing Avatar Service dependency. ([#7268](https://github.com/vector-im/element-ios/pull/7268))
+- The (edited) tag for messages is now light grey like on web and Android. ([#5148](https://github.com/vector-im/element-ios/issues/5148))
+- Live Location Sharing does not work on first selection after granting "Allow always" location permission. ([#7222](https://github.com/vector-im/element-ios/issues/7222))
+- Voice Broadcast: Fixed an issue where the voice broadcast audio player progress bar behaved unexpectedly. ([#7252](https://github.com/vector-im/element-ios/issues/7252))
+- Voice Broadcast: VoiceBroadcast chunks are no longer resent as voice messages ([#7261](https://github.com/vector-im/element-ios/issues/7261))
+- Timeline's links and hyperlinks match now the blue colour of Android and Web. ([#7263](https://github.com/vector-im/element-ios/issues/7263))
+
+🧱 Build
+
+- Fix Element Alpha workflow not being able to run. ([#7256](https://github.com/vector-im/element-ios/pull/7256))
+
+
+## Changes in 1.9.15 (2023-01-10)
+
+✨ Features
+
+- Threads: Load the thread list using server-side sorting and pagination ([#6059](https://github.com/vector-im/element-ios/issues/6059))
+- Rich Text Composer: added link creation/editing feature. ([#7159](https://github.com/vector-im/element-ios/issues/7159))
+- Rich Text Composer: added inline code formatting feature. ([#7177](https://github.com/vector-im/element-ios/issues/7177))
+- Voice Broadcast: allow to react on Voice Broadcast. ([#7179](https://github.com/vector-im/element-ios/issues/7179))
+
+🙌 Improvements
+
+- Labs: VoiceBroadcast: Add backward and forward buttons for playback ([#7146](https://github.com/vector-im/element-ios/pull/7146))
+- Update the room description in the rooms list in case of live broadcast (incoming or outgoing) ([#7160](https://github.com/vector-im/element-ios/pull/7160))
+- Labs: VoiceBroadcast: Link the live icon color to the recording state ([#7163](https://github.com/vector-im/element-ios/pull/7163))
+- Add old device data from user's account data events. ([#7164](https://github.com/vector-im/element-ios/pull/7164))
+- Labs: VoiceBroadcast: Replace the player timeline ([#7165](https://github.com/vector-im/element-ios/pull/7165))
+- Labs: VoiceBroadcast: Update Voice Broadcast recorder cell by adjusting some padding values ([#7175](https://github.com/vector-im/element-ios/pull/7175))
+- Labs: VoiceBroadcast: Update live badge layout for recorder and player cells ([#7178](https://github.com/vector-im/element-ios/pull/7178))
+- Updates on the UI/UX to conform the device manager to the design. ([#7180](https://github.com/vector-im/element-ios/pull/7180))
+- Labs: VoiceBroadcast: Handle potential crash whereas a voice broadcast is in progress ([#7188](https://github.com/vector-im/element-ios/pull/7188))
+- Polls: show decryption errors in timeline during aggregations. ([#7206](https://github.com/vector-im/element-ios/pull/7206))
+- Device Manager: change fallback display name for sessions. ([#7214](https://github.com/vector-im/element-ios/pull/7214))
+- Ignore the voice broadcast chunks at the notifications level ([#7230](https://github.com/vector-im/element-ios/pull/7230))
+- Polls: render the poll ended event in the timeline. ([#7231](https://github.com/vector-im/element-ios/pull/7231))
+- Upgrade MatrixSDK version ([v0.24.7](https://github.com/matrix-org/matrix-ios-sdk/releases/tag/v0.24.7)).
+- Updated fastlane script to use Xcode v 14.2. ([#7182](https://github.com/vector-im/element-ios/issues/7182))
+
+🐛 Bugfixes
+
+- Labs: Crash on new voice broadcast if the room has avatar ([#7173](https://github.com/vector-im/element-ios/pull/7173))
+- Fix hidden live location timeline tiles after text messages ([#7220](https://github.com/vector-im/element-ios/pull/7220))
+- Fix an issue preventing temporary audio files to be deleted. ([#7244](https://github.com/vector-im/element-ios/pull/7244))
+- App Layout: wrap Space names to 1 line only in the bottom sheet ([#6579](https://github.com/vector-im/element-ios/issues/6579))
+- Timeline: fixed navigation back from replies. ([#7003](https://github.com/vector-im/element-ios/issues/7003))
+- Timeline: fixed an issue where formatted links appeared in black. ([#7109](https://github.com/vector-im/element-ios/issues/7109))
+- Voice Broadcast: Pause voice broadcast listening on new voice broadcast recording ([#7192](https://github.com/vector-im/element-ios/issues/7192))
+- Direct Message: fixed a crash when a new DM room is created ([#7232](https://github.com/vector-im/element-ios/issues/7232))
+- Voice Broadcast: Prevent sending voice message during a voice broadcast recording ([#7235](https://github.com/vector-im/element-ios/issues/7235))
+
+
 ## Changes in 1.9.14 (2022-12-13)
 
 🙌 Improvements

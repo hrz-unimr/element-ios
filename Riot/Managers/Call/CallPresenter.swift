@@ -208,7 +208,7 @@ class CallPresenter: NSObject {
             if error == nil {
                 JMCallKitProxy.reportCallUpdate(with: newUUID,
                                                 handle: roomId,
-                                                displayName: room.summary.displayname,
+                                                displayName: room.summary.displayName,
                                                 hasVideo: true)
                 JMCallKitProxy.reportOutgoingCall(with: newUUID, connectedAt: nil)
 
@@ -834,7 +834,7 @@ extension CallPresenter: JMCallKitListener {
         
     }
     
-    func performAnswerCall(UUID: UUID) {
+    func performAnswerCall(with UUID: UUID) {
         guard let widget = jitsiCalls[UUID] else {
             return
         }
@@ -842,7 +842,7 @@ extension CallPresenter: JMCallKitListener {
         displayJitsiCall(withWidget: widget)
     }
     
-    func performEndCall(UUID: UUID) {
+    func performEndCall(with UUID: UUID) {
         guard let widget = jitsiCalls[UUID] else {
             return
         }
@@ -857,7 +857,7 @@ extension CallPresenter: JMCallKitListener {
         }
     }
     
-    func performSetMutedCall(UUID: UUID, isMuted: Bool) {
+    func performSetMutedCall(with UUID: UUID, isMuted: Bool) {
         guard let widget = jitsiCalls[UUID] else {
             return
         }
@@ -868,20 +868,20 @@ extension CallPresenter: JMCallKitListener {
         }
     }
     
-    func performStartCall(UUID: UUID, isVideo: Bool) {
-        
+    func performStartCall(with UUID: UUID, isVideo: Bool) {
+
     }
     
-    func providerDidActivateAudioSession(sessionInfo: AVAudioSession) {
-        
+    func providerDidActivateAudioSession(with session: AVAudioSession) {
+
     }
 
-    func providerDidDeactivateAudioSession(sessionInfo: AVAudioSession) {
-        
+    func providerDidDeactivateAudioSession(with session: AVAudioSession) {
+
     }
 
-    func providerTimedOutPerformingAction(action: CXAction) {
-        
+    func providerTimedOutPerformingAction(with action: CXAction) {
+
     }
     
 }

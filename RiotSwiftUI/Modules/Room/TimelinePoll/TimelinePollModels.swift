@@ -32,6 +32,17 @@ enum TimelinePollType {
     case undisclosed
 }
 
+enum TimelinePollEventType {
+    case started
+    case ended
+}
+
+enum TimelinePollDetailsState {
+    case loading
+    case loaded(TimelinePollDetails)
+    case errored
+}
+
 struct TimelinePollAnswerOption: Identifiable {
     var id: String
     var text: String
@@ -57,31 +68,20 @@ extension MutableCollection where Element == TimelinePollAnswerOption {
 }
 
 struct TimelinePollDetails {
+    var id: String
     var question: String
     var answerOptions: [TimelinePollAnswerOption]
     var closed: Bool
+    var startDate: Date
     var totalAnswerCount: UInt
     var type: TimelinePollType
+    var eventType: TimelinePollEventType
     var maxAllowedSelections: UInt
-    var hasBeenEdited = true
-    
-    init(question: String, answerOptions: [TimelinePollAnswerOption],
-         closed: Bool,
-         totalAnswerCount: UInt,
-         type: TimelinePollType,
-         maxAllowedSelections: UInt,
-         hasBeenEdited: Bool) {
-        self.question = question
-        self.answerOptions = answerOptions
-        self.closed = closed
-        self.totalAnswerCount = totalAnswerCount
-        self.type = type
-        self.maxAllowedSelections = maxAllowedSelections
-        self.hasBeenEdited = hasBeenEdited
-    }
+    var hasBeenEdited: Bool
+    var hasDecryptionError: Bool
     
     var hasCurrentUserVoted: Bool {
-        answerOptions.filter { $0.selected == true }.count > 0
+        answerOptions.contains(where: \.selected)
     }
     
     var shouldDiscloseResults: Bool {
@@ -91,10 +91,16 @@ struct TimelinePollDetails {
             return type == .disclosed && totalAnswerCount > 0 && hasCurrentUserVoted
         }
     }
+    
+    var representsPollEndedEvent: Bool {
+        eventType == .ended
+    }
 }
 
+extension TimelinePollDetails: Identifiable { }
+
 struct TimelinePollViewState: BindableState {
-    var poll: TimelinePollDetails
+    var pollState: TimelinePollDetailsState
     var bindings: TimelinePollViewStateBindings
 }
 

@@ -35,6 +35,7 @@ static NSString * _Nonnull kRCTTextViewClassName = @"RCTTextView";
  Some feature flags defined in https://github.com/jitsi/jitsi-meet/blob/master/react/features/base/flags/constants.js
  */
 static NSString * _Nonnull kJitsiFeatureFlagChatEnabled = @"chat.enabled";
+static NSString * _Nonnull kJitsiFeatureFlagScreenSharingEnabled = @"ios.screensharing.enabled";
 
 @interface JitsiViewController () <PictureInPicturable, JitsiMeetViewDelegate>
 
@@ -272,12 +273,13 @@ static NSString * _Nonnull kJitsiFeatureFlagChatEnabled = @"chat.enabled";
             builder.room = conferenceId;
             builder.videoMuted = !self.startWithVideo;
 
-            builder.subject = roomSummary.displayname;
+            builder.subject = roomSummary.displayName;
             builder.userInfo = [[JitsiMeetUserInfo alloc] initWithDisplayName:userDisplayName
                                                                      andEmail:nil
                                                                     andAvatar:avatarUrl];
             builder.token = self.jwtToken;
             [builder setFeatureFlag:kJitsiFeatureFlagChatEnabled withBoolean:NO];
+            [builder setFeatureFlag:kJitsiFeatureFlagScreenSharingEnabled withBoolean: YES];
         }];
         
         [self.jitsiMeetView join:jitsiMeetConferenceOptions];

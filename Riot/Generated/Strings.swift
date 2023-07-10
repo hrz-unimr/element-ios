@@ -27,6 +27,10 @@ public class VectorL10n: NSObject {
   public static var accessibilityCheckboxLabel: String { 
     return VectorL10n.tr("Vector", "accessibility_checkbox_label") 
   }
+  /// selected
+  public static var accessibilitySelected: String { 
+    return VectorL10n.tr("Vector", "accessibility_selected") 
+  }
   /// Unable to verify email address. Please check your email and click on the link it contains. Once this is done, click continue
   public static var accountEmailValidationError: String { 
     return VectorL10n.tr("Vector", "account_email_validation_error") 
@@ -206,38 +210,6 @@ public class VectorL10n: NSObject {
   /// Nothing found.
   public static var allChatsNothingFoundPlaceholderTitle: String { 
     return VectorL10n.tr("Vector", "all_chats_nothing_found_placeholder_title") 
-  }
-  /// To simplify your Element, tabs are now optional. Manage them using the top-right menu.
-  public static var allChatsOnboardingPageMessage1: String { 
-    return VectorL10n.tr("Vector", "all_chats_onboarding_page_message1") 
-  }
-  /// Access your Spaces (bottom-left) faster and easier than ever before.
-  public static var allChatsOnboardingPageMessage2: String { 
-    return VectorL10n.tr("Vector", "all_chats_onboarding_page_message2") 
-  }
-  /// Tap your profile to let us know what you think.
-  public static var allChatsOnboardingPageMessage3: String { 
-    return VectorL10n.tr("Vector", "all_chats_onboarding_page_message3") 
-  }
-  /// Welcome to a new view!
-  public static var allChatsOnboardingPageTitle1: String { 
-    return VectorL10n.tr("Vector", "all_chats_onboarding_page_title1") 
-  }
-  /// Access Spaces
-  public static var allChatsOnboardingPageTitle2: String { 
-    return VectorL10n.tr("Vector", "all_chats_onboarding_page_title2") 
-  }
-  /// Give Feedback
-  public static var allChatsOnboardingPageTitle3: String { 
-    return VectorL10n.tr("Vector", "all_chats_onboarding_page_title3") 
-  }
-  /// What's new
-  public static var allChatsOnboardingTitle: String { 
-    return VectorL10n.tr("Vector", "all_chats_onboarding_title") 
-  }
-  /// Try it out
-  public static var allChatsOnboardingTryIt: String { 
-    return VectorL10n.tr("Vector", "all_chats_onboarding_try_it") 
   }
   /// Chats
   public static var allChatsSectionTitle: String { 
@@ -770,6 +742,10 @@ public class VectorL10n: NSObject {
   /// Link a device
   public static var authenticationQrLoginDisplayTitle: String { 
     return VectorL10n.tr("Vector", "authentication_qr_login_display_title") 
+  }
+  /// Linking with this device is not supported.
+  public static var authenticationQrLoginFailureDeviceNotSupported: String { 
+    return VectorL10n.tr("Vector", "authentication_qr_login_failure_device_not_supported") 
   }
   /// QR code is invalid.
   public static var authenticationQrLoginFailureInvalidQr: String { 
@@ -1895,6 +1871,14 @@ public class VectorL10n: NSObject {
   public static var deviceVerificationSelfVerifyAlertValidateAction: String { 
     return VectorL10n.tr("Vector", "device_verification_self_verify_alert_validate_action") 
   }
+  /// You need to verify this session in order to read your secure message history.\n\nOpen Element on one of your other devices and follow the instructions.
+  public static var deviceVerificationSelfVerifyOpenOnOtherDeviceInformation: String { 
+    return VectorL10n.tr("Vector", "device_verification_self_verify_open_on_other_device_information") 
+  }
+  /// Open %@ on your other device
+  public static func deviceVerificationSelfVerifyOpenOnOtherDeviceTitle(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "device_verification_self_verify_open_on_other_device_title", p1)
+  }
   /// Use this session to verify your new one, granting it access to encrypted messages.
   public static var deviceVerificationSelfVerifyStartInformation: String { 
     return VectorL10n.tr("Vector", "device_verification_self_verify_start_information") 
@@ -1919,9 +1903,9 @@ public class VectorL10n: NSObject {
   public static var deviceVerificationSelfVerifyWaitNewSignInTitle: String { 
     return VectorL10n.tr("Vector", "device_verification_self_verify_wait_new_sign_in_title") 
   }
-  /// If you can't access an existing session
-  public static var deviceVerificationSelfVerifyWaitRecoverSecretsAdditionalInformation: String { 
-    return VectorL10n.tr("Vector", "device_verification_self_verify_wait_recover_secrets_additional_information") 
+  /// Can't access an existing %@ session?
+  public static func deviceVerificationSelfVerifyWaitRecoverSecretsAdditionalHelp(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "device_verification_self_verify_wait_recover_secrets_additional_help", p1)
   }
   /// Checking for other verification capabilities ...
   public static var deviceVerificationSelfVerifyWaitRecoverSecretsCheckingAvailability: String { 
@@ -2543,6 +2527,10 @@ public class VectorL10n: NSObject {
   public static var homeContextMenuMarkAsRead: String { 
     return VectorL10n.tr("Vector", "home_context_menu_mark_as_read") 
   }
+  /// Mark as unread
+  public static var homeContextMenuMarkAsUnread: String { 
+    return VectorL10n.tr("Vector", "home_context_menu_mark_as_unread") 
+  }
   /// Mute
   public static var homeContextMenuMute: String { 
     return VectorL10n.tr("Vector", "home_context_menu_mute") 
@@ -2750,6 +2738,10 @@ public class VectorL10n: NSObject {
   /// Restoring backup…
   public static var keyBackupRecoverFromPrivateKeyInfo: String { 
     return VectorL10n.tr("Vector", "key_backup_recover_from_private_key_info") 
+  }
+  /// %@%% Complete
+  public static func keyBackupRecoverFromPrivateKeyProgress(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "key_backup_recover_from_private_key_progress", p1)
   }
   /// Use your Security Key to unlock your secure message history
   public static var keyBackupRecoverFromRecoveryKeyInfo: String { 
@@ -3003,6 +2995,26 @@ public class VectorL10n: NSObject {
   public static func keyVerificationScanConfirmationScanningUserWaitingOther(_ p1: String) -> String {
     return VectorL10n.tr("Vector", "key_verification_scan_confirmation_scanning_user_waiting_other", p1)
   }
+  /// Point your camera at the QR code displayed on your other device to verify your new session
+  public static var keyVerificationScanQrCodeInformationNewSession: String { 
+    return VectorL10n.tr("Vector", "key_verification_scan_qr_code_information_new_session") 
+  }
+  /// Point your camera at the QR code displayed on your other device to verify this session
+  public static var keyVerificationScanQrCodeInformationOtherDevice: String { 
+    return VectorL10n.tr("Vector", "key_verification_scan_qr_code_information_other_device") 
+  }
+  /// Point your camera at the QR code displayed on your other device to verify your session
+  public static var keyVerificationScanQrCodeInformationOtherSession: String { 
+    return VectorL10n.tr("Vector", "key_verification_scan_qr_code_information_other_session") 
+  }
+  /// Point your camera at the QR code displayed on their device to verify their session
+  public static var keyVerificationScanQrCodeInformationOtherUser: String { 
+    return VectorL10n.tr("Vector", "key_verification_scan_qr_code_information_other_user") 
+  }
+  /// Scan QR code
+  public static var keyVerificationScanQrCodeTitle: String { 
+    return VectorL10n.tr("Vector", "key_verification_scan_qr_code_title") 
+  }
   /// Other users may not trust it.
   public static var keyVerificationSelfVerifyCurrentSessionAlertMessage: String { 
     return VectorL10n.tr("Vector", "key_verification_self_verify_current_session_alert_message") 
@@ -3014,6 +3026,14 @@ public class VectorL10n: NSObject {
   /// Verify
   public static var keyVerificationSelfVerifyCurrentSessionAlertValidateAction: String { 
     return VectorL10n.tr("Vector", "key_verification_self_verify_current_session_alert_validate_action") 
+  }
+  /// Secure messaging has been improved with the latest update. Please re-verify your device.
+  public static var keyVerificationSelfVerifySecurityUpgradeAlertMessage: String { 
+    return VectorL10n.tr("Vector", "key_verification_self_verify_security_upgrade_alert_message") 
+  }
+  /// App updated
+  public static var keyVerificationSelfVerifySecurityUpgradeAlertTitle: String { 
+    return VectorL10n.tr("Vector", "key_verification_self_verify_security_upgrade_alert_title") 
   }
   /// Review
   public static var keyVerificationSelfVerifyUnverifiedSessionsAlertValidateAction: String { 
@@ -3179,17 +3199,13 @@ public class VectorL10n: NSObject {
   public static var later: String { 
     return VectorL10n.tr("Vector", "later") 
   }
-  /// Processing data\n%@ %%
-  public static func launchLoadingProcessingResponse(_ p1: String) -> String {
-    return VectorL10n.tr("Vector", "launch_loading_processing_response", p1)
+  /// This may take a little longer.\nThanks for your patience.
+  public static var launchLoadingDelayWarning: String { 
+    return VectorL10n.tr("Vector", "launch_loading_delay_warning") 
   }
-  /// Syncing with the server
-  public static var launchLoadingServerSyncing: String { 
-    return VectorL10n.tr("Vector", "launch_loading_server_syncing") 
-  }
-  /// Syncing with the server\n(%@ attempt)
-  public static func launchLoadingServerSyncingNthAttempt(_ p1: String) -> String {
-    return VectorL10n.tr("Vector", "launch_loading_server_syncing_nth_attempt", p1)
+  /// Syncing your conversations
+  public static var launchLoadingGeneric: String { 
+    return VectorL10n.tr("Vector", "launch_loading_generic") 
   }
   /// Leave
   public static var leave: String { 
@@ -3883,6 +3899,10 @@ public class VectorL10n: NSObject {
   public static func noticeDisplayNameChangedFromByYou(_ p1: String, _ p2: String) -> String {
     return VectorL10n.tr("Vector", "notice_display_name_changed_from_by_you", p1, p2)
   }
+  /// %@ changed their display name to %@
+  public static func noticeDisplayNameChangedTo(_ p1: String, _ p2: String) -> String {
+    return VectorL10n.tr("Vector", "notice_display_name_changed_to", p1, p2)
+  }
   /// %@ removed their display name
   public static func noticeDisplayNameRemoved(_ p1: String) -> String {
     return VectorL10n.tr("Vector", "notice_display_name_removed", p1)
@@ -4323,6 +4343,18 @@ public class VectorL10n: NSObject {
   public static var noticeVideoAttachment: String { 
     return VectorL10n.tr("Vector", "notice_video_attachment") 
   }
+  /// %@ ended a voice broadcast.
+  public static func noticeVoiceBroadcastEnded(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "notice_voice_broadcast_ended", p1)
+  }
+  /// You ended a voice broadcast.
+  public static var noticeVoiceBroadcastEndedByYou: String { 
+    return VectorL10n.tr("Vector", "notice_voice_broadcast_ended_by_you") 
+  }
+  /// Live broadcast
+  public static var noticeVoiceBroadcastLive: String { 
+    return VectorL10n.tr("Vector", "notice_voice_broadcast_live") 
+  }
   /// Always notify
   public static var notificationSettingsAlwaysNotify: String { 
     return VectorL10n.tr("Vector", "notification_settings_always_notify") 
@@ -4671,6 +4703,22 @@ public class VectorL10n: NSObject {
   public static func photoLibraryAccessNotGranted(_ p1: String) -> String {
     return VectorL10n.tr("Vector", "photo_library_access_not_granted", p1)
   }
+  /// Message
+  public static var pillMessage: String { 
+    return VectorL10n.tr("Vector", "pill_message") 
+  }
+  /// Message from %@
+  public static func pillMessageFrom(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "pill_message_from", p1)
+  }
+  /// Message in %@
+  public static func pillMessageIn(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "pill_message_in", p1)
+  }
+  /// Space/Room
+  public static var pillRoomFallbackDisplayName: String { 
+    return VectorL10n.tr("Vector", "pill_room_fallback_display_name") 
+  }
   /// Create a PIN for security
   public static var pinProtectionChoosePin: String { 
     return VectorL10n.tr("Vector", "pin_protection_choose_pin") 
@@ -4827,6 +4875,62 @@ public class VectorL10n: NSObject {
   public static var pollEditFormUpdateFailureTitle: String { 
     return VectorL10n.tr("Vector", "poll_edit_form_update_failure_title") 
   }
+  /// Active polls
+  public static var pollHistoryActiveSegmentTitle: String { 
+    return VectorL10n.tr("Vector", "poll_history_active_segment_title") 
+  }
+  /// View poll in timeline
+  public static var pollHistoryDetailViewInTimeline: String { 
+    return VectorL10n.tr("Vector", "poll_history_detail_view_in_timeline") 
+  }
+  /// Error fetching polls.
+  public static var pollHistoryFetchingError: String { 
+    return VectorL10n.tr("Vector", "poll_history_fetching_error") 
+  }
+  /// Load more polls
+  public static var pollHistoryLoadMore: String { 
+    return VectorL10n.tr("Vector", "poll_history_load_more") 
+  }
+  /// Displaying polls
+  public static var pollHistoryLoadingText: String { 
+    return VectorL10n.tr("Vector", "poll_history_loading_text") 
+  }
+  /// There are no active polls for the past %@ days. Load more polls to view polls for previous months
+  public static func pollHistoryNoActivePollPeriodText(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "poll_history_no_active_poll_period_text", p1)
+  }
+  /// There are no active polls in this room
+  public static var pollHistoryNoActivePollText: String { 
+    return VectorL10n.tr("Vector", "poll_history_no_active_poll_text") 
+  }
+  /// There are no past polls for the past %@ days. Load more polls to view polls for previous months
+  public static func pollHistoryNoPastPollPeriodText(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "poll_history_no_past_poll_period_text", p1)
+  }
+  /// There are no past polls in this room
+  public static var pollHistoryNoPastPollText: String { 
+    return VectorL10n.tr("Vector", "poll_history_no_past_poll_text") 
+  }
+  /// Past polls
+  public static var pollHistoryPastSegmentTitle: String { 
+    return VectorL10n.tr("Vector", "poll_history_past_segment_title") 
+  }
+  /// Poll history
+  public static var pollHistoryTitle: String { 
+    return VectorL10n.tr("Vector", "poll_history_title") 
+  }
+  /// Due to decryption errors, some votes may not be counted
+  public static var pollTimelineDecryptionError: String { 
+    return VectorL10n.tr("Vector", "poll_timeline_decryption_error") 
+  }
+  /// Ended the poll
+  public static var pollTimelineEndedText: String { 
+    return VectorL10n.tr("Vector", "poll_timeline_ended_text") 
+  }
+  /// Loading...
+  public static var pollTimelineLoading: String { 
+    return VectorL10n.tr("Vector", "poll_timeline_loading") 
+  }
   /// Please try again
   public static var pollTimelineNotClosedSubtitle: String { 
     return VectorL10n.tr("Vector", "poll_timeline_not_closed_subtitle") 
@@ -4838,6 +4942,10 @@ public class VectorL10n: NSObject {
   /// 1 vote
   public static var pollTimelineOneVote: String { 
     return VectorL10n.tr("Vector", "poll_timeline_one_vote") 
+  }
+  /// Ended poll
+  public static var pollTimelineReplyEndedPoll: String { 
+    return VectorL10n.tr("Vector", "poll_timeline_reply_ended_poll") 
   }
   /// Final results based on %lu votes
   public static func pollTimelineTotalFinalResults(_ p1: Int) -> String {
@@ -5111,6 +5219,58 @@ public class VectorL10n: NSObject {
   public static var roomAvatarViewAccessibilityLabel: String { 
     return VectorL10n.tr("Vector", "room_avatar_view_accessibility_label") 
   }
+  /// Bans user with given id
+  public static var roomCommandBanUserDescription: String { 
+    return VectorL10n.tr("Vector", "room_command_ban_user_description") 
+  }
+  /// Changes your display nickname
+  public static var roomCommandChangeDisplayNameDescription: String { 
+    return VectorL10n.tr("Vector", "room_command_change_display_name_description") 
+  }
+  /// Sets the room topic
+  public static var roomCommandChangeRoomTopicDescription: String { 
+    return VectorL10n.tr("Vector", "room_command_change_room_topic_description") 
+  }
+  /// Forces the current outbound group session in an encrypted room to be discarded
+  public static var roomCommandDiscardSessionDescription: String { 
+    return VectorL10n.tr("Vector", "room_command_discard_session_description") 
+  }
+  /// Displays action
+  public static var roomCommandEmoteDescription: String { 
+    return VectorL10n.tr("Vector", "room_command_emote_description") 
+  }
+  /// Invalid or unhandled command
+  public static var roomCommandErrorUnknownCommand: String { 
+    return VectorL10n.tr("Vector", "room_command_error_unknown_command") 
+  }
+  /// Invites user with given id to current room
+  public static var roomCommandInviteUserDescription: String { 
+    return VectorL10n.tr("Vector", "room_command_invite_user_description") 
+  }
+  /// Joins room with given address
+  public static var roomCommandJoinRoomDescription: String { 
+    return VectorL10n.tr("Vector", "room_command_join_room_description") 
+  }
+  /// Removes user with given id from this room
+  public static var roomCommandKickUserDescription: String { 
+    return VectorL10n.tr("Vector", "room_command_kick_user_description") 
+  }
+  /// Leave room
+  public static var roomCommandPartRoomDescription: String { 
+    return VectorL10n.tr("Vector", "room_command_part_room_description") 
+  }
+  /// Deops user with given id
+  public static var roomCommandResetUserPowerLevelDescription: String { 
+    return VectorL10n.tr("Vector", "room_command_reset_user_power_level_description") 
+  }
+  /// Define the power level of a user
+  public static var roomCommandSetUserPowerLevelDescription: String { 
+    return VectorL10n.tr("Vector", "room_command_set_user_power_level_description") 
+  }
+  /// Unbans user with given id
+  public static var roomCommandUnbanUserDescription: String { 
+    return VectorL10n.tr("Vector", "room_command_unban_user_description") 
+  }
   /// You need permission to manage conference call in this room
   public static var roomConferenceCallNoPower: String { 
     return VectorL10n.tr("Vector", "room_conference_call_no_power") 
@@ -5183,6 +5343,10 @@ public class VectorL10n: NSObject {
   public static var roomCreationNameTitle: String { 
     return VectorL10n.tr("Vector", "room_creation_name_title") 
   }
+  /// You can only invite one email at a time
+  public static var roomCreationOnlyOneEmailInvite: String { 
+    return VectorL10n.tr("Vector", "room_creation_only_one_email_invite") 
+  }
   /// (e.g. @bob:homeserver1; @john:homeserver2...)
   public static var roomCreationParticipantsPlaceholder: String { 
     return VectorL10n.tr("Vector", "room_creation_participants_placeholder") 
@@ -5206,6 +5370,18 @@ public class VectorL10n: NSObject {
   /// New Chat
   public static var roomCreationTitle: String { 
     return VectorL10n.tr("Vector", "room_creation_title") 
+  }
+  /// Start DM anyway
+  public static var roomCreationUserNotFoundPromptInviteAction: String { 
+    return VectorL10n.tr("Vector", "room_creation_user_not_found_prompt_invite_action") 
+  }
+  /// Unable to find profiles for this Matrix ID. Would you like to start a DM anyway?
+  public static var roomCreationUserNotFoundPromptMessage: String { 
+    return VectorL10n.tr("Vector", "room_creation_user_not_found_prompt_message") 
+  }
+  /// Confirmation
+  public static var roomCreationUserNotFoundPromptTitle: String { 
+    return VectorL10n.tr("Vector", "room_creation_user_not_found_prompt_title") 
   }
   /// A room is already being created. Please wait.
   public static var roomCreationWaitForCreation: String { 
@@ -5482,6 +5658,10 @@ public class VectorL10n: NSObject {
   /// Photo
   public static var roomDetailsPhotoForDm: String { 
     return VectorL10n.tr("Vector", "room_details_photo_for_dm") 
+  }
+  /// Poll history
+  public static var roomDetailsPolls: String { 
+    return VectorL10n.tr("Vector", "room_details_polls") 
   }
   /// Suggest to space members
   public static var roomDetailsPromoteRoomSuggestTitle: String { 
@@ -6207,6 +6387,10 @@ public class VectorL10n: NSObject {
   public static var roomParticipantsInviteAnotherUser: String { 
     return VectorL10n.tr("Vector", "room_participants_invite_another_user") 
   }
+  /// Invite anyway
+  public static var roomParticipantsInviteAnyway: String { 
+    return VectorL10n.tr("Vector", "room_participants_invite_anyway") 
+  }
   /// Malformed ID. Should be an email address or a Matrix ID like '@localpart:domain'
   public static var roomParticipantsInviteMalformedId: String { 
     return VectorL10n.tr("Vector", "room_participants_invite_malformed_id") 
@@ -6226,6 +6410,10 @@ public class VectorL10n: NSObject {
   /// Are you sure you want to invite %@ to %@?
   public static func roomParticipantsInvitePromptToMsg(_ p1: String, _ p2: String) -> String {
     return VectorL10n.tr("Vector", "room_participants_invite_prompt_to_msg", p1, p2)
+  }
+  /// Unable to find profiles for this Matrix ID. Are you sure you want to invite %@ to %@?
+  public static func roomParticipantsInviteUnknownParticipantPromptToMsg(_ p1: String, _ p2: String) -> String {
+    return VectorL10n.tr("Vector", "room_participants_invite_unknown_participant_prompt_to_msg", p1, p2)
   }
   /// INVITED
   public static var roomParticipantsInvitedSection: String { 
@@ -6534,6 +6722,14 @@ public class VectorL10n: NSObject {
   /// Message failed to send due to unknown sessions being present.
   public static var roomUnsentMessagesUnknownDevicesNotification: String { 
     return VectorL10n.tr("Vector", "room_unsent_messages_unknown_devices_notification") 
+  }
+  /// Once invited users have joined %@, you will be able to chat and the room will be end-to-end encrypted
+  public static func roomWaitingOtherParticipantsMessage(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "room_waiting_other_participants_message", p1)
+  }
+  /// Waiting for users to join %@
+  public static func roomWaitingOtherParticipantsTitle(_ p1: String) -> String {
+    return VectorL10n.tr("Vector", "room_waiting_other_participants_title", p1)
   }
   /// End-to-end encryption is in beta and may not be reliable.\n\nYou should not yet trust it to secure data.\n\nDevices will not yet be able to decrypt history from before they joined the room.\n\nEncrypted messages will not be visible on clients that do not yet implement encryption.
   public static var roomWarningAboutEncryption: String { 
@@ -7103,6 +7299,10 @@ public class VectorL10n: NSObject {
   public static var settingsAbout: String { 
     return VectorL10n.tr("Vector", "settings_about") 
   }
+  /// Acceptable Use Policy
+  public static var settingsAcceptableUse: String { 
+    return VectorL10n.tr("Vector", "settings_acceptable_use") 
+  }
   /// Invalid credentials
   public static var settingsAdd3pidInvalidPasswordMessage: String { 
     return VectorL10n.tr("Vector", "settings_add_3pid_invalid_password_message") 
@@ -7567,7 +7767,7 @@ public class VectorL10n: NSObject {
   public static var settingsLabsEnableThreads: String { 
     return VectorL10n.tr("Vector", "settings_labs_enable_threads") 
   }
-  /// Voice broadcast (under active development)
+  /// Voice broadcast
   public static var settingsLabsEnableVoiceBroadcast: String { 
     return VectorL10n.tr("Vector", "settings_labs_enable_voice_broadcast") 
   }
@@ -7702,6 +7902,10 @@ public class VectorL10n: NSObject {
   /// Profile Picture
   public static var settingsProfilePicture: String { 
     return VectorL10n.tr("Vector", "settings_profile_picture") 
+  }
+  /// An error occurred when updating your notification preferences. Please try to toggle your option again.
+  public static var settingsPushRulesError: String { 
+    return VectorL10n.tr("Vector", "settings_push_rules_error") 
   }
   /// Are you sure you want to remove the email address %@?
   public static func settingsRemoveEmailPromptMsg(_ p1: String) -> String {
@@ -8727,7 +8931,7 @@ public class VectorL10n: NSObject {
   public static var userOtherSessionPermanentlyUnverifiedAdditionalInfo: String { 
     return VectorL10n.tr("Vector", "user_other_session_permanently_unverified_additional_info") 
   }
-  /// Security recommendation
+  /// Other sessions
   public static var userOtherSessionSecurityRecommendationTitle: String { 
     return VectorL10n.tr("Vector", "user_other_session_security_recommendation_title") 
   }
@@ -9159,6 +9363,14 @@ public class VectorL10n: NSObject {
   public static var voiceBroadcastBuffering: String { 
     return VectorL10n.tr("Vector", "voice_broadcast_buffering") 
   }
+  /// Unfortunately we’re unable to start a recording right now. Please try again later.
+  public static var voiceBroadcastConnectionErrorMessage: String { 
+    return VectorL10n.tr("Vector", "voice_broadcast_connection_error_message") 
+  }
+  /// Connection error
+  public static var voiceBroadcastConnectionErrorTitle: String { 
+    return VectorL10n.tr("Vector", "voice_broadcast_connection_error_title") 
+  }
   /// Live
   public static var voiceBroadcastLive: String { 
     return VectorL10n.tr("Vector", "voice_broadcast_live") 
@@ -9170,6 +9382,18 @@ public class VectorL10n: NSObject {
   /// Unable to play this voice broadcast.
   public static var voiceBroadcastPlaybackLoadingError: String { 
     return VectorL10n.tr("Vector", "voice_broadcast_playback_loading_error") 
+  }
+  /// Voice broadcast
+  public static var voiceBroadcastPlaybackLockScreenPlaceholder: String { 
+    return VectorL10n.tr("Vector", "voice_broadcast_playback_lock_screen_placeholder") 
+  }
+  /// Unable to decrypt this voice broadcast.
+  public static var voiceBroadcastPlaybackUnableToDecrypt: String { 
+    return VectorL10n.tr("Vector", "voice_broadcast_playback_unable_to_decrypt") 
+  }
+  /// Connection error - Recording paused
+  public static var voiceBroadcastRecorderConnectionError: String { 
+    return VectorL10n.tr("Vector", "voice_broadcast_recorder_connection_error") 
   }
   /// Yes, stop
   public static var voiceBroadcastStopAlertAgreeButton: String { 
@@ -9194,6 +9418,22 @@ public class VectorL10n: NSObject {
   /// Can't start a new voice broadcast
   public static var voiceBroadcastUnauthorizedTitle: String { 
     return VectorL10n.tr("Vector", "voice_broadcast_unauthorized_title") 
+  }
+  /// You can’t start a call as you are currently recording a live broadcast. Please end your live broadcast in order to start a call.
+  public static var voiceBroadcastVoipCannotStartDescription: String { 
+    return VectorL10n.tr("Vector", "voice_broadcast_voip_cannot_start_description") 
+  }
+  /// Can’t start a call
+  public static var voiceBroadcastVoipCannotStartTitle: String { 
+    return VectorL10n.tr("Vector", "voice_broadcast_voip_cannot_start_title") 
+  }
+  /// You can't start a voice message as you are currently recording a live broadcast. Please end your live broadcast in order to start recording a voice message
+  public static var voiceMessageBroadcastInProgressMessage: String { 
+    return VectorL10n.tr("Vector", "voice_message_broadcast_in_progress_message") 
+  }
+  /// Can't start voice message
+  public static var voiceMessageBroadcastInProgressTitle: String { 
+    return VectorL10n.tr("Vector", "voice_message_broadcast_in_progress_title") 
   }
   /// Voice message
   public static var voiceMessageLockScreenPlaceholder: String { 
@@ -9311,6 +9551,18 @@ public class VectorL10n: NSObject {
   public static var wysiwygComposerFormatActionBold: String { 
     return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_bold") 
   }
+  /// Toggle code block
+  public static var wysiwygComposerFormatActionCodeBlock: String { 
+    return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_code_block") 
+  }
+  /// Increase indentation
+  public static var wysiwygComposerFormatActionIndent: String { 
+    return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_indent") 
+  }
+  /// Apply inline code format
+  public static var wysiwygComposerFormatActionInlineCode: String { 
+    return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_inline_code") 
+  }
   /// Apply italic format
   public static var wysiwygComposerFormatActionItalic: String { 
     return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_italic") 
@@ -9319,13 +9571,29 @@ public class VectorL10n: NSObject {
   public static var wysiwygComposerFormatActionLink: String { 
     return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_link") 
   }
+  /// Toggle numbered list
+  public static var wysiwygComposerFormatActionOrderedList: String { 
+    return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_ordered_list") 
+  }
+  /// Toggle quote
+  public static var wysiwygComposerFormatActionQuote: String { 
+    return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_quote") 
+  }
   /// Apply underline format
   public static var wysiwygComposerFormatActionStrikethrough: String { 
     return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_strikethrough") 
   }
+  /// Decrease indentation
+  public static var wysiwygComposerFormatActionUnIndent: String { 
+    return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_un_indent") 
+  }
   /// Apply strikethrough format
   public static var wysiwygComposerFormatActionUnderline: String { 
     return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_underline") 
+  }
+  /// Toggle bulleted list
+  public static var wysiwygComposerFormatActionUnorderedList: String { 
+    return VectorL10n.tr("Vector", "wysiwyg_composer_format_action_unordered_list") 
   }
   /// Create a link
   public static var wysiwygComposerLinkActionCreateTitle: String { 

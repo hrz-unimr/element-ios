@@ -61,7 +61,7 @@ extern NSTimeInterval const kResizeComposerAnimationDuration;
 // The preview header
 @property (weak, nonatomic, nullable) IBOutlet UIView *previewHeaderContainer;
 @property (weak, nonatomic, nullable) IBOutlet NSLayoutConstraint *previewHeaderContainerHeightConstraint;
-@property (weak, nonatomic, nullable) IBOutlet NSLayoutConstraint *userSuggestionContainerHeightConstraint;
+@property (weak, nonatomic, nullable) IBOutlet NSLayoutConstraint *completionSuggestionContainerHeightConstraint;
 
 // The jump to last unread banner
 @property (weak, nonatomic, nullable) IBOutlet UIView *jumpToLastUnreadBannerContainer;
@@ -125,6 +125,8 @@ extern NSTimeInterval const kResizeComposerAnimationDuration;
 
 @property (nonatomic, strong, nullable) ComposerLinkActionBridgePresenter *composerLinkActionBridgePresenter;
 
+@property (weak, nonatomic, nullable) UIViewController *waitingOtherParticipantViewController;
+@property (nonatomic) BOOL isWaitingForOtherParticipants;
 
 /**
  Retrieve the live data source in cases where the timeline is not live.

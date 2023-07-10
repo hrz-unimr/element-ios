@@ -30,6 +30,10 @@ final class MXRoomNotificationSettingsService: RoomNotificationSettingsServiceTy
     
     private var observers: [ObjectIdentifier] = []
     
+    private var notificationCenter: MXNotificationCenter? {
+        room.mxSession?.notificationCenter
+    }
+    
     // MARK: Public
     
     var notificationState: RoomNotificationState {
@@ -98,7 +102,7 @@ final class MXRoomNotificationSettingsService: RoomNotificationSettingsServiceTy
         }
         
         // if the user defined one, use it
-        if rule.actionsContains(actionType: MXPushRuleActionTypeDontNotify) {
+        if rule.dontNotify {
             enablePushRule(rule: rule, completion: completion)
         } else {
             removePushRule(rule: rule) {
@@ -132,7 +136,7 @@ final class MXRoomNotificationSettingsService: RoomNotificationSettingsServiceTy
         }
         
         // if the user defined one, use it
-        if rule.actionsContains(actionType: MXPushRuleActionTypeDontNotify) {
+        if rule.dontNotify {
             enablePushRule(rule: rule, completion: completion)
         } else {
             removePushRule(rule: rule) {
@@ -166,7 +170,7 @@ final class MXRoomNotificationSettingsService: RoomNotificationSettingsServiceTy
         }
         handleFailureCallback(completion)
         
-        room.mxSession.notificationCenter.addRoomRule(
+        notificationCenter?.addRoomRule(
             room.roomId,
             notify: false,
             sound: false,
@@ -184,7 +188,7 @@ final class MXRoomNotificationSettingsService: RoomNotificationSettingsServiceTy
         }
         handleFailureCallback(completion)
         
-        room.mxSession.notificationCenter.addOverrideRule(
+        notificationCenter?.addOverrideRule(
             withId: roomId,
             conditions: [["kind": "event_match", "key": "room_id", "pattern": roomId]],
             notify: false,
@@ -196,11 +200,11 @@ final class MXRoomNotificationSettingsService: RoomNotificationSettingsServiceTy
     private func removePushRule(rule: MXPushRule, completion: @escaping Completion) {
         handleUpdateCallback(completion) { [weak self] in
             guard let self = self else { return true }
-            return self.room.mxSession.notificationCenter.rule(byId: rule.ruleId) == nil
+            return self.notificationCenter?.rule(byId: rule.ruleId) == nil
         }
         handleFailureCallback(completion)
         
-        room.mxSession.notificationCenter.removeRule(rule)
+        notificationCenter?.removeRule(rule)
     }
     
     private func enablePushRule(rule: MXPushRule, completion: @escaping Completion) {
@@ -210,7 +214,7 @@ final class MXRoomNotificationSettingsService: RoomNotificationSettingsServiceTy
         }
         handleFailureCallback(completion)
         
-        room.mxSession.notificationCenter.enableRule(rule, isEnabled: true)
+        notificationCenter?.enableRule(rule, isEnabled: true)
     }
     
     private func handleUpdateCallback(_ completion: @escaping Completion, releaseCheck: @escaping () -> Bool) {
@@ -257,7 +261,7 @@ public extension MXRoom {
         // Check whether an override rule has been defined with the roomm id as rule id.
         // This kind of rule is created to mute the room
         guard let rule = overridePushRule,
-              rule.actionsContains(actionType: MXPushRuleActionTypeDontNotify),
+              rule.dontNotify,
               rule.conditionIsEnabled(kind: .eventMatch, for: roomId) else {
             return false
         }
@@ -267,7 +271,7 @@ public extension MXRoom {
     var isMentionsOnly: Bool {
         // Check push rules at room level
         guard let rule = roomPushRule else { return false }
-        return rule.enabled && rule.actionsContains(actionType: MXPushRuleActionTypeDontNotify)
+        return rule.enabled && rule.dontNotify
     }
 }
 
@@ -283,14 +287,14 @@ private extension MXRoom {
     }
     
     var overridePushRule: MXPushRule? {
-        guard let overrideRules = mxSession.notificationCenter.rules.global.override else {
+        guard let overrideRules = mxSession?.notificationCenter?.rules?.global?.override else {
             return nil
         }
         return getRoomRule(from: overrideRules)
     }
     
     var roomPushRule: MXPushRule? {
-        guard let roomRules = mxSession.notificationCenter.rules.global.room else {
+        guard let roomRules = mxSession?.notificationCenter?.rules?.global?.room else {
             return nil
         }
         return getRoomRule(from: roomRules)
