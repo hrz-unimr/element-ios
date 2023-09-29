@@ -102,13 +102,16 @@ final class BuildSettings: NSObject {
     static let forceHomeserverSelection = false
 
     /// Default server proposed on the authentication screen
-    static let serverConfigDefaultHomeserverUrlString = "https://matrix-homeserver.uni-marburg.de"
+    static var serverConfigDefaultHomeserverUrlString: String {
+        MDMSettings.serverConfigDefaultHomeserverUrlString ?? "https://matrix-homeserver.uni-marburg.de"
+    }
     
     /// Default identity server
     static let serverConfigDefaultIdentityServerUrlString = "https://matrix-homeserver.uni-marburg.de"
         
-    static let serverConfigSygnalAPIUrlString = "https://matrix-pushgateway.hrz.uni-marburg.de/_matrix/push/v1/notify"
-    
+    static var serverConfigSygnalAPIUrlString: String {
+        MDMSettings.serverConfigSygnalAPIUrlString ?? "https://matrix-pushgateway.hrz.uni-marburg.de/_matrix/push/v1/notify"
+    }
     
     // MARK: - Legal URLs
     
@@ -144,7 +147,9 @@ final class BuildSettings: NSObject {
     // This baseURL is used to generate permalinks within the app (E.g. timeline message permalinks).
     // Optional String that when set is used as permalink base, when nil matrix.to format is used.
     // Example value would be "https://www.example.com", note there is no trailing '/'.
-    static let clientPermalinkBaseUrl: String? = nil
+    static var clientPermalinkBaseUrl: String? {
+        MDMSettings.clientPermalinkBaseUrl
+    }
     
     // MARK: - VoIP
     static var allowVoIPUsage: Bool {
@@ -192,7 +197,7 @@ final class BuildSettings: NSObject {
     #else
     /// The configuration to use for analytics. Set `isEnabled` to false to disable analytics.
     static let analyticsConfiguration = AnalyticsConfiguration(isEnabled: BuildSettings.baseBundleIdentifier.starts(with: "im.vector.app"),
-                                                               host: "https://posthog.hss.element.io",
+                                                               host: "https://posthog.element.io",
                                                                apiKey: "phc_Jzsm6DTm6V2705zeU5dcNvQDlonOR68XvX2sh1sEOHO",
                                                                termsURL: URL(string: "https://element.io/cookie-policy")!)
     #endif
